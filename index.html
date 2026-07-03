@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Polares — Your Capital Guide</title>
+  <meta name="description" content="Polares is uw onafhankelijke vertrouwenspersoon voor familie en bedrijf. Zoals de noordpoolster: helder en richtinggevend voor uw vermogen.">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <script>(function(){try{if(!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('reveal-ready');}}catch(e){}})();</script>
+
+  <style>
+    /* ── Fonts ───────────────────────────────────────────────── */
+    @font-face{font-family:'Cantata One';font-style:normal;font-weight:400;font-display:swap;
+      src:url(https://fonts.gstatic.com/s/cantataone/v16/PlI5Fl60Nb5obNzNe2jslWxDvcE.woff2) format('woff2');}
+    @font-face{font-family:'Source Sans Pro';font-style:normal;font-weight:400;font-display:swap;
+      src:url(https://fonts.gstatic.com/s/sourcesanspro/v23/6xK3dSBYKcSV-LCoeQqfX1RYOo3qOK7l.woff2) format('woff2');}
+    @font-face{font-family:'Source Sans Pro';font-style:normal;font-weight:700;font-display:swap;
+      src:url(https://fonts.gstatic.com/s/sourcesanspro/v23/6xKydSBYKcSV-LCoeQqfX1RYOo3ig4vwlxdu.woff2) format('woff2');}
+
+    /* ── Tokens ──────────────────────────────────────────────── */
+    :root {
+      /* navy-ramp */
+      --navy-50:#EEF1F5; --navy-100:#D8DEE5; --navy-200:#A1B2C0; --navy-300:#7E94A6;
+      --navy-400:#5A7388; --navy-500:#2F5471; --navy-600:#10324E; --navy-700:#0D2B43;
+      --navy-800:#0A2236; --navy-900:#071826;
+      /* neutralen */
+      --white:#FFFFFF; --paper:#FAFBFC; --mist:#F3F5F7; --line:#E5E5E5; --line-strong:#CFD6DD;
+      /* semantiek */
+      --text:#10324E; --text-soft:#5A7388; --text-faint:#7E94A6;
+      --on-navy:#FFFFFF; --on-navy-soft:#A1B2C0;
+      /* schaduw */
+      --shadow-sm:0 2px 8px rgba(16,50,78,.07);
+      --shadow-md:0 6px 20px rgba(16,50,78,.09);
+      --shadow-lg:0 16px 40px rgba(16,50,78,.12);
+      --focus-ring:0 0 0 3px rgba(90,115,136,.35);
+      /* type */
+      --serif:'Cantata One', Georgia, 'Times New Roman', serif;
+      --sans:'Source Sans Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      /* motion */
+      --ease:cubic-bezier(.4,0,.2,1); --ease-out:cubic-bezier(.16,1,.3,1);
+      --dur-1:150ms; --dur-2:300ms; --dur-3:600ms;
+      /* layout */
+      --container:1280px; --pad:clamp(1.5rem,5vw,5rem); --section-y:clamp(5rem,10vw,8rem);
+    }
+
+    /* ── Reset & base ────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 15px; scroll-behavior: smooth; }
+    body {
+      font-family: var(--sans);
+      font-weight: 400;
+      line-height: 1.67;
+      color: var(--text);
+      background: var(--white);
+      -webkit-font-smoothing: antialiased;
+      text-wrap: pretty;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+    h1, h2, h3 { font-family: var(--serif); font-weight: 400; }
+
+    /* ── Focus ───────────────────────────────────────────────── */
+    :focus-visible { box-shadow: var(--focus-ring); outline: none; border-radius: 2px; }
+
+    /* ── Utilities ───────────────────────────────────────────── */
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+    .container {
+      max-width: var(--container);
+      margin-inline: auto;
+      padding-inline: var(--pad);
+    }
+    .label {
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+    .label--on-navy { color: var(--on-navy-soft); }
+
+    /* ── Skip link ───────────────────────────────────────────── */
+    .skip {
+      position: absolute;
+      top: -100%;
+      left: 1rem;
+      background: var(--white);
+      color: var(--navy-600);
+      padding: .6rem 1.2rem;
+      font-family: var(--sans);
+      font-size: 14px;
+      z-index: 9999;
+      border: 1px solid var(--navy-600);
+    }
+    .skip:focus { top: 1rem; }
+
+    /* ── Nav ─────────────────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      height: 76px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-inline: var(--pad);
+      transition: background var(--dur-2) var(--ease),
+                  border-color var(--dur-2) var(--ease),
+                  box-shadow var(--dur-2) var(--ease);
+      border-bottom: 1px solid transparent;
+    }
+    .nav.scrolled {
+      background: rgba(250,251,252,.96);
+      border-bottom-color: var(--line);
+    }
+
+    /* Logo / brand */
+    .brand { display: flex; align-items: center; }
+    .brand__logo {
+      display: block;
+      width: clamp(120px, 16vw, 180px);
+      aspect-ratio: 1477 / 455;
+      background: var(--white);
+      -webkit-mask: url(assets/POLARES_LOGO_WIT.png) no-repeat center / contain;
+      mask: url(assets/POLARES_LOGO_WIT.png) no-repeat center / contain;
+      transition: background var(--dur-2) var(--ease);
+    }
+    .nav.scrolled .brand__logo { background: var(--navy-600); }
+
+    /* Desktop links */
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    .nav__links a {
+      font-family: var(--sans);
+      font-size: 13px;
+      letter-spacing: .04em;
+      color: rgba(255,255,255,.85);
+      transition: color var(--dur-1) var(--ease);
+    }
+    .nav__links a:hover { color: var(--white); }
+    .nav.scrolled .nav__links a { color: var(--text); }
+    .nav.scrolled .nav__links a:hover { color: var(--navy-700); }
+
+    /* CTA */
+    .nav__cta {
+      font-family: var(--sans);
+      font-size: 13px;
+      letter-spacing: .04em;
+      color: var(--white);
+      border: 1px solid rgba(255,255,255,.7);
+      padding: .55rem 1.3rem;
+      transition: background var(--dur-2) var(--ease), color var(--dur-2) var(--ease),
+                  border-color var(--dur-2) var(--ease);
+    }
+    .nav__cta:hover { background: var(--white); color: var(--navy-800); }
+    .nav.scrolled .nav__cta { color: var(--navy-600); border-color: var(--navy-600); }
+    .nav.scrolled .nav__cta:hover { background: var(--navy-600); color: var(--white); }
+
+    /* Hamburger */
+    .nav__burger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 44px;
+      height: 44px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+    .nav__burger span {
+      display: block;
+      width: 22px;
+      height: 1px;
+      background: var(--white);
+      transition: background var(--dur-2) var(--ease);
+    }
+    .nav.scrolled .nav__burger span { background: var(--navy-600); }
+
+    /* ── Overlay ─────────────────────────────────────────────── */
+    .overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 300;
+      background: var(--navy-800);
+      transform: translateX(100%);
+      visibility: hidden;
+      transition: transform var(--dur-3) var(--ease), visibility 0s var(--dur-3);
+      display: flex;
+      flex-direction: column;
+      padding: 76px var(--pad) clamp(2rem,6vw,4rem);
+    }
+    .overlay.is-open { transform: translateX(0); visibility: visible; transition-delay: 0s; }
+
+    .overlay__close {
+      position: absolute;
+      top: 1.2rem;
+      right: var(--pad);
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: none;
+      border: none;
+      color: var(--white);
+      font-size: 28px;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .overlay__close:focus-visible {
+      outline: 2px solid rgba(255,255,255,.7);
+      outline-offset: 2px;
+      box-shadow: none;
+    }
+
+    .overlay__nav {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+      margin-top: 1.5rem;
+    }
+    .overlay__link {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      color: var(--white);
+      padding-block: .35rem;
+      transition: color var(--dur-1) var(--ease);
+    }
+    .overlay__link:hover { color: var(--navy-200); }
+    .overlay__link:focus-visible {
+      outline: 2px solid rgba(255,255,255,.7);
+      outline-offset: 2px;
+      box-shadow: none;
+    }
+    .overlay__link svg { flex-shrink: 0; }
+
+    .overlay__contact {
+      margin-top: auto;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,.12);
+    }
+    .overlay__contact p {
+      font-family: var(--sans);
+      font-size: 14px;
+      color: var(--on-navy-soft);
+      line-height: 1.8;
+    }
+    .overlay__contact a { color: var(--on-navy-soft); transition: color var(--dur-1); }
+    .overlay__contact a:hover { color: var(--white); }
+
+    /* ── Meridian ────────────────────────────────────────────── */
+    .meridian {
+      position: fixed;
+      left: calc((100vw - var(--container)) / 2 + 28px);
+      top: 50%;
+      transform: translateY(-50%);
+      height: 38vh;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      pointer-events: none;
+    }
+    .meridian__star { color: var(--navy-600); }
+    .meridian__line {
+      flex: 1;
+      width: 1px;
+      background: var(--navy-100);
+    }
+    .meridian__label {
+      font-family: var(--sans);
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--text-faint);
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      margin-top: .5rem;
+    }
+
+    /* ── Hero ────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      min-height: 100svh;
+      background: radial-gradient(60% 42% at 50% 16%, rgba(64,110,150,.14) 0%, rgba(40,78,116,.05) 55%, rgba(7,24,38,0) 100%),
+                  radial-gradient(120% 90% at 50% 20%, #0E2A42 0%, var(--navy-800) 45%, var(--navy-900) 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    #sky {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .hero__scrim {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 40%;
+      background: linear-gradient(to top, rgba(7,24,38,.5), transparent);
+      pointer-events: none;
+    }
+    .hero__inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding-top: 76px;
+      padding-inline: var(--pad);
+      margin-top: 12vh;
+    }
+    .hero__logo { width: clamp(240px, 34vw, 460px); }
+    .hero__rule {
+      width: 54px;
+      height: 1px;
+      background: rgba(255,255,255,.4);
+      margin: 2.2rem auto 1.8rem;
+    }
+    .hero__coords {
+      position: absolute;
+      bottom: 2.2rem;
+      left: var(--pad);
+      font-family: var(--sans);
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.38);
+      z-index: 1;
+    }
+    .hero__scroll-cue {
+      position: absolute;
+      bottom: 2.2rem;
+      right: var(--pad);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .5rem;
+      z-index: 1;
+    }
+    .hero__scroll-line {
+      width: 1px;
+      height: 44px;
+      background: rgba(255,255,255,.38);
+    }
+    .hero__scroll-cue .label { color: rgba(255,255,255,.38); font-size: 10px; }
+
+    /* ── Chapter head ────────────────────────────────────────── */
+    .chapter-head {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 1.75rem;
+    }
+    .chapter-head__line {
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+    .chapter-head--light .chapter-head__line { background: rgba(255,255,255,.14); }
+    .chapter-head--light .label { color: var(--on-navy-soft); }
+    .chapter-head__star { flex-shrink: 0; }
+    .chapter-head--light .chapter-head__star { color: var(--white); }
+
+    /* ── I — Missie ──────────────────────────────────────────── */
+    #missie { padding-block: var(--section-y) calc(var(--section-y) * .5); background: var(--paper); }
+    .missie__h2 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 3.6vw, 3.2rem);
+      line-height: 1.18;
+      letter-spacing: -0.01em;
+      text-wrap: balance;
+      color: var(--text);
+    }
+    .missie__grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 4rem;
+      margin-bottom: 3.5rem;
+      align-items: start;
+    }
+    .missie__body p + p { margin-top: 1.2em; }
+    .missie__body p { font-size: 15px; color: var(--text-soft); }
+    .missie__triade {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1.25rem 2rem;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding-block: 2.2rem;
+    }
+    .missie__triade-item { font-family: var(--serif); font-size: 1.15rem; color: var(--navy-500); }
+    .missie__triade-sep { color: var(--navy-400); flex-shrink: 0; }
+
+    /* ── II — Visie ──────────────────────────────────────────── */
+    #visie { padding-block: calc(var(--section-y) * .45) var(--section-y); background: var(--paper); }
+    .visie__intro {
+      font-family: var(--serif);
+      font-size: clamp(1.05rem, 1.7vw, 1.2rem);
+      line-height: 1.62;
+      color: var(--navy-600);
+      max-width: 580px;
+      margin: 0 auto 2rem;
+      text-align: center;
+    }
+    .visie__scene {
+      position: relative;
+      width: 100%;
+      /* de hele sterrenkaart moet ruim in één scherm passen: breedte begrensd
+         door de beschikbare hoogte (beeldverhouding 2560/1240 ≈ 2.0645) */
+      max-width: min(1000px, calc((100svh - 300px) * 2.0645));
+      margin-inline: auto;
+    }
+    .visie__caption { text-align: center; margin-top: clamp(1.25rem, 2vw, 1.75rem); }
+    .uv-node { cursor: pointer; }
+    .uv-node:focus-visible { outline: 2px solid rgba(90,115,136,.5); outline-offset: 4px; }
+
+    /* ── III — Advies ────────────────────────────────────────── */
+    #advies {
+      padding-block: var(--section-y);
+      background: var(--white);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .advies__h2 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 3.6vw, 3.2rem);
+      line-height: 1.18;
+      letter-spacing: -0.01em;
+      text-wrap: balance;
+      color: var(--text);
+      margin-bottom: 3rem;
+    }
+    .advies__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(3rem, 6vw, 6rem);
+    }
+    /* kolommen strekken zich even hoog; de "Meer over…"-link wordt tegen de
+       onderrand gedrukt zodat beide links altijd perfect uitlijnen */
+    .portal-col { display: flex; flex-direction: column; align-items: center; }
+    .portal-col .more-link { margin-top: auto; }
+    .portal__circle {
+      width: 220px;
+      height: 220px;
+      border-radius: 50%;
+      border: 1px solid var(--navy-600);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: .5rem;
+      margin-bottom: 2rem;
+      color: var(--navy-600);
+    }
+    .portal__label {
+      font-family: var(--serif);
+      font-size: 1.5rem;
+      color: var(--navy-600);
+    }
+    .portal-col__body { font-size: 15px; color: var(--text-soft); text-align: center; margin-bottom: 1.5rem; }
+    .portal-col__services { width: 100%; margin-bottom: 1.5rem; }
+    .portal-col__service-item {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      font-family: var(--sans);
+      font-size: 13px;
+      color: var(--text);
+      padding-block: .6rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .portal-col__service-item svg { flex-shrink: 0; color: var(--navy-600); }
+    .more-link {
+      display: inline-flex;
+      align-items: center;
+      gap: .6rem;
+      font-family: var(--sans);
+      font-size: 13px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--navy-600);
+      border-bottom: 1px solid transparent;
+      padding-bottom: 2px;
+      transition: border-color var(--dur-2) var(--ease);
+    }
+    .more-link svg { transition: transform var(--dur-2) var(--ease); flex-shrink: 0; }
+    .more-link:hover { border-bottom-color: var(--navy-600); }
+    .more-link:hover svg { transform: translateX(8px); }
+
+    /* ── IV — Expertise ──────────────────────────────────────── */
+    #expertise { padding-block: var(--section-y); background: var(--navy-600); }
+    .expertise__header-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(3rem, 6vw, 6rem);
+      align-items: start;
+      margin-bottom: clamp(3rem, 5vw, 4rem);
+    }
+    .expertise__h2 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 3.6vw, 3.2rem);
+      line-height: 1.18;
+      letter-spacing: -0.01em;
+      text-wrap: balance;
+      color: var(--white);
+    }
+    .expertise__h2-soft { display: block; color: var(--navy-200); }
+    .expertise__intro { font-size: 15px; line-height: 1.67; color: var(--navy-100); }
+    .expertise__grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .expertise__item { border-top: 1px solid rgba(255,255,255,.14); padding: 1.8rem 2rem 1.8rem 0; }
+    .expertise__item-head { display: flex; align-items: center; gap: .75rem; margin-bottom: .6rem; }
+    .expertise__item-head svg { flex-shrink: 0; color: var(--white); }
+    .expertise__item-title { font-family: var(--sans); font-weight: 700; font-size: 15px; color: var(--white); }
+    .expertise__item-desc { font-size: 13.5px; color: var(--navy-200); padding-left: calc(12px + .75rem); }
+
+    /* ── V — Waarden ─────────────────────────────────────────── */
+    #waarden { padding-block: var(--section-y); background: var(--paper); }
+    .waarden__h2 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 3.6vw, 3.2rem);
+      line-height: 1.18;
+      letter-spacing: -0.01em;
+      text-wrap: balance;
+      color: var(--text);
+      margin-bottom: 1rem;
+    }
+    .waarden__intro { font-size: 15px; color: var(--text-soft); max-width: 560px; margin-bottom: 3rem; }
+    .waarden__grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+    .waarden__item { border-left: 1px solid var(--line); padding: 0 2rem; }
+    .waarden__item:first-child { border-left: none; padding-left: 0; }
+    .waarden__name { font-family: var(--serif); font-size: 1.4rem; color: var(--navy-600); margin-bottom: .6rem; }
+    .waarden__desc { font-size: 13.5px; color: var(--text-soft); line-height: 1.65; }
+
+    /* ── VI — Team ───────────────────────────────────────────── */
+    #team { padding-block: var(--section-y); background: var(--white); }
+    .team__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(3rem, 6vw, 6rem);
+      align-items: center;
+    }
+    /* geen crop: de volledige teamfoto is altijd zichtbaar */
+    .team__photo { width: 100%; height: auto; display: block; }
+    .team__content { display: flex; flex-direction: column; gap: 1.25rem; }
+    .team__h2 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 3.6vw, 3.2rem);
+      line-height: 1.18;
+      letter-spacing: -0.01em;
+      text-wrap: balance;
+      color: var(--text);
+    }
+    .team__body { font-size: 15px; color: var(--text-soft); }
+
+    /* ── VII — Contact ───────────────────────────────────────── */
+    #contact {
+      position: relative;
+      padding-block: clamp(7rem, 14vw, 11rem);
+      background: var(--navy-900);
+      text-align: center;
+      overflow: hidden;
+    }
+    .contact__stars {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+    .contact__inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.25rem;
+    }
+    .contact__poolster { width: 16px; height: 16px; color: var(--white); margin-bottom: .75rem; }
+    .contact__h2 {
+      font-family: var(--serif);
+      font-size: clamp(2.4rem, 5vw, 4.2rem);
+      line-height: 1.12;
+      color: var(--white);
+    }
+    .contact__sub { font-size: 15px; color: var(--navy-200); max-width: 480px; }
+    .contact__actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.25rem;
+      justify-content: center;
+      margin-top: .5rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--sans);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      padding: 1.05rem 2.4rem;
+      border-radius: 0;
+      cursor: pointer;
+      transition: transform var(--dur-2) var(--ease), box-shadow var(--dur-2) var(--ease),
+                  background var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease),
+                  color var(--dur-2) var(--ease);
+      border: 1px solid transparent;
+      text-decoration: none;
+    }
+    .btn--primary { background: var(--white); color: var(--navy-900); border-color: var(--white); }
+    .btn--primary:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+    .btn--ghost { background: transparent; color: var(--white); border-color: rgba(255,255,255,.4); }
+    .btn--ghost:hover { border-color: var(--white); }
+
+    /* ── Footer ──────────────────────────────────────────────── */
+    .footer {
+      background: var(--navy-900);
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-block: clamp(3rem, 6vw, 5rem);
+    }
+    .footer__grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      gap: 2.5rem;
+    }
+    .footer__logo { width: 150px; margin-bottom: 1.25rem; }
+    .footer__tagline { font-family: var(--serif); font-size: 14px; line-height: 1.7; color: rgba(255,255,255,.45); }
+    .footer__col-title {
+      font-family: var(--sans);
+      font-size: 12px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.35);
+      margin-bottom: 1rem;
+    }
+    .footer__links li + li { margin-top: .4rem; }
+    .footer__links a { font-family: var(--sans); font-size: 13px; color: rgba(255,255,255,.55); transition: color var(--dur-1) var(--ease); }
+    .footer__links a:hover { color: var(--white); }
+    .footer__contact-item { font-family: var(--sans); font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.8; }
+    .footer__contact-item a { color: rgba(255,255,255,.55); transition: color var(--dur-1) var(--ease); }
+    .footer__contact-item a:hover { color: var(--white); }
+    .footer__contact-item + .footer__contact-item { margin-top: .25rem; }
+    .footer__bottom {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: clamp(2rem, 4vw, 3rem);
+      padding-top: 1.6rem;
+      border-top: 1px solid rgba(255,255,255,.08);
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .footer__bottom svg { color: rgba(255,255,255,.3); }
+    .footer__legal { font-family: var(--sans); font-size: 11.5px; color: rgba(255,255,255,.28); }
+    .footer__legal a { color: rgba(255,255,255,.28); transition: color var(--dur-1) var(--ease); }
+    .footer__legal a:hover { color: rgba(255,255,255,.6); }
+    .footer__coords { font-family: var(--sans); font-size: 11px; letter-spacing: .08em; color: rgba(255,255,255,.28); }
+
+    /* ── Motionlaag (taak B) ─────────────────────────────────── */
+    /* Hero-laadsequentie */
+    @keyframes heroRise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+    @keyframes heroFade { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes ruleGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    .reveal-ready .hero__logo    { animation: heroRise 1.2s var(--ease) .15s both; }
+    .reveal-ready .hero__rule    { transform-origin: center; animation: ruleGrow .9s var(--ease) .5s both; }
+    .reveal-ready .hero__sub     { animation: heroFade 1.4s var(--ease) .75s both; }
+    .reveal-ready .hero__coords,
+    .reveal-ready .hero__scroll-cue { animation: heroFade 1.6s var(--ease) 1.05s both; }
+
+    /* Scroll-cue puls */
+    .hero__scroll-line { position: relative; overflow: hidden; }
+    @keyframes cuePulse { 0% { transform: translateY(-100%); opacity: 0; } 15% { opacity: .9; } 100% { transform: translateY(44px); opacity: 0; } }
+    .reveal-ready .hero__scroll-line::after {
+      content: ''; position: absolute; left: 0; top: 0; width: 1px; height: 14px;
+      background: var(--white); animation: cuePulse 2.8s var(--ease) 1.8s infinite;
+    }
+
+    /* Scroll-reveals */
+    .reveal-ready [data-reveal] {
+      opacity: 0; transform: translateY(24px);
+      transition: opacity .6s var(--ease-out), transform .6s var(--ease-out);
+    }
+    .reveal-ready [data-reveal].is-in { opacity: 1; transform: none; }
+
+    /* Meridiaan */
+    .meridian { transition: opacity .3s var(--ease); }
+    .meridian.is-off { opacity: 0; }
+    .meridian__star, .meridian__line, .meridian__label {
+      transition: color .3s var(--ease), background .3s var(--ease);
+    }
+    .meridian--dark .meridian__star { color: var(--white); }
+    .meridian--dark .meridian__line { background: rgba(255,255,255,.3); }
+    .meridian--dark .meridian__label { color: rgba(255,255,255,.55); }
+
+    /* Universum-interactie */
+    .uv-scene .uv-node { transition: opacity .45s var(--ease); }
+    .uv-scene .uv-art { transform-box: fill-box; transform-origin: center; transition: transform .45s var(--ease); }
+    @media (hover: hover) {
+      .uv-scene:hover .uv-node { opacity: .24; }
+    }
+    .uv-scene .uv-node:hover,
+    .uv-scene .uv-node:focus-visible,
+    .uv-scene .uv-node.is-active { opacity: 1 !important; }
+    .uv-scene .uv-node:hover .uv-art,
+    .uv-scene .uv-node:focus-visible .uv-art,
+    .uv-scene .uv-node.is-active .uv-art { transform: scale(1.08); }
+    @keyframes uvTwinkle { 0%, 100% { opacity: 1; } 50% { opacity: .6; } }
+    .reveal-ready .uv-twinkle { animation: uvTwinkle 5.5s ease-in-out infinite; }
+
+    /* Tooltipkaart (DS-stijl) */
+    .visie-tip {
+      display: none;
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      box-shadow: var(--shadow-md);
+      padding: 18px 20px;
+      text-align: left;
+      pointer-events: none;
+    }
+    .visie-tip.is-open { display: block; }
+    .visie-tip--float { position: absolute; width: 320px; max-width: 78vw; z-index: 20; }
+    .visie-tip--panel { position: static; width: 100%; margin-top: 1.5rem; min-height: 108px; }
+    .visie-tip__head { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
+    .visie-tip__title { font-family: var(--serif); font-size: 17px; line-height: 1.2; color: var(--navy-700); }
+    .visie-tip__body { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--text-soft); }
+
+    /* Hover-microinteracties */
+    .portal__circle { transition: transform .45s var(--ease), border-color .45s var(--ease), box-shadow .45s var(--ease); }
+    .reveal-ready .portal-col:hover .portal__circle {
+      transform: translateY(-6px);
+      border-color: var(--navy-700);
+      box-shadow: var(--shadow-md);
+    }
+    .expertise__item-head svg { transition: transform .3s var(--ease); }
+    .expertise__item:hover .expertise__item-head svg { transform: rotate(45deg); }
+    .expertise__item-desc { transition: color .3s var(--ease); }
+    .expertise__item:hover .expertise__item-desc { color: var(--navy-100); }
+    .waarden__name { position: relative; display: inline-block; }
+    .waarden__name::after {
+      content: ''; position: absolute; left: 0; bottom: -4px; width: 100%; height: 1px;
+      background: var(--navy-600); transform: scaleX(0); transform-origin: left;
+      transition: transform .3s var(--ease);
+    }
+    .waarden__item:hover .waarden__name::after { transform: scaleX(1); }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 1199px) { .meridian { display: none; } }
+
+    @media (max-width: 1024px) {
+      .expertise__grid { grid-template-columns: repeat(2, 1fr); }
+      .expertise__item:nth-child(2n) { padding-right: 0; }
+      .expertise__item:nth-child(2n+1) { padding-right: 2rem; }
+      .waarden__grid { grid-template-columns: repeat(2, 1fr); }
+      .waarden__item:nth-child(3) { border-left: none; padding-left: 0; }
+      .waarden__item { padding-block: 1.5rem; }
+      .footer__grid { grid-template-columns: 1fr 1fr; }
+      .expertise__header-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .nav__links { display: none; }
+      .nav__burger { display: flex; }
+      .missie__grid { grid-template-columns: 1fr; gap: 2rem; }
+      .advies__grid { grid-template-columns: 1fr; }
+      .team__grid { grid-template-columns: 1fr; }
+      .hero__logo { width: min(72vw, 340px); }
+      .expertise__grid { grid-template-columns: 1fr; }
+      .footer__grid { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .waarden__grid { grid-template-columns: 1fr; }
+      .waarden__item { border-left: none; padding-left: 0; border-top: 1px solid var(--line); padding-top: 1.5rem; }
+      .waarden__item:first-child { border-top: none; padding-top: 0; }
+      .btn { width: 100%; max-width: 320px; }
+      .hero__coords { display: none; }
+      .footer__grid { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+      }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Skip link -->
+  <a class="skip" href="#main">Naar inhoud</a>
+
+  <!-- ── Nav ─────────────────────────────────────────────────── -->
+  <header class="nav" id="nav">
+    <a class="brand" href="/" aria-label="Polares — home">
+      <span class="brand__logo" role="img" aria-label="Polares"></span>
+    </a>
+
+    <nav aria-label="Hoofdnavigatie">
+      <ul class="nav__links">
+        <li><a href="#missie">Missie</a></li>
+        <li><a href="#visie">Onze visie</a></li>
+        <li><a href="#advies">Advies</a></li>
+        <li><a href="#expertise">Expertise</a></li>
+        <li><a href="#team">Team</a></li>
+        <li><a class="nav__cta" href="#contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <button class="nav__burger" id="burgerBtn"
+            aria-expanded="false" aria-controls="overlay" aria-label="Menu openen">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <!-- ── Overlay ──────────────────────────────────────────────── -->
+  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Navigatiemenu">
+    <button class="overlay__close" id="overlayClose" aria-label="Menu sluiten">&#x00D7;</button>
+    <nav class="overlay__nav" aria-label="Mobiele navigatie">
+      <a href="#missie" class="overlay__link" id="overlayFirstLink">
+        <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+        Missie
+      </a>
+      <a href="#visie" class="overlay__link">
+        <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+        Onze visie
+      </a>
+      <a href="#advies" class="overlay__link">
+        <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+        Advies
+      </a>
+      <a href="#expertise" class="overlay__link">
+        <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+        Expertise
+      </a>
+      <a href="#team" class="overlay__link">
+        <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+        Team
+      </a>
+      <a href="#contact" class="overlay__link">
+        <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+        Contact
+      </a>
+    </nav>
+    <div class="overlay__contact">
+      <p><a href="mailto:info@polares.be">info@polares.be</a></p>
+      <p><a href="tel:+3254235050">+32 54 23 50 50</a></p>
+      <p>Dirk Martensstraat 41, 9300 Aalst</p>
+    </div>
+  </div>
+
+  <!-- ── Meridiaan (DOM hook voor taak B) ─────────────────────── -->
+  <aside class="meridian" aria-hidden="true">
+    <svg class="meridian__star" width="10" height="10" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+    <span class="meridian__line"></span>
+    <span class="meridian__label">I — MISSIE</span>
+  </aside>
+
+  <!-- ── Main ─────────────────────────────────────────────────── -->
+  <main id="main">
+
+    <h1 class="sr-only">Polares — uw vertrouwenspersoon voor familie en bedrijf</h1>
+
+    <!-- ── Hero ─────────────────────────────────────────────── -->
+    <section class="hero" aria-label="Hero">
+      <canvas id="sky" aria-hidden="true"></canvas>
+
+      <div class="hero__inner">
+        <img class="hero__logo"
+             src="assets/POLARES_LOGO_WIT.png"
+             alt="Polares — Your Capital Guide"
+             fetchpriority="high">
+        <div class="hero__rule" aria-hidden="true"></div>
+        <p class="hero__sub label label--on-navy">UW VERTROUWENSPERSOON VOOR FAMILIE EN BEDRIJF</p>
+      </div>
+
+      <p class="hero__coords" aria-hidden="true">50.94° N — 4.04° O · AALST</p>
+
+      <div class="hero__scroll-cue" aria-hidden="true">
+        <span class="hero__scroll-line"></span>
+        <span class="label">ONTDEK UW KOERS</span>
+      </div>
+
+      <div class="hero__scrim" aria-hidden="true"></div>
+    </section>
+
+    <!-- ── I — Missie ─────────────────────────────────────────── -->
+    <section id="missie" aria-labelledby="missie-h2">
+      <div class="container">
+        <div class="chapter-head" data-reveal>
+          <svg class="chapter-head__star" aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor" style="color:var(--navy-600)"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+          <span class="label">I — MISSIE</span>
+          <span class="chapter-head__line" aria-hidden="true"></span>
+        </div>
+
+        <div class="missie__grid" data-reveal>
+          <h2 class="missie__h2" id="missie-h2">Als onafhankelijke vertrouwenspartner kijken we verder dan cijfers alleen.</h2>
+          <div class="missie__body">
+            <p>We verdiepen ons in uw context, denken vooruit en handelen met de discretie, zorgvuldigheid en aandacht die uw situatie vraagt. Zo blijft uw vermogen niet alleen beschermd, maar vooral afgestemd op wat voor u werkelijk van waarde is.</p>
+            <p>Onderneming en familie staan nooit los van elkaar. Elke begeleiding bij Polares vertrekt vanuit één kompas: uw kapitaalgeluk.</p>
+          </div>
+        </div>
+
+        <div class="missie__triade" data-reveal>
+          <span class="missie__triade-item">Duidelijk, helder en aanwezig</span>
+          <span class="missie__triade-sep" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+          </span>
+          <span class="missie__triade-item">Een uitgestippeld en doelgericht parcours</span>
+          <span class="missie__triade-sep" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+          </span>
+          <span class="missie__triade-item">Altijd en overal</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── II — Onze visie ────────────────────────────────────── -->
+    <section id="visie" aria-labelledby="visie-h2">
+      <div class="container">
+        <div class="chapter-head" data-reveal>
+          <svg class="chapter-head__star" aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor" style="color:var(--navy-600)"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+          <span class="label">II — ONZE VISIE</span>
+          <span class="chapter-head__line" aria-hidden="true"></span>
+        </div>
+        <h2 class="sr-only" id="visie-h2">Onze visie</h2>
+        <p class="visie__intro" data-reveal>Eén geheel waarin alles met elkaar verbonden is. Wij begeleiden onze klant als partner en gids — met een brede blik en een sterke focus op de lange termijn.</p>
+      </div>
+
+      <!-- Universum SVG — verbatim van oude site r.923–1003 -->
+      <div class="visie__scene" id="visieScene" data-reveal>
+        <svg class="uv-scene" viewBox="0 0 2560 1240" width="100%" style="display:block;height:auto;overflow:visible;" role="group" aria-label="Universum Polares — interactief overzicht">
+
+          <!-- Concentric ecliptic orbits -->
+          <g fill="none" stroke="var(--navy-400)" stroke-width="1.6" opacity="0.5">
+            <ellipse cx="1290" cy="880" rx="250" ry="66"></ellipse>
+            <ellipse cx="1290" cy="880" rx="430" ry="113"></ellipse>
+            <ellipse cx="1290" cy="880" rx="610" ry="160"></ellipse>
+            <ellipse cx="1290" cy="880" rx="795" ry="208"></ellipse>
+            <ellipse cx="1290" cy="880" rx="980" ry="256"></ellipse>
+            <ellipse cx="1290" cy="880" rx="1175" ry="308"></ellipse>
+          </g>
+
+          <!-- Dashed celestial trajectories -->
+          <g fill="none" stroke="var(--navy-400)" stroke-width="1.6" stroke-dasharray="2 10" stroke-linecap="round" opacity="0.6">
+            <path d="M120,700 C350,180 750,80 1290,75 C1830,80 2230,180 2460,700"></path>
+            <path d="M250,560 C600,210 950,120 1290,116 C1630,120 1980,210 2330,560"></path>
+            <path d="M120,748 C300,470 380,360 458,325 C730,200 1015,150 1290,150 C1565,150 1850,200 2030,322 C2160,395 2300,520 2440,748"></path>
+            <path d="M1290,150 L1290,900"></path>
+            <path d="M548,300 C528,600 522,955 558,1142"></path>
+            <path d="M2032,300 C2052,600 2058,955 2022,1142"></path>
+          </g>
+
+          <!-- Kompas -->
+          <g class="uv-node" data-key="kompas" tabindex="0" role="button" aria-label="Het kompas">
+            <image class="uv-art" href="assets/uv/kompas.png" x="12" y="772" width="215" height="215"></image>
+            <circle cx="120" cy="880" r="98" fill="transparent"></circle>
+          </g>
+          <!-- GPS / kaart -->
+          <g class="uv-node" data-key="gps" tabindex="0" role="button" aria-label="De GPS">
+            <image class="uv-art" href="assets/uv/gps.png" x="335" y="783" width="190" height="190"></image>
+            <circle cx="430" cy="878" r="84" fill="transparent"></circle>
+          </g>
+          <!-- Munt -->
+          <g class="uv-node" data-key="munt" tabindex="0" role="button" aria-label="Financiële rust">
+            <image class="uv-art" href="assets/uv/munt.png" x="732" y="784" width="175" height="175"></image>
+            <circle cx="820" cy="872" r="80" fill="transparent"></circle>
+          </g>
+          <!-- Leefwereld (globe, center) -->
+          <g class="uv-node" data-key="leefwereld" tabindex="0" role="button" aria-label="De leefwereld">
+            <image class="uv-art" href="assets/uv/leefwereld.png" x="1130" y="710" width="320" height="320"></image>
+            <circle cx="1290" cy="870" r="140" fill="transparent"></circle>
+          </g>
+          <!-- Satelliet -->
+          <g class="uv-node" data-key="satelliet" tabindex="0" role="button" aria-label="Onze rol">
+            <image class="uv-art" href="assets/uv/satelliet.png" x="1462" y="769" width="205" height="205"></image>
+            <circle cx="1565" cy="872" r="90" fill="transparent"></circle>
+          </g>
+          <!-- Expertise (lamp) -->
+          <g class="uv-node" data-key="expertise" tabindex="0" role="button" aria-label="Onze expertise">
+            <image class="uv-art" href="assets/uv/expertise.png" x="1872" y="769" width="205" height="205"></image>
+            <circle cx="1975" cy="872" r="92" fill="transparent"></circle>
+          </g>
+          <!-- Vermogen (diamant) -->
+          <g class="uv-node" data-key="vermogen" tabindex="0" role="button" aria-label="Het vermogen">
+            <image class="uv-art" href="assets/uv/vermogen.png" x="2217" y="707" width="315" height="315"></image>
+            <circle cx="2375" cy="865" r="125" fill="transparent"></circle>
+          </g>
+          <!-- Komeet -->
+          <g class="uv-node" data-key="komeet" tabindex="0" role="button" aria-label="De buitenwereld">
+            <image class="uv-art" href="assets/uv/komeet.png" x="1865" y="150" width="330" height="330"></image>
+            <circle cx="2030" cy="320" r="95" fill="transparent"></circle>
+          </g>
+          <!-- Zwart gat -->
+          <g class="uv-node" data-key="zwartgat" tabindex="0" role="button" aria-label="Het zwarte gat">
+            <circle cx="455" cy="325" r="123" fill="none" stroke="var(--navy-200)" stroke-width="1.4" stroke-dasharray="1 10" opacity="0.55"></circle>
+            <circle cx="455" cy="325" r="116" fill="none" stroke="var(--navy-300)" stroke-width="1.6" stroke-dasharray="1.5 6" opacity="0.7"></circle>
+            <circle class="uv-art" cx="455" cy="325" r="104" fill="var(--navy-700)"></circle>
+            <circle cx="455" cy="325" r="120" fill="transparent"></circle>
+          </g>
+          <!-- Poolster -->
+          <g class="uv-node" data-key="poolster" tabindex="0" role="button" aria-label="De Poolster">
+            <g transform="translate(1232,30) scale(1.16)">
+              <path class="uv-art uv-twinkle" d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z" fill="var(--navy-700)"></path>
+            </g>
+            <circle cx="1290" cy="90" r="86" fill="transparent"></circle>
+          </g>
+
+        </svg>
+
+        <!-- Tooltip container -->
+        <div id="visieTip" class="visie-tip visie-tip--float" role="status" aria-live="polite"></div>
+      </div>
+
+      <div class="container">
+        <p class="visie__caption label" style="color:var(--text-faint);">HET UNIVERSUM POLARES — BEWEEG OVER DE HEMELLICHAMEN</p>
+      </div>
+    </section>
+
+    <!-- ── III — Advies ───────────────────────────────────────── -->
+    <section id="advies" aria-labelledby="advies-h2">
+      <div class="container">
+        <div class="chapter-head" data-reveal>
+          <svg class="chapter-head__star" aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor" style="color:var(--navy-600)"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+          <span class="label">III — ADVIES</span>
+          <span class="chapter-head__line" aria-hidden="true"></span>
+        </div>
+
+        <h2 class="advies__h2" id="advies-h2">Advies voor uw familie en uw bedrijf.</h2>
+
+        <div class="advies__grid">
+
+          <!-- Familie -->
+          <div class="portal-col" data-reveal>
+            <div class="portal__circle">
+              <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+              <span class="portal__label">Uw familie</span>
+            </div>
+            <p class="portal-col__body">Uw family office, als centraal vertrouwensorgaan, staat in voor de afhandeling van de privézaken van u, de ondernemer en/of vermogende familie. Financiële planning, groeiplanning, successieplanning en overdracht naar de volgende generatie krijgen volle aandacht.</p>
+            <ul class="portal-col__services" aria-label="Diensten familie">
+              <li class="portal-col__service-item">
+                <svg aria-hidden="true" width="8" height="8" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+                Vermogensarchitectuur
+              </li>
+              <li class="portal-col__service-item">
+                <svg aria-hidden="true" width="8" height="8" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+                Vermogensmonitoring
+              </li>
+              <li class="portal-col__service-item">
+                <svg aria-hidden="true" width="8" height="8" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+                Successieplanning
+              </li>
+              <li class="portal-col__service-item">
+                <svg aria-hidden="true" width="8" height="8" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+                Vastgoedplanning
+              </li>
+            </ul>
+            <a href="#contact" class="more-link">
+              Meer over familie
+              <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9">
+                <line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/>
+              </svg>
+            </a>
+          </div>
+
+          <!-- Bedrijf -->
+          <div class="portal-col" data-reveal>
+            <div class="portal__circle">
+              <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+              <span class="portal__label">Uw bedrijf</span>
+            </div>
+            <p class="portal-col__body">Wij begeleiden u bij de realisatie van de toekomstplannen van uw bedrijf. We verschaffen inzicht in de rendabiliteit door analyse van kostenstructuur, marges en cashflow, en bepalen samen een toekomstplan. Polares is tevens uw vertrouwenspersoon bij fusie en overname.</p>
+            <ul class="portal-col__services" aria-label="Diensten bedrijf">
+              <li class="portal-col__service-item">
+                <svg aria-hidden="true" width="8" height="8" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+                Financiële analyse
+              </li>
+              <li class="portal-col__service-item">
+                <svg aria-hidden="true" width="8" height="8" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+                Fusies &amp; overnames
+              </li>
+              <li class="portal-col__service-item">
+                <svg aria-hidden="true" width="8" height="8" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+                Bedrijfsoverdracht
+              </li>
+            </ul>
+            <a href="#contact" class="more-link">
+              Meer over bedrijven
+              <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9">
+                <line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/>
+              </svg>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── IV — Expertise ─────────────────────────────────────── -->
+    <section id="expertise" aria-labelledby="expertise-h2">
+      <div class="container">
+        <div class="chapter-head chapter-head--light" data-reveal>
+          <svg class="chapter-head__star" aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+          <span class="label">IV — EXPERTISE</span>
+          <span class="chapter-head__line" aria-hidden="true"></span>
+        </div>
+
+        <div class="expertise__header-grid" data-reveal>
+          <h2 class="expertise__h2" id="expertise-h2">
+            Expertise die overzicht brengt.
+            <span class="expertise__h2-soft">Regie die vertrouwen geeft.</span>
+          </h2>
+          <p class="expertise__intro">Polares combineert diepgaande expertise met een zorgvuldig uitgebouwd netwerk van gespecialiseerde partners — boekhouders, advocaten en notarissen. Zo benaderen we elke vraag rond vermogen, onderneming en familie vanuit één geïntegreerde visie, met heldere regie over het geheel.</p>
+        </div>
+
+        <div class="expertise__grid">
+          <div class="expertise__item" data-reveal>
+            <div class="expertise__item-head">
+              <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+              <span class="expertise__item-title">Vermogensstructuur</span>
+            </div>
+            <p class="expertise__item-desc">Overzicht en structuren die beschermen, optimaliseren en groeien</p>
+          </div>
+          <div class="expertise__item" data-reveal>
+            <div class="expertise__item-head">
+              <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+              <span class="expertise__item-title">Fiscaliteit</span>
+            </div>
+            <p class="expertise__item-desc">Opportuniteiten gesignaleerd, afgestemd op de lange termijn</p>
+          </div>
+          <div class="expertise__item" data-reveal>
+            <div class="expertise__item-head">
+              <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+              <span class="expertise__item-title">Investeringen</span>
+            </div>
+            <p class="expertise__item-desc">Rendement, risico en levensdoelen in evenwicht</p>
+          </div>
+          <div class="expertise__item" data-reveal>
+            <div class="expertise__item-head">
+              <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+              <span class="expertise__item-title">Overdracht &amp; successie</span>
+            </div>
+            <p class="expertise__item-desc">Helder, correct en gedragen voor alle betrokkenen</p>
+          </div>
+          <div class="expertise__item" data-reveal>
+            <div class="expertise__item-head">
+              <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+              <span class="expertise__item-title">Ondernemingsstrategie</span>
+            </div>
+            <p class="expertise__item-desc">Samenhang tussen bedrijfsbeslissingen en privévermogen</p>
+          </div>
+          <div class="expertise__item" data-reveal>
+            <div class="expertise__item-head">
+              <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+              <span class="expertise__item-title">Risico-monitoring</span>
+            </div>
+            <p class="expertise__item-desc">Vroeg detecteren, tijdig bijsturen</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── V — Waarden ────────────────────────────────────────── -->
+    <section id="waarden" aria-labelledby="waarden-h2">
+      <div class="container">
+        <div class="chapter-head" data-reveal>
+          <svg class="chapter-head__star" aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor" style="color:var(--navy-600)"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+          <span class="label">V — WAARDEN</span>
+          <span class="chapter-head__line" aria-hidden="true"></span>
+        </div>
+        <h2 class="waarden__h2" id="waarden-h2">Waarden die richting geven.</h2>
+        <p class="waarden__intro">Onze begeleiding vertrekt vanuit duidelijke waarden die bepalen hoe we luisteren, denken en handelen — in elk gesprek, elke analyse en elke beslissing.</p>
+        <div class="waarden__grid">
+          <div class="waarden__item" data-reveal>
+            <p class="waarden__name">Warmte</p>
+            <p class="waarden__desc">We luisteren eerst, adviseren daarna. Uw situatie is het vertrekpunt, niet onze oplossingen.</p>
+          </div>
+          <div class="waarden__item" data-reveal>
+            <p class="waarden__name">Vakmanschap</p>
+            <p class="waarden__desc">We streven naar uitmuntendheid in elk detail. Kennis die breed is, en diep genoeg om het verschil te maken.</p>
+          </div>
+          <div class="waarden__item" data-reveal>
+            <p class="waarden__name">Eenvoud</p>
+            <p class="waarden__desc">We maken complexe materie helder en hanteerbaar. Zodat u begrijpt wat er speelt en met vertrouwen beslist.</p>
+          </div>
+          <div class="waarden__item" data-reveal>
+            <p class="waarden__name">Integriteit</p>
+            <p class="waarden__desc">We doen wat juist is voor u — ook als niemand kijkt. Geen vergoedingen van derden, enkel uw belang.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── VI — Team ──────────────────────────────────────────── -->
+    <section id="team" aria-labelledby="team-h2">
+      <div class="container">
+        <div class="chapter-head" data-reveal>
+          <svg class="chapter-head__star" aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor" style="color:var(--navy-600)"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+          <span class="label">VI — TEAM</span>
+          <span class="chapter-head__line" aria-hidden="true"></span>
+        </div>
+        <div class="team__grid">
+          <img class="team__photo"
+               src="assets/Team-Polares-scaled.jpg"
+               alt="Het team van Polares"
+               width="1200" height="1220"
+               decoding="async"
+               data-reveal>
+          <div class="team__content" data-reveal>
+            <h2 class="team__h2" id="team-h2">De mensen achter uw koers.</h2>
+            <p class="team__body">Bij Polares begeleiden we niet alleen vermogens, maar vooral de mensen erachter. Met betrokkenheid, expertise en heldere inzichten zorgen we dat elke beslissing bijdraagt aan wat voor u werkelijk van waarde is.</p>
+            <a href="#contact" class="more-link">
+              Maak kennis met Polares
+              <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9">
+                <line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── VII — Contact / CTA ────────────────────────────────── -->
+    <section id="contact" aria-labelledby="contact-h2">
+      <!-- Decoratieve sterren (inline SVG, aria-hidden) -->
+      <svg class="contact__stars" aria-hidden="true" viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid slice">
+        <circle cx="42"  cy="38"  r="0.8" fill="white" opacity="0.3"/>
+        <circle cx="118" cy="112" r="0.6" fill="white" opacity="0.25"/>
+        <circle cx="187" cy="58"  r="1.1" fill="white" opacity="0.4"/>
+        <circle cx="263" cy="145" r="0.7" fill="white" opacity="0.22"/>
+        <circle cx="315" cy="22"  r="0.9" fill="white" opacity="0.35"/>
+        <circle cx="398" cy="88"  r="1.3" fill="white" opacity="0.45"/>
+        <circle cx="455" cy="162" r="0.6" fill="white" opacity="0.2"/>
+        <circle cx="522" cy="34"  r="1.0" fill="white" opacity="0.38"/>
+        <circle cx="589" cy="118" r="0.8" fill="white" opacity="0.28"/>
+        <circle cx="645" cy="52"  r="1.2" fill="white" opacity="0.42"/>
+        <circle cx="712" cy="178" r="0.6" fill="white" opacity="0.22"/>
+        <circle cx="768" cy="26"  r="0.9" fill="white" opacity="0.33"/>
+        <circle cx="834" cy="138" r="1.1" fill="white" opacity="0.4"/>
+        <circle cx="890" cy="72"  r="0.7" fill="white" opacity="0.26"/>
+        <circle cx="952" cy="155" r="0.8" fill="white" opacity="0.3"/>
+        <circle cx="78"  cy="290" r="0.9" fill="white" opacity="0.28"/>
+        <circle cx="155" cy="340" r="0.6" fill="white" opacity="0.2"/>
+        <circle cx="228" cy="268" r="1.0" fill="white" opacity="0.35"/>
+        <circle cx="344" cy="320" r="0.7" fill="white" opacity="0.25"/>
+        <circle cx="468" cy="285" r="1.2" fill="white" opacity="0.42"/>
+        <circle cx="555" cy="355" r="0.8" fill="white" opacity="0.3"/>
+        <circle cx="672" cy="302" r="0.6" fill="white" opacity="0.22"/>
+        <circle cx="748" cy="372" r="1.0" fill="white" opacity="0.38"/>
+        <circle cx="845" cy="258" r="0.9" fill="white" opacity="0.33"/>
+        <circle cx="918" cy="338" r="0.7" fill="white" opacity="0.25"/>
+        <circle cx="988" cy="280" r="1.1" fill="white" opacity="0.4"/>
+      </svg>
+
+      <div class="contact__inner container">
+        <svg class="contact__poolster" aria-hidden="true" viewBox="0 0 100 100" fill="currentColor">
+          <path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/>
+        </svg>
+        <p class="label label--on-navy" data-reveal>VII — CONTACT</p>
+        <h2 class="contact__h2" id="contact-h2" data-reveal>Vertrouwen begint met een gesprek.</h2>
+        <p class="contact__sub" data-reveal>Discreet, vrijblijvend en met volle aandacht voor uw verhaal.</p>
+        <div class="contact__actions" data-reveal>
+          <a href="mailto:info@polares.be" class="btn btn--primary">info@polares.be</a>
+          <a href="tel:+3254235050" class="btn btn--ghost">+32 54 23 50 50</a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <!-- Kolom 1 — Logo + tagline -->
+        <div>
+          <img class="footer__logo" src="assets/POLARES_LOGO_WIT.png" alt="Polares">
+          <p class="footer__tagline">Zoals de noordpoolster, helder en richtinggevend voor uw vermogen.</p>
+        </div>
+        <!-- Kolom 2 — Uw familie -->
+        <div>
+          <p class="footer__col-title">Uw familie</p>
+          <ul class="footer__links">
+            <li><a href="#advies">Vermogensarchitectuur</a></li>
+            <li><a href="#advies">Vermogensmonitoring</a></li>
+            <li><a href="#advies">Successieplanning</a></li>
+            <li><a href="#advies">Vastgoedplanning</a></li>
+          </ul>
+        </div>
+        <!-- Kolom 3 — Uw onderneming -->
+        <div>
+          <p class="footer__col-title">Uw onderneming</p>
+          <ul class="footer__links">
+            <li><a href="#advies">Financiële analyse</a></li>
+            <li><a href="#advies">Fusies &amp; overnames</a></li>
+            <li><a href="#advies">Bedrijfsoverdracht</a></li>
+          </ul>
+        </div>
+        <!-- Kolom 4 — Contact -->
+        <div>
+          <p class="footer__col-title">Contact</p>
+          <p class="footer__contact-item">Dirk Martensstraat 41<br>9300 Aalst</p>
+          <p class="footer__contact-item"><a href="tel:+3254235050">+32 54 23 50 50</a></p>
+          <p class="footer__contact-item"><a href="mailto:info@polares.be">info@polares.be</a></p>
+        </div>
+      </div>
+
+      <!-- Onderbalk -->
+      <div class="footer__bottom">
+        <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor">
+          <path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/>
+        </svg>
+        <p class="footer__legal">
+          &copy; 2026 Polares &middot; KBO BE0657.919.425 &middot;
+          <a href="#">Algemene voorwaarden</a> &middot;
+          <a href="#">Privacyverklaring</a>
+        </p>
+        <p class="footer__coords">50.94° N — 4.04° O</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Nav scroll ──────────────────────────────────────────────
+    (function () {
+      var nav = document.getElementById('nav');
+      function sync() { nav.classList.toggle('scrolled', window.scrollY > 40); }
+      window.addEventListener('scroll', sync, { passive: true });
+      sync();
+    })();
+
+    // ── Overlay open / dicht ────────────────────────────────────
+    (function () {
+      var burger    = document.getElementById('burgerBtn');
+      var overlay   = document.getElementById('overlay');
+      var closeBtn  = document.getElementById('overlayClose');
+      var firstLink = document.getElementById('overlayFirstLink');
+
+      function openOverlay() {
+        overlay.classList.add('is-open');
+        burger.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+        if (firstLink) firstLink.focus();
+      }
+
+      function closeOverlay() {
+        overlay.classList.remove('is-open');
+        burger.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+        burger.focus();
+      }
+
+      burger.addEventListener('click', openOverlay);
+      closeBtn.addEventListener('click', closeOverlay);
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && overlay.classList.contains('is-open')) {
+          closeOverlay();
+        }
+      });
+
+      // Sluit bij klik op anker-link in overlay
+      overlay.querySelectorAll('a[href]').forEach(function (link) {
+        link.addEventListener('click', closeOverlay);
+      });
+    })();
+
+    // ── Hero-canvas: de hemel wentelt om het vaste punt ─────────
+    (function () {
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var canvas = document.getElementById('sky');
+      var hero = document.querySelector('.hero');
+      if (!canvas || !hero) return;
+      var ctx = canvas.getContext('2d');
+
+      var W = 0, H = 0, PX = 0, PY = 0;
+      var stars = [], shooting = [], nextShoot = 9;
+      var running = false, heroVisible = true;
+      var t0 = performance.now();
+      var mouse = { x: 0, y: 0, tx: 0, ty: 0 };
+      var OMEGA = 0.00087; // rad/s — volledige omwenteling ≈ 2 uur
+
+      function debounce(fn, ms) {
+        var t; return function () { clearTimeout(t); t = setTimeout(fn, ms); };
+      }
+
+      function build() {
+        // uniforme dichtheid tot in de hoeken: straal via sqrt-verdeling
+        var R = Math.hypot(Math.max(PX, W - PX), Math.max(PY, H - PY));
+        var count = Math.round((W * H) / 9000);
+        stars = [];
+        for (var i = 0; i < count; i++) {
+          stars.push({
+            r: Math.sqrt(Math.random()) * R,
+            a: Math.random() * Math.PI * 2,
+            s: 0.4 + Math.random() * 1.2,
+            base: 0.25 + Math.random() * 0.6,
+            tw: 0.4 + Math.random() * 1.6,
+            ph: Math.random() * Math.PI * 2,
+            warm: Math.random() < 0.12,
+            depth: Math.random()
+          });
+        }
+      }
+
+      function pivot() {
+        // het vaste punt = de ster in het logo zelf
+        var logo = document.querySelector('.hero__logo');
+        if (logo) {
+          var r = logo.getBoundingClientRect();
+          if (r.width) {
+            PX = r.left + r.width * 0.975;
+            PY = r.top + window.scrollY + r.height * 0.07;
+            return;
+          }
+        }
+        PX = W * 0.5; PY = window.innerHeight * 0.3;
+      }
+
+      function resize() {
+        var dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        W = canvas.clientWidth; H = canvas.clientHeight;
+        if (!W || !H) return;
+        canvas.width = Math.max(1, Math.round(W * dpr));
+        canvas.height = Math.max(1, Math.round(H * dpr));
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        pivot();
+        build();
+        if (reduce) draw(0);
+      }
+      window.addEventListener('load', resize);
+
+      function draw(t) {
+        ctx.clearRect(0, 0, W, H);
+        mouse.x += (mouse.tx - mouse.x) * 0.05;
+        mouse.y += (mouse.ty - mouse.y) * 0.05;
+        // melkweggloed is statisch (CSS-achtergrond van .hero) — canvas tekent alleen sterren
+        var rot = t * OMEGA;
+        for (var i = 0; i < stars.length; i++) {
+          var s = stars[i];
+          var ang = s.a + rot;
+          var px = PX + Math.cos(ang) * s.r + mouse.x * (1 - s.depth) * 8;
+          var py = PY + Math.sin(ang) * s.r + mouse.y * (1 - s.depth) * 5;
+          if (px < -4 || px > W + 4 || py < -4 || py > H + 4) continue;
+          var a = s.base * (0.55 + 0.45 * Math.sin(t * s.tw + s.ph));
+          if (a < 0.02) continue;
+          var col = s.warm ? 'rgba(214,228,245,' : 'rgba(236,243,252,';
+          if (s.s > 1.35) {
+            var halo = ctx.createRadialGradient(px, py, 0, px, py, s.s * 4);
+            halo.addColorStop(0, col + (a * 0.5) + ')');
+            halo.addColorStop(1, 'rgba(236,243,252,0)');
+            ctx.fillStyle = halo;
+            ctx.beginPath(); ctx.arc(px, py, s.s * 4, 0, 6.2832); ctx.fill();
+          }
+          ctx.fillStyle = col + a + ')';
+          ctx.beginPath(); ctx.arc(px, py, s.s, 0, 6.2832); ctx.fill();
+        }
+
+        drawShooting(t);
+      }
+
+      function drawShooting(t) {
+        if (t > nextShoot) {
+          nextShoot = t + 18 + Math.random() * 12;
+          shooting.push({
+            x: W * (0.25 + Math.random() * 0.5),
+            y: H * (0.06 + Math.random() * 0.22),
+            vx: 160 + Math.random() * 80,
+            vy: 70 + Math.random() * 40,
+            life: 0, max: 1.0
+          });
+        }
+        var dt = 1 / 60;
+        shooting = shooting.filter(function (s) { return s.life < s.max; });
+        for (var i = 0; i < shooting.length; i++) {
+          var s = shooting[i];
+          s.life += dt;
+          s.x += s.vx * dt; s.y += s.vy * dt;
+          var a = Math.sin(Math.min(1, s.life / s.max) * Math.PI) * 0.5;
+          var tx = s.x - s.vx * 0.26, ty = s.y - s.vy * 0.26;
+          var grad = ctx.createLinearGradient(s.x, s.y, tx, ty);
+          grad.addColorStop(0, 'rgba(255,255,255,' + a + ')');
+          grad.addColorStop(1, 'rgba(255,255,255,0)');
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 1.5;
+          ctx.lineCap = 'round';
+          ctx.beginPath(); ctx.moveTo(s.x, s.y); ctx.lineTo(tx, ty); ctx.stroke();
+        }
+      }
+
+      function loop(now) {
+        if (!running) return;
+        draw((now - t0) / 1000);
+        requestAnimationFrame(loop);
+      }
+
+      function setRunning(on) {
+        if (reduce) return;
+        if (on && !running) { running = true; requestAnimationFrame(loop); }
+        else if (!on) { running = false; }
+      }
+
+      window.addEventListener('resize', debounce(resize, 150), { passive: true });
+      resize();
+
+      if (reduce) return; // statische render volstaat
+
+      if (matchMedia('(hover: hover)').matches) {
+        window.addEventListener('mousemove', function (e) {
+          mouse.tx = e.clientX / window.innerWidth - 0.5;
+          mouse.ty = e.clientY / window.innerHeight - 0.5;
+        }, { passive: true });
+      }
+
+      new IntersectionObserver(function (entries) {
+        heroVisible = entries[0].isIntersecting;
+        setRunning(heroVisible && !document.hidden);
+      }, { threshold: 0 }).observe(hero);
+
+      document.addEventListener('visibilitychange', function () {
+        setRunning(heroVisible && !document.hidden);
+      });
+
+      setRunning(true);
+    })();
+
+    // ── Scroll-reveals (one-shot, gestaggerd per parent) ────────
+    (function () {
+      if (!document.documentElement.classList.contains('reveal-ready')) return;
+      var els = [].slice.call(document.querySelectorAll('[data-reveal]'));
+      if (!('IntersectionObserver' in window)) {
+        els.forEach(function (el) { el.classList.add('is-in'); });
+        return;
+      }
+      var seen = new Map();
+      els.forEach(function (el) {
+        var p = el.parentElement;
+        var n = seen.get(p) || 0;
+        seen.set(p, n + 1);
+        el.style.transitionDelay = (n * 0.09) + 's';
+      });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.classList.add('is-in');
+            io.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+      els.forEach(function (el) { io.observe(el); });
+    })();
+
+    // ── Meridiaan: ster reist het hoofdstukkentraject ───────────
+    (function () {
+      var mer = document.querySelector('.meridian');
+      if (!mer) return;
+      var star = mer.querySelector('.meridian__star');
+      var line = mer.querySelector('.meridian__line');
+      var label = mer.querySelector('.meridian__label');
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) return; // statisch: ster bovenaan, label I — MISSIE
+
+      var chapters = [
+        ['missie', 'I — MISSIE'], ['visie', 'II — ONZE VISIE'], ['advies', 'III — ADVIES'],
+        ['expertise', 'IV — EXPERTISE'], ['waarden', 'V — WAARDEN'], ['team', 'VI — TEAM']
+      ].map(function (c) {
+        var el = document.getElementById(c[0]);
+        return el ? { el: el, name: c[1] } : null;
+      }).filter(Boolean);
+      if (!chapters.length) return;
+
+      var darkSection = document.getElementById('expertise');
+
+      var startY = 0, endY = 0, lineH = 0, starH = 10, ticking = false;
+
+      function measure() {
+        var first = chapters[0].el, last = chapters[chapters.length - 1].el;
+        startY = first.getBoundingClientRect().top + window.scrollY;
+        endY = last.getBoundingClientRect().bottom + window.scrollY;
+        lineH = line.getBoundingClientRect().height;
+        update();
+      }
+
+      function update() {
+        ticking = false;
+        var mid = window.scrollY + window.innerHeight / 2;
+        var p = (mid - startY) / (endY - startY);
+        p = Math.max(0, Math.min(1, p));
+        star.style.transform = 'translateY(' + (p * Math.max(0, lineH)) + 'px)';
+
+        var active = chapters[0], best = Infinity;
+        chapters.forEach(function (c) {
+          var r = c.el.getBoundingClientRect();
+          var d = Math.abs(r.top + r.height / 2 - window.innerHeight / 2);
+          if (d < best) { best = d; active = c; }
+        });
+        if (label.textContent !== active.name) label.textContent = active.name;
+
+        // buiten het hoofdstukkentraject (hero, contact, footer): verbergen
+        mer.classList.toggle('is-off', mid < startY || mid > endY);
+        // boven het donkere expertise-paneel: witte variant i.p.v. verdwijnen
+        var dark = false;
+        if (darkSection) {
+          var dr = darkSection.getBoundingClientRect();
+          dark = dr.top < window.innerHeight / 2 && dr.bottom > window.innerHeight / 2;
+        }
+        mer.classList.toggle('meridian--dark', dark);
+      }
+
+      function onScroll() {
+        if (!ticking) { ticking = true; requestAnimationFrame(update); }
+      }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', debounceM(measure, 150), { passive: true });
+      window.addEventListener('load', measure);
+      function debounceM(fn, ms) {
+        var t; return function () { clearTimeout(t); t = setTimeout(fn, ms); };
+      }
+      measure();
+    })();
+
+    // ── Universum-interactie (port van de vorige site, DS-stijl) ─
+    (function () {
+      var scene = document.getElementById('visieScene');
+      var tip = document.getElementById('visieTip');
+      if (!scene || !tip) return;
+
+      var MAP = {
+        poolster:  { title: 'De Poolster', below: true, xPct: 50.4, yPct: 7.3,
+          body: 'Zoals de noordpoolster: helder en richtinggevend. Polares is het vaste punt waarop onze klant koers zet — vandaag en in de toekomst.' },
+        zwartgat:  { title: 'Het zwarte gat', below: true, xPct: 17.8, yPct: 26.2,
+          body: "Onwetendheid over het eigen vermogen, gemiste kansen en onnodige risico's. Onze opdracht is helder: dit zwarte gat verkleinen met inzicht, overzicht en rust." },
+        komeet:    { title: 'De buitenwereld', below: true, xPct: 79.3, yPct: 25.4,
+          body: 'Rond het universum beweegt een bredere realiteit: economische evoluties, wetgeving, fiscaliteit en maatschappelijke veranderingen. Wij detecteren ze tijdig en vertalen ze naar duidelijke inzichten.' },
+        kompas:    { title: 'Het kompas', below: true, xPct: 4.7, yPct: 71.0,
+          body: 'Waar wil onze klant naartoe? Het kompas staat voor wat écht belangrijk is en bepaalt de richting van alle keuzes die we samen maken.' },
+        gps:       { title: 'De GPS', below: true, xPct: 16.8, yPct: 70.8,
+          body: 'Het traject dat we samen afleggen. Soms rechtlijnig, soms met een omweg, maar altijd gericht op het doel. Wij zorgen voor opvolging, bijsturing en houvast onderweg.' },
+        munt:      { title: 'Financiële rust', below: true, xPct: 32.0, yPct: 70.3,
+          body: 'De munt staat voor wat onze klant nodig heeft om zijn of haar leven te leven — de financiële basis voor bewuste en juiste keuzes.' },
+        leefwereld:{ title: 'De leefwereld', below: true, xPct: 50.4, yPct: 70.2,
+          body: 'De wereld van onze klant bestaat uit twee onlosmakelijke delen: familie én onderneming. Wij bekijken ze nooit apart, maar met een 360°-aanpak.' },
+        satelliet: { title: 'Onze rol', below: true, xPct: 61.1, yPct: 70.3,
+          body: "Wij nemen de rol op van satelliet: dicht bij de klant, voortdurend meebewegend en proactief inspelend op kansen en risico's in zijn of haar leefwereld." },
+        expertise: { title: 'Onze expertise', below: true, xPct: 77.1, yPct: 70.3,
+          body: 'De lamp staat voor kennis en inzicht. We brengen licht in complexe materie — ondernemen, beleggen, erfrecht en fiscaliteit — zodat onze klant met vertrouwen beslist.' },
+        vermogen:  { title: 'Het vermogen', below: true, xPct: 92.8, yPct: 69.8,
+          body: 'De diamant staat voor het totale vermogen, opgebouwd uit meerdere pijlers: vastgoed, beleggingen, onderneming, kunst... Elke facet maakt deel uit van één geheel.' }
+      };
+
+      var STAR = '<svg width="13" height="13" viewBox="0 0 100 100" fill="var(--navy-600)" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"></path></svg>';
+      var DEFAULT_PANEL = { title: 'Het universum', body: 'Tik op een hemellichaam om zijn betekenis te lezen.' };
+      var CAP_HOVER = 'HET UNIVERSUM POLARES — BEWEEG OVER DE HEMELLICHAMEN';
+      var CAP_TAP = 'HET UNIVERSUM POLARES — TIK OP DE HEMELLICHAMEN';
+
+      var nodes = [].slice.call(scene.querySelectorAll('.uv-node'));
+      var caption = document.querySelector('.visie__caption');
+      var mq = matchMedia('(max-width: 767px)');
+      var active = null;
+
+      function isPanel() { return mq.matches; }
+
+      function content(d) {
+        tip.innerHTML = '<div class="visie-tip__head">' + STAR +
+          '<span class="visie-tip__title"></span></div>' +
+          '<p class="visie-tip__body"></p>';
+        tip.querySelector('.visie-tip__title').textContent = d.title;
+        tip.querySelector('.visie-tip__body').textContent = d.body;
+      }
+
+      function render() {
+        nodes.forEach(function (n) {
+          n.classList.toggle('is-active', n.getAttribute('data-key') === active);
+        });
+        if (isPanel()) {
+          tip.className = 'visie-tip visie-tip--panel is-open';
+          tip.removeAttribute('style');
+          content(active && MAP[active] ? MAP[active] : DEFAULT_PANEL);
+          return;
+        }
+        var d = active ? MAP[active] : null;
+        if (!d) {
+          tip.className = 'visie-tip visie-tip--float';
+          tip.innerHTML = '';
+          return;
+        }
+        tip.className = 'visie-tip visie-tip--float is-open';
+        var tx = d.xPct < 20 ? '-9%' : d.xPct > 80 ? '-91%' : '-50%';
+        var ty = d.below ? 'calc(0% + 22px)' : 'calc(-100% - 22px)';
+        tip.style.left = d.xPct + '%';
+        tip.style.top = d.yPct + '%';
+        tip.style.transform = 'translate(' + tx + ',' + ty + ')';
+        content(d);
+      }
+
+      function setActive(k) { active = k; render(); }
+
+      function syncCaption() {
+        if (caption) caption.textContent = isPanel() ? CAP_TAP : CAP_HOVER;
+      }
+
+      nodes.forEach(function (node) {
+        var k = node.getAttribute('data-key');
+        node.addEventListener('mouseenter', function () { if (!isPanel()) setActive(k); });
+        node.addEventListener('mouseleave', function () { if (!isPanel()) setActive(null); });
+        node.addEventListener('focus', function () { setActive(k); });
+        node.addEventListener('blur', function () { if (!isPanel()) setActive(null); });
+        node.addEventListener('click', function (e) { e.stopPropagation(); setActive(k); });
+        node.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActive(k); }
+        });
+      });
+
+      document.addEventListener('click', function () { setActive(null); });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') setActive(null);
+      });
+      if (mq.addEventListener) {
+        mq.addEventListener('change', function () { setActive(null); syncCaption(); });
+      }
+
+      syncCaption();
+      render();
+    })();
+  </script>
+
+</body>
+</html>
