@@ -1,0 +1,88 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Polares — serverconfiguratie voor Combell (Apache)
+# Vervangt wat vercel.json deed, plus de redirects van de oude Craft-site.
+#
+# Elke blok staat in <IfModule>: ontbreekt een module op het pakket, dan wordt
+# het blok overgeslagen in plaats van dat de site een 500 geeft.
+# ─────────────────────────────────────────────────────────────────────────────
+
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # ── 1. Eén canonieke adresvorm: https en zonder www, in één sprong ─────────
+  # De eerste voorwaarde begrenst dit tot het echte domein, zodat een tijdelijke
+  # test-URL van Combell niet ongewild naar polares.be wordt gestuurd.
+  RewriteCond %{HTTP_HOST} ^(www\.)?polares\.be$ [NC]
+  RewriteCond %{HTTPS} !=on [OR]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteRule ^(.*)$ https://polares.be/$1 [R=301,L]
+
+  # ── 2. Oude Craft-pagina's → secties op de nieuwe pagina ───────────────────
+  # De vlag NE is hier essentieel: zonder NE maakt Apache van # een %23 en
+  # komt de bezoeker op een kapotte URL uit.
+  # Komen er later aparte dienstpagina's, dan wijzen deze regels daarheen.
+  RewriteRule ^contact/?$                          /#contact   [R=301,L,NE]
+  RewriteRule ^expertise/?$                        /#expertise [R=301,L,NE]
+  RewriteRule ^uw-familie/?$                       /#advies    [R=301,L,NE]
+  RewriteRule ^uw-familie/vermogensarchitectuur/?$ /#advies    [R=301,L,NE]
+  RewriteRule ^uw-familie/vermogensmonitoring/?$   /#advies    [R=301,L,NE]
+  RewriteRule ^uw-familie/concrete-uitwerking/?$   /#advies    [R=301,L,NE]
+</IfModule>
+
+# ── 3. Alles wat niet polares.be is, blijft uit de zoekresultaten ────────────
+# Zelfde vangnet als de host-conditie in vercel.json: draait de site op een
+# tijdelijke URL of een testdomein, dan wordt hij niet geïndexeerd.
+<IfModule mod_setenvif.c>
+  SetEnvIf Host ^(www\.)?polares\.be$ IS_PRODUCTIE=1
+</IfModule>
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow" env=!IS_PRODUCTIE
+</IfModule>
+
+# ── 4. Beveiligingsheaders ───────────────────────────────────────────────────
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+  # DENY mag hier omdat de CMS-preview later op een andere omgeving draait.
+  # Zou de visuele editor ooit de productiesite in een frame laden, dan moet
+  # dit SAMEORIGIN of een frame-ancestors-regel worden.
+  Header set X-Frame-Options "DENY"
+</IfModule>
+
+# ── 5. Caching ───────────────────────────────────────────────────────────────
+# Let op het verschil: lettertypen wijzigen nooit meer en mogen een jaar
+# blijven staan. Afbeeldingen hebben vaste bestandsnamen zonder versiehash —
+# die een jaar vastzetten betekent dat een vervangen logo een jaar lang oud
+# blijft bij terugkerende bezoekers. Vandaar dertig dagen.
+# Komt er later een build met gehashte bestandsnamen, dan kan dat omhoog.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(woff2|woff|ttf|otf)$">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </FilesMatch>
+  <FilesMatch "\.(webp|jpe?g|png|gif|svg|ico)$">
+    Header set Cache-Control "public, max-age=2592000"
+  </FilesMatch>
+  <FilesMatch "\.(html|xml|txt|json|webmanifest)$">
+    Header set Cache-Control "public, max-age=0, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# ── 6. Compressie ────────────────────────────────────────────────────────────
+# Staat al aan via het Combell-paneel (Prestaties & Caching). Dit blok is een
+# vangnet en dekt ook types die zo'n schakelaar soms overslaat.
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json
+  AddOutputFilterByType DEFLATE image/svg+xml application/manifest+json
+</IfModule>
+
+# ── 7. MIME-types ────────────────────────────────────────────────────────────
+# Gedeelde hosting kent .webmanifest vaak niet; dan weigert de browser hem.
+<IfModule mod_mime.c>
+  AddType image/webp .webp
+  AddType image/svg+xml .svg
+  AddType application/manifest+json .webmanifest
+  AddType font/woff2 .woff2
+</IfModule>
