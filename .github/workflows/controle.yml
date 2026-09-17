@@ -1,0 +1,17 @@
+name: Consistentiecontrole
+
+# Draait bij elke push en pull request. Controleert of feiten die op meerdere
+# plaatsen in de HTML staan — contactgegevens, ondernemingsnummer, FAQ-teksten —
+# nog overal gelijk zijn. Gebruikt alleen de Python-standaardbibliotheek.
+
+on: [push, pull_request]
+
+jobs:
+  consistentie:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python tools/check-consistentie.py
