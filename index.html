@@ -286,6 +286,7 @@
       color: var(--text-soft);
     }
     .label--on-navy { color: var(--on-navy-soft); }
+    .hero__sub { line-height: 2; }
 
     /* ── Skip link ───────────────────────────────────────────── */
     .skip {
@@ -601,138 +602,450 @@
     .chapter-head--light .chapter-head__line { background: rgba(255,255,255,.14); }
     .chapter-head--light .label { color: var(--on-navy-soft); }
     .chapter-head__star { flex-shrink: 0; }
+    /* Vanaf 1200px staat de hoofdstuktitel al verticaal in de meridiaan links;
+       de horizontale kop is dan dubbel. Op smallere schermen (geen meridiaan)
+       blijft hij staan als houvast. */
+    @media (min-width: 1200px) {
+      .chapter-head { display: none; }
+    }
     .chapter-head--light .chapter-head__star { color: var(--white); }
 
     /* ── I — Missie ──────────────────────────────────────────── */
-    #missie { padding-block: var(--section-y); background: var(--paper); }
-    .missie__h2 {
-      font-family: var(--serif);
-      font-size: clamp(2rem, 3.6vw, 3.2rem);
-      line-height: 1.18;
-      letter-spacing: -0.01em;
-      text-wrap: balance;
-      color: var(--text);
+    #missie {
+      position: relative;
+      z-index: 3;
+      padding-block: var(--section-y) clamp(4rem, 8vw, 6rem);
+      background: var(--white);
+      border-radius: 0 0 28px 28px;
     }
+    /* Twee kolommen: links de satelliet (in plaats van een titel), rechts de missie. */
     .missie__grid {
       display: grid;
-      grid-template-columns: 1.1fr 0.9fr;
-      gap: 4rem;
-      margin-bottom: 3.5rem;
-      align-items: start;
+      grid-template-columns: .9fr 1.1fr;
+      gap: clamp(2.5rem, 6vw, 6rem);
+      align-items: center;
+      margin-bottom: clamp(3rem, 6vw, 4.5rem);
     }
-    .missie__body p + p { margin-top: 1.2em; }
-    .missie__body p { font-size: 15px; color: var(--text-soft); }
+    .missie__kompas {
+      width: clamp(110px, 12vw, 160px);
+      height: auto;
+      justify-self: center;
+    }
+    .reveal-ready .missie__grid[data-reveal] .missie__kompas {
+      transform: rotate(-16deg);
+      transition: transform 2.2s var(--ease-out) .1s;
+    }
+    .reveal-ready .missie__grid[data-reveal].is-in .missie__kompas { transform: none; }
+    .missie__text {
+      font-family: var(--serif);
+      font-size: clamp(1.1rem, 1.6vw, 1.35rem);
+      line-height: 1.75;
+      letter-spacing: .005em;
+      color: var(--navy-500);
+      max-width: 40ch;
+      text-wrap: pretty;
+      /* Cantata One heeft maar één gewicht: een contour in de achtergrondkleur
+         maakt de letters subtiel fijner */
+      -webkit-text-stroke: .3px var(--white);
+    }
+    @media (max-width: 767px) {
+      .missie__grid { grid-template-columns: 1fr; gap: 2rem; }
+      .missie__kompas { justify-self: start; }
+    }
     .missie__triade {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: center;
       gap: 1.25rem 2rem;
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      padding-block: 2.2rem;
+      /* twee identieke rijen kernwoorden openen en sluiten de sectie (gecentreerd) */
+      padding-block: 0 clamp(1rem, 2vw, 1.5rem);
+      margin-bottom: clamp(2.5rem, 5vw, 4rem);
     }
     .missie__triade-item { font-family: var(--serif); font-size: 1.15rem; color: var(--navy-500); }
     .missie__triade-sep { color: var(--navy-400); flex-shrink: 0; }
 
     /* ── II — Visie ──────────────────────────────────────────── */
-    /* Eigen lichte tint + volle ademruimte: het universum krijgt zijn eigen
-       paneel, zodat hoofdstuk II duidelijk van I scheidt (de onderrand wordt
-       gevormd door de bovenrand van #advies). */
+    /* Volledig wit paneel met volle ademruimte: de fijne lijnen van de
+       constellatie komen zo het best tot hun recht. De bovenrand scheidt
+       hoofdstuk II van I (de onderrand is de navy sectie Expertise). */
+    /* Donkerblauw zoals Expertise; de constellatie staat in een wit venster.
+       Het traject eronder schuift als een wit blad over de donkere sectie. */
     #visie {
-      padding-block: var(--section-y);
-      background: var(--navy-50);
-      border-top: 1px solid var(--line);
+      position: relative;
+      z-index: 2;                      /* het witte traject-blad ligt over Expertise */
+      /* eigen stapelcontext: niets van deze sectie kan boven een volgende sectie komen */
+      isolation: isolate;
+      /* schuift onder de afgeronde onderrand van de witte missie-kaart */
+      margin-top: -28px;
+      padding-top: calc(var(--section-y) + 28px);
+      background: var(--navy-900);
     }
+    /* dezelfde hemel als de hero: verloop + twinkelende sterren. Een laag zo
+       groot als de sectie (en daarbinnen geknipt) draagt een doek ter grootte van
+       het scherm dat kleeft; zo vult de hemel altijd het beeld, maar kan ze nooit
+       buiten de sectie komen (en dus nooit over de tekst van Expertise). */
+    .visie__sky-laag {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      -webkit-clip-path: inset(0);
+      clip-path: inset(0);
+    }
+    .visie__sky {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      max-height: 100%;
+      pointer-events: none;
+      background: radial-gradient(60% 42% at 50% 16%, rgba(64,110,150,.14) 0%, rgba(40,78,116,.05) 55%, rgba(7,24,38,0) 100%),
+                  radial-gradient(120% 90% at 50% 20%, #0E2A42 0%, var(--navy-800) 45%, var(--navy-900) 100%);
+    }
+    .visie__sky canvas { display: block; width: 100%; height: 100%; }
+    #visie .visie__track { position: relative; z-index: 1; }
     .visie__intro {
       font-family: var(--serif);
       font-size: clamp(1.05rem, 1.7vw, 1.2rem);
       line-height: 1.62;
-      color: var(--navy-600);
+      color: var(--white);
       max-width: 580px;
       margin: 0 auto 2rem;
       text-align: center;
+      /* Cantata One bestaat maar in één gewicht; een contour in de
+         achtergrondkleur schaaft de letters subtiel dunner. */
+      -webkit-text-stroke: .35px var(--navy-800);
     }
     .visie__scene {
       position: relative;
       width: 100%;
       /* de hele sterrenkaart moet ruim in één scherm passen: breedte begrensd
-         door de beschikbare hoogte (beeldverhouding 2560/1240 ≈ 2.0645) */
-      max-width: min(1000px, calc((100svh - 350px) * 2.0645));
+         door de beschikbare hoogte (beeldverhouding 741/359 ≈ 2.064) */
+      max-width: min(1000px, calc((100svh - 380px) * 2.064));
       margin-inline: auto;
     }
-    .visie__caption { text-align: center; margin-top: clamp(1.25rem, 2vw, 1.75rem); }
+    /* De constellatie in het wit op de donkerblauwe sectie: de tekeningen
+       worden via een filter wit, banen en trajecten krijgen een lichte lijn. */
+    .uv-scene image.uv-art { filter: brightness(0) invert(1); }
+    .uv-scene .uv-orbits { stroke: rgba(255,255,255,.6); stroke-width: .3; }
+    .uv-scene .uv-paths { stroke: rgba(255,255,255,.55); stroke-width: .3; }
+    .uv-scene [data-key="poolster"] path.uv-art { fill: var(--white); }
+    .visie--zoom.is-zooming .visie__scene { transition: none; }
+    .visie__foot {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: .9rem;
+      margin-top: clamp(1.25rem, 2vw, 1.75rem);
+    }
+    /* de "Ontdek meer"-knop: tekstlink met pijltje, als knopelement */
+    .visie__next {
+      background: none;
+      border: 0;
+      border-bottom: 1px solid transparent;
+      border-radius: 0;
+      cursor: pointer;
+      font-family: var(--sans);
+    }
+    .visie__next:focus-visible { outline: 2px solid rgba(255,255,255,.6); outline-offset: 4px; }
+    .visie__caption {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .7rem;
+      color: var(--navy-100);
+      text-align: center;
+    }
+    /* kloppend puntje voor het onderschrift: "hier kan je iets doen" */
+    .visie__caption::before {
+      content: "";
+      flex-shrink: 0;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--white);
+      box-shadow: 0 0 0 0 rgba(255,255,255,.45);
+      animation: capPulse 2.4s var(--ease-out) infinite;
+    }
+    @keyframes capPulse {
+      0% { box-shadow: 0 0 0 0 rgba(255,255,255,.45); }
+      70%, 100% { box-shadow: 0 0 0 9px rgba(255,255,255,0); }
+    }
+    /* in het (flex)podium zou de container anders krimpen en centreren */
+    .visie__head { width: 100%; }
     .uv-node { cursor: pointer; }
-    .uv-node:focus-visible { outline: 2px solid rgba(90,115,136,.5); outline-offset: 4px; }
+    .uv-node:focus-visible { outline: 2px solid rgba(255,255,255,.6); outline-offset: 4px; }
+    /* na een muisklik geen browserrand; met het toetsenbord wel (hierboven) */
+    .uv-node:focus:not(:focus-visible) { outline: none; }
     /* Op smalle schermen wordt de kaart horizontaal swipebaar i.p.v. gekrompen,
        zodat de hemellichamen groot genoeg blijven om aan te tikken */
     @media (max-width: 767px) {
       .visie__scene { max-width: none; }
+      .visie__foot { padding-inline: 16px; }
       .visie__scroll {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: thin;
         padding-bottom: .5rem;
       }
-      .visie__scroll .uv-scene { min-width: 720px; }
+      .visie__scroll .uv-scene { min-width: 960px; }
+    }
+
+    /* Scrollgestuurde zoom: alleen actief als JS .visie--zoom zet (niet bij
+       prefers-reduced-motion). Het spoor geeft de scrollafstand; het podium
+       blijft zolang staan. */
+    .visie--zoom .visie__track { height: calc(100svh - 76px + 100svh); }
+    .visie--zoom .visie__stage {
+      position: sticky;
+      top: 76px;                       /* hoogte van de vaste navigatie */
+      min-height: calc(100svh - 76px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .visie--zoom.is-zooming .uv-node { pointer-events: none; transition: none; }
+    .visie--zoom.is-zooming .uv-art { transition: none; }
+    .visie--zoom.is-zooming .visie__scroll { overflow: hidden; }
+    /* het traject: wit blad met afgeronde bovenhoeken */
+    .koers-sheet {
+      position: relative;
+      z-index: 2;
+      background: var(--white);
+      /* onderaan recht: het blad loopt naadloos over in de witte teamsectie */
+      border-radius: 28px 28px 0 0;
+      margin-top: var(--section-y);
+      padding-bottom: clamp(2.5rem, 5vw, 4rem);
+    }
+    .visie--zoom .koers-sheet {
+      margin-top: -85svh;              /* schuift over de tweede helft van de overgang */
+      padding-top: 6svh;
+    }
+
+    /* ── Het traject in zeven stappen ── */
+    .koers {
+      position: relative;
+      padding-top: clamp(3rem, 6vw, 5rem);
+      --icon: 112px;
+      --col-gap: clamp(2.5rem, 6vw, 6rem);
+    }
+    .koers__path {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+    }
+    .koers__dots {
+      fill: none;
+      stroke: var(--navy-400);
+      stroke-width: 1.4;
+      stroke-dasharray: 0 6;
+      stroke-linecap: round;
+    }
+    .koers__reveal { fill: none; stroke: #fff; stroke-width: 10; }
+    .koers__head { fill: var(--navy-600); transition: opacity .3s var(--ease); }
+
+    /* Stappen komen tot leven zodra de lijn ze bereikt (alleen met JS en
+       zonder "beperkte beweging"; anders staat alles gewoon zichtbaar) */
+    .koers--live .koers__step .koers__icon {
+      opacity: 0;
+      transform: scale(.45);
+      transition: opacity .5s var(--ease-out), transform .8s cubic-bezier(.34, 1.56, .64, 1);
+    }
+    .koers--live .koers__step .koers__title,
+    .koers--live .koers__step .koers__text {
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity .6s var(--ease-out), transform .6s var(--ease-out);
+    }
+    .koers--live .koers__step .koers__title { transition-delay: .08s; }
+    .koers--live .koers__step .koers__text { transition-delay: .18s; }
+    .koers--live .koers__step.is-reached .koers__icon,
+    .koers--live .koers__step.is-reached .koers__title,
+    .koers--live .koers__step.is-reached .koers__text { opacity: 1; transform: none; }
+    /* het icoon van stap 1 is de landingsplaats van de wereldbol: geen pop */
+    .koers--live .koers__step--lead .koers__icon { opacity: 1; transform: none; transition: none; }
+    .koers__icon::after {
+      content: "";
+      position: absolute;
+      inset: -8px;
+      border: 1px solid var(--navy-300);
+      border-radius: 50%;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .koers--live .koers__step.is-reached .koers__icon::after { animation: koersPing 1.4s var(--ease-out) .15s 1 both; }
+    @keyframes koersPing {
+      0% { opacity: .9; transform: scale(.85); }
+      100% { opacity: 0; transform: scale(1.35); }
+    }
+
+    /* De vliegende wereldbol (van universum naar stap 1) */
+    .visie__flyer {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 150;                    /* onder de navigatie (200) */
+      visibility: hidden;
+      pointer-events: none;
+      object-fit: contain;
+      /* witte schijf: anders is de navy tekening onzichtbaar op de donkere sectie */
+      box-sizing: content-box;
+      padding: 10px;
+      margin: -10px 0 0 -10px;
+      background: var(--white);
+      border-radius: 50%;
+      box-shadow: 0 10px 40px rgba(7,24,38,.25);
+    }
+    .koers__list {
+      position: relative;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      column-gap: var(--col-gap);
+      row-gap: clamp(3.5rem, 7vw, 6rem);
+    }
+    .koers__step,
+    .koers__row {
+      display: grid;
+      grid-template-columns: var(--icon) 1fr;
+      column-gap: clamp(1.25rem, 2.5vw, 2.25rem);
+      align-items: center;
+    }
+    .koers__step--lead {
+      grid-column: 1 / -1;
+      grid-template-columns: 1fr 1fr;
+      column-gap: var(--col-gap);
+      padding-top: clamp(1rem, 3vw, 2rem);
+    }
+    .koers__step--lead > .koers__title {
+      justify-self: end;
+      text-align: left;
+      margin: 0;
+    }
+    .koers__icon {
+      position: relative;
+      width: var(--icon);
+      height: var(--icon);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--white);        /* dekt de gestippelde lijn af */
+    }
+    .koers__icon img { display: block; width: 84%; height: 84%; object-fit: contain; }
+    .koers__icon--overzicht img { width: 90%; height: 90%; }
+    .koers__icon--uitvoering img { width: 88%; height: 88%; }
+    .koers__icon--partnerschap img { width: 90%; height: 90%; }
+    .koers__star { width: 44px; height: 44px; color: var(--navy-600); }
+    .koers__title {
+      font-family: var(--serif);
+      font-size: clamp(1.05rem, 1.4vw, 1.2rem);
+      color: var(--navy-600);
+      margin: 0 0 .7rem;
+    }
+    .koers__text {
+      margin: 0;
+      max-width: 40ch;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-soft);
+    }
+    @media (max-width: 767px) {
+      .koers { --icon: 76px; }
+      .koers__list { grid-template-columns: 1fr; row-gap: 2.75rem; }
+      .koers__step,
+      .koers__step--lead {
+        grid-template-columns: var(--icon) 1fr;
+        grid-template-areas: "icon title" "icon text";
+        column-gap: 1.25rem;
+        align-items: start;
+      }
+      .koers__step--lead { padding-top: 0; }
+      .koers__step--lead > .koers__title { justify-self: start; text-align: left; }
+      .koers__step--lead .koers__row { display: contents; }
+      .koers__step .koers__copy { display: contents; }
+      .koers__icon { grid-area: icon; align-self: center; }
+      .koers__title { grid-area: title; margin-bottom: .4rem; }
+      .koers__text { grid-area: text; }
+      .koers__star { width: 32px; height: 32px; }
     }
 
     /* ── III — Advies ────────────────────────────────────────── */
-    #advies {
-      padding-block: var(--section-y);
-      background: var(--white);
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
+    .missie__portals { margin-top: clamp(3.5rem, 7vw, 5.5rem); }
+    /* Afsluiter van hoofdstuk I: één regel die de scheidingslijn vervangt */
+    .missie__slot { margin-top: clamp(4rem, 8vw, 6rem); }
+    /* zelfde vorm als de kernwoorden bovenaan, zonder hun ondermarge */
+    .missie__triade--slot { padding-block: 0; margin-bottom: 0; }
+    /* Lijn door de missie (alleen desktop, zonder "beperkte beweging") */
+    .missie__flow { position: relative; }
+    .missie__path {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+      display: none;
     }
-    .advies__h2 {
-      font-family: var(--serif);
-      font-size: clamp(2rem, 3.6vw, 3.2rem);
-      line-height: 1.18;
-      letter-spacing: -0.01em;
-      text-wrap: balance;
-      color: var(--text);
-      margin-bottom: 3rem;
-    }
+    .missie--live .missie__path { display: block; }
+    .missie__path { transition: opacity .6s var(--ease); }
+    .missie__dots-donker { stroke: rgba(255,255,255,.7); }
+    /* zodra de constellatie inzoomt, laat de lijn van hoofdstuk I los */
+    body:has(#visie.is-zooming) .missie__path,
+    .missie__path.is-landed { opacity: 0; }
+    .missie__path.is-landed { transition: opacity 1.4s var(--ease) .35s; }
+    /* de titel van hoofdstuk II wacht tot de ster op de Poolster landt */
+    #visie .visie__intro { transition: opacity .9s var(--ease-out), transform .9s var(--ease-out); }
+    #visie .visie__intro.is-waiting { opacity: 0; transform: translateY(12px); }
+    #visieScene.is-landed [data-key="poolster"] .uv-art { animation: uvLand 1.3s var(--ease-out) 1, uvTwinkle 5.5s ease-in-out 1.3s infinite; }
+    @keyframes uvLand { 0% { transform: scale(1); } 30% { transform: scale(1.35); } 100% { transform: scale(1); } }
+    /* de onderdelen verschijnen pas als de lijn ze bereikt */
+    #missie .missie--live .missie__grid:not(.is-reached),
+    #missie .missie--live .portal-col:not(.is-reached),
+    #missie .missie--live .missie__slot:not(.is-reached) { opacity: 0; transform: translateY(18px); }
+    #missie .missie--live .missie__grid,
+    #missie .missie--live .missie__slot,
+    #missie .missie--live .portal-col { transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
+    /* Uw familie en Uw bedrijf onder elkaar: tekst links, illustratie rechts,
+       zodat de stippellijn van de ene illustratie in de volgende vloeit. */
     .advies__grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(3rem, 6vw, 6rem);
+      row-gap: clamp(3.5rem, 7vw, 5.5rem);
     }
-    /* kolommen strekken zich even hoog; de "Meer over…"-link wordt tegen de
-       onderrand gedrukt zodat beide links altijd perfect uitlijnen */
-    .portal-col { display: flex; flex-direction: column; align-items: center; }
-    .portal-col .more-link { margin-top: auto; }
-    .portal__circle {
-      width: 220px;
-      height: 220px;
-      border-radius: 50%;
-      border: 1px solid var(--navy-600);
-      display: flex;
-      flex-direction: column;
+    .portal-col {
+      display: grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap: clamp(2.5rem, 6vw, 6rem);
       align-items: center;
-      justify-content: center;
-      gap: .5rem;
-      margin-bottom: 2rem;
-      color: var(--navy-600);
+    }
+    .portal__copy { max-width: 44ch; }
+    /* gespiegelde rij: zelfde kolommen als de satelliet erboven */
+    .portal-col--rev { grid-template-columns: .9fr 1.1fr; }
+    .portal-col--rev .portal__art { order: -1; }
+    .portal__art {
+      display: block;
+      width: auto;
+      height: clamp(120px, 12vw, 160px);
+      max-width: 100%;
+      object-fit: contain;
+      justify-self: center;
     }
     .portal__label {
       font-family: var(--serif);
+      font-weight: 400;
       font-size: 1.5rem;
       color: var(--navy-600);
+      margin-bottom: .75rem;
     }
-    .portal-col__body { font-size: 15px; color: var(--text-soft); text-align: center; margin-bottom: 1.5rem; }
-    .portal-col__services { width: 100%; margin-bottom: 1.5rem; }
-    .portal-col__service-item {
-      display: flex;
-      align-items: center;
-      gap: .6rem;
-      font-family: var(--sans);
-      font-size: 13px;
-      color: var(--text);
-      padding-block: .6rem;
-      border-bottom: 1px solid var(--line);
+    .portal-col__body { font-size: 15px; color: var(--text-soft); margin-bottom: 1.5rem; }
+    @media (max-width: 767px) {
+      .portal-col { grid-template-columns: 1fr; gap: 1.5rem; }
+      .portal-col .portal__art { order: -1; justify-self: start; }
     }
-    .portal-col__service-item svg { flex-shrink: 0; color: var(--navy-600); }
     .more-link {
       display: inline-flex;
       align-items: center;
@@ -749,35 +1062,121 @@
     .more-link svg { transition: transform var(--dur-2) var(--ease); flex-shrink: 0; }
     .more-link:hover { border-bottom-color: var(--navy-600); }
     .more-link:hover svg { transform: translateX(8px); }
+    .more-link--light { color: var(--white); font-size: 14px; }
+    .more-link--light:hover { border-bottom-color: var(--white); }
 
     /* ── IV — Expertise ──────────────────────────────────────── */
-    #expertise { padding-block: var(--section-y); background: var(--navy-600); }
+    /* Zelfde hemel als de hero; de lamp vervangt de titel en een gestippelde
+       lijn loopt speels langs alle expertises naar de slotregel. */
+    #expertise {
+      position: relative;
+      z-index: 1;
+      isolation: isolate;
+      /* schuift onder de afgeronde witte kaarten erboven en eronder door */
+      margin-top: -28px;
+      padding-block: calc(var(--section-y) + 28px);
+      background: var(--navy-900);
+    }
+    .expertise__sky {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(60% 42% at 50% 16%, rgba(64,110,150,.14) 0%, rgba(40,78,116,.05) 55%, rgba(7,24,38,0) 100%),
+                  radial-gradient(120% 90% at 50% 20%, #0E2A42 0%, var(--navy-800) 45%, var(--navy-900) 100%);
+    }
+    .expertise__sky canvas { display: block; width: 100%; height: 100%; }
+    .expertise__flow { position: relative; z-index: 1; }
+    /* de intro en de middelste kolom van het raster beginnen allebei precies
+       in het midden van de pagina; de lamp staat in de linkerhelft */
     .expertise__header-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: clamp(3rem, 6vw, 6rem);
-      align-items: start;
+      gap: 0;
+      align-items: center;
       margin-bottom: clamp(3rem, 5vw, 4rem);
     }
-    .expertise__h2 {
-      font-family: var(--serif);
-      font-size: clamp(2rem, 3.6vw, 3.2rem);
-      line-height: 1.18;
-      letter-spacing: -0.01em;
-      text-wrap: balance;
-      color: var(--white);
+    .expertise__header-grid .expertise__intro { max-width: 62ch; }
+    .expertise__lamp {
+      width: auto;
+      height: clamp(100px, 10vw, 140px);
+      justify-self: center;
+      filter: brightness(0) invert(1);
     }
-    .expertise__h2-soft { display: block; color: var(--navy-200); }
+    .expertise__path {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+      display: none;
+    }
+    .expertise--live .expertise__path { display: block; }
+    .expertise__path .koers__dots { stroke: rgba(255,255,255,.55); }
+    .expertise__path .koers__head { fill: var(--white); }
+    .expertise__item-head svg { position: relative; z-index: 1; }
+    /* de tekst verschijnt pas als de lijn het sterretje bereikt */
+    .expertise--live .expertise__item-title,
+    .expertise--live .expertise__item-desc,
+    .expertise--live .expertise__slot { transition: opacity .7s var(--ease-out), transform .7s var(--ease-out); }
+    .expertise--live .expertise__item-desc { transition-delay: .1s; }
+    .expertise--live .expertise__item:not(.is-reached) .expertise__item-title,
+    .expertise--live .expertise__item:not(.is-reached) .expertise__item-desc,
+    .expertise--live .expertise__slot:not(.is-reached) { opacity: 0; transform: translateY(10px); }
+    .expertise--live .expertise__item:not(.is-reached) .expertise__item-head svg { opacity: .35; }
+    /* slotregel: kernwoorden in het wit */
+    .missie__triade--light { padding-block: 0; margin: clamp(5.5rem, 10vw, 8rem) 0 0; gap: 1.25rem clamp(2.5rem, 5vw, 4.5rem); }
+    .missie__triade--light .missie__triade-item { color: var(--white); }
+    .missie__triade--light .missie__triade-sep { color: var(--navy-200); }
     .expertise__intro { font-size: 15px; line-height: 1.67; color: var(--navy-100); }
-    .expertise__grid { display: grid; grid-template-columns: repeat(3, 1fr); }
-    .expertise__item { border-top: 1px solid rgba(255,255,255,.14); padding: 1.8rem 2rem 1.8rem 0; }
+    /* drie kolommen met de sterretjes op gelijke afstand (28%), het middelste
+       precies in het midden van de pagina: links 22% inspringen, dan 28/28/22 */
+    .expertise__grid { display: grid; grid-template-columns: 28fr 28fr 22fr; padding-left: 22%; }
+    .expertise__item { padding: 1.8rem 2rem 1.8rem 0; }
     .expertise__item-head { display: flex; align-items: center; gap: .75rem; margin-bottom: .6rem; }
     .expertise__item-head svg { flex-shrink: 0; color: var(--white); }
     .expertise__item-title { font-family: var(--sans); font-weight: 700; font-size: 15px; color: var(--white); }
     .expertise__item-desc { font-size: 13.5px; color: var(--navy-200); padding-left: calc(12px + .75rem); }
 
     /* ── V — Waarden ─────────────────────────────────────────── */
-    #waarden { padding-block: var(--section-y); background: var(--paper); }
+    #waarden {
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+      margin-top: -28px;
+      padding-block: var(--section-y);
+      background: var(--paper);
+      border-radius: 28px 28px 0 0;
+    }
+    #waarden > .container { position: relative; z-index: 1; }
+    /* Teamfoto als zachte, transparante achtergrond rechtsboven: ze lost via een
+       ovaal masker op in het papier, zodat de titel en de waarden leesbaar blijven. */
+    .waarden__photo {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: min(64%, 980px);
+      height: 88%;
+      pointer-events: none;
+      -webkit-mask-image: radial-gradient(ellipse 70% 78% at 68% 38%, #000 22%, rgba(0,0,0,.55) 48%, transparent 76%);
+      mask-image: radial-gradient(ellipse 70% 78% at 68% 38%, #000 22%, rgba(0,0,0,.55) 48%, transparent 76%);
+    }
+    .waarden__photo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 62% 30%;
+      opacity: .34;
+      filter: saturate(.45) contrast(.92) brightness(1.04);
+      mix-blend-mode: multiply;
+    }
+    .reveal-ready .waarden__photo[data-reveal] { transform: scale(1.03); transition: opacity 1.4s var(--ease-out), transform 2.4s var(--ease-out); }
+    .reveal-ready .waarden__photo[data-reveal].is-in { transform: none; }
+    @media (max-width: 767px) {
+      .waarden__photo { width: 100%; height: 420px; }
+      .waarden__photo img { opacity: .26; object-position: 55% 25%; }
+    }
     .waarden__h2 {
       font-family: var(--serif);
       font-size: clamp(2rem, 3.6vw, 3.2rem);
@@ -796,15 +1195,68 @@
 
     /* ── VI — Team ───────────────────────────────────────────── */
     /* hairline zoals bij #advies: wit-op-papier is anders te zwak als scheiding */
-    #team { padding-block: var(--section-y); background: var(--white); border-top: 1px solid var(--line); }
+    /* Team volgt naadloos op het witte traject-blad en ligt als witte kaart met
+       afgeronde onderhoeken boven de sterrenhemel van Expertise */
+    #team {
+      position: relative;
+      z-index: 3;
+      padding-block: clamp(4rem, 7vw, 6rem) var(--section-y);
+      background: var(--white);
+      border-radius: 0 0 28px 28px;
+    }
+    .team__flow { position: relative; }
+    .team__path {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+      display: none;
+      z-index: 2;
+    }
+    .team--live .team__path { display: block; }
+    #team.team--live .team__grid { transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
+    #team.team--live .team__grid:not(.is-reached) { opacity: 0; transform: translateY(18px); }
+    /* De partners als zachte achtergrond links, zoals de foto bij Waarden: ze
+       lost via een ovaal masker op in het wit; de tekst staat rechts. */
+    .team__photo-wrap {
+      position: absolute;
+      top: 6%;
+      bottom: 6%;
+      /* kleiner, en uitgelijnd op de linkerrand van de inhoud */
+      left: max(0px, calc((100% - var(--container)) / 2));
+      /* eindigt vóór de stippellijn tussen foto en tekst */
+      width: min(33%, 480px);
+      pointer-events: none;
+      /* ruime volle kern: enkel de uiterste randen vloeien zacht uit */
+      -webkit-mask-image: radial-gradient(closest-side ellipse at 50% 48%, #000 62%, rgba(0,0,0,.75) 80%, transparent 100%);
+      mask-image: radial-gradient(closest-side ellipse at 50% 48%, #000 62%, rgba(0,0,0,.75) 80%, transparent 100%);
+      /* de lichte uitzoom bij het infaden blijft binnen de sectie */
+      -webkit-clip-path: inset(0);
+      clip-path: inset(0);
+    }
+    .team__photo {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: 45% 18%;
+      opacity: .4;
+      filter: saturate(.5) contrast(.93) brightness(1.04);
+      mix-blend-mode: multiply;
+    }
+    .reveal-ready .team__photo-wrap[data-reveal] .team__photo { transform: scale(1.04); transition: transform 2.4s var(--ease-out); }
+    .reveal-ready .team__photo-wrap[data-reveal].is-in .team__photo { transform: none; }
+    .reveal-ready .team__photo-wrap[data-reveal] { transform: none; transition: opacity 1.4s var(--ease-out); }
+    #team > .container { position: relative; z-index: 1; }
     .team__grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: clamp(3rem, 6vw, 6rem);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       align-items: center;
+      min-height: clamp(420px, 56vh, 620px);
     }
-    /* geen crop: de volledige teamfoto is altijd zichtbaar */
-    .team__photo { width: 100%; height: auto; display: block; }
+    .team__content { grid-column: 2; }
     .team__content { display: flex; flex-direction: column; gap: 1.25rem; }
     .team__h2 {
       font-family: var(--serif);
@@ -845,7 +1297,7 @@
       position: relative;
       padding-block: clamp(7rem, 14vw, 11rem);
       background: var(--navy-900);
-      text-align: center;
+      text-align: left;
       overflow: hidden;
     }
     .contact__stars {
@@ -860,7 +1312,7 @@
       z-index: 1;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: flex-start;
       gap: 1.25rem;
     }
     .contact__poolster { width: 16px; height: 16px; color: var(--white); margin-bottom: .75rem; }
@@ -874,9 +1326,9 @@
     .contact__actions {
       display: flex;
       flex-wrap: wrap;
-      gap: 1.25rem;
-      justify-content: center;
-      margin-top: .5rem;
+      gap: .75rem 2.5rem;
+      justify-content: flex-start;
+      margin-top: .75rem;
     }
     .btn {
       display: inline-flex;
@@ -924,6 +1376,10 @@
     }
     .footer__links li + li { margin-top: .4rem; }
     .footer__links li { font-family: var(--sans); font-size: 13px; color: rgba(255,255,255,.62); }
+    .footer__links a,
+    .footer__col-title a { color: inherit; transition: color var(--dur-1) var(--ease); }
+    .footer__links a:hover,
+    .footer__col-title a:hover { color: var(--white); }
     .footer__contact-item { font-family: var(--sans); font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.8; }
     .footer__contact-item a { color: rgba(255,255,255,.55); transition: color var(--dur-1) var(--ease); }
     .footer__contact-item a:hover { color: var(--white); }
@@ -1001,6 +1457,29 @@
     .uv-scene .uv-node:focus-visible .uv-art,
     .uv-scene .uv-node.is-active .uv-art { transform: scale(1.08); }
     @keyframes uvTwinkle { 0%, 100% { opacity: 1; } 50% { opacity: .6; } }
+    /* Uitnodiging om te klikken: een zachte ring loopt beurtelings over de
+       hemellichamen, tot de bezoeker er zelf een aanraakt */
+    .uv-ring {
+      fill: none;
+      stroke: rgba(255,255,255,.85);
+      stroke-width: .9;
+      opacity: 0;
+      pointer-events: none;
+      transform-box: fill-box;
+      transform-origin: center;
+    }
+    .reveal-ready .uv-scene:not(.uv-explored) .uv-ring {
+      animation: uvPing 9s var(--ease-out) infinite;
+      animation-delay: calc(var(--i) * .9s + 1s);
+    }
+    @keyframes uvPing {
+      0% { opacity: 0; transform: scale(.85); }
+      2% { opacity: .9; }
+      11% { opacity: 0; transform: scale(1.6); }
+      100% { opacity: 0; transform: scale(1.6); }
+    }
+    .uv-scene .uv-node:hover .uv-ring { animation: none; }
+    @media (prefers-reduced-motion: reduce) { .uv-ring { animation: none !important; } }
     .reveal-ready .uv-twinkle { animation: uvTwinkle 5.5s ease-in-out infinite; }
 
     /* Tooltipkaart (DS-stijl) */
@@ -1022,12 +1501,8 @@
     .visie-tip__body { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--text-soft); }
 
     /* Hover-microinteracties */
-    .portal__circle { transition: transform .45s var(--ease), border-color .45s var(--ease), box-shadow .45s var(--ease); }
-    .reveal-ready .portal-col:hover .portal__circle {
-      transform: translateY(-6px);
-      border-color: var(--navy-700);
-      box-shadow: var(--shadow-md);
-    }
+    .portal__art { transition: transform .45s var(--ease); }
+    .reveal-ready .portal-col:hover .portal__art { transform: translateY(-6px); }
     .expertise__item-head svg { transition: transform .3s var(--ease); }
     .expertise__item:hover .expertise__item-head svg { transform: rotate(45deg); }
     .expertise__item-desc { transition: color .3s var(--ease); }
@@ -1044,24 +1519,26 @@
     @media (max-width: 1199px) { .meridian { display: none; } }
 
     @media (max-width: 1024px) {
-      .expertise__grid { grid-template-columns: repeat(2, 1fr); }
+      .expertise__grid { grid-template-columns: repeat(2, 1fr); padding-left: 0; }
+      .expertise__header-grid { grid-template-columns: 1fr 1fr; }
       .expertise__item:nth-child(2n) { padding-right: 0; }
       .expertise__item:nth-child(2n+1) { padding-right: 2rem; }
       .waarden__grid { grid-template-columns: repeat(2, 1fr); }
       .waarden__item:nth-child(3) { border-left: none; padding-left: 0; }
       .waarden__item { padding-block: 1.5rem; }
       .footer__grid { grid-template-columns: 1fr 1fr; }
-      .expertise__header-grid { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 768px) {
       .nav__links { display: none; }
       .nav__burger { display: flex; }
-      .missie__grid { grid-template-columns: 1fr; gap: 2rem; }
-      .advies__grid { grid-template-columns: 1fr; }
-      .team__grid { grid-template-columns: 1fr; }
+      .team__grid { grid-template-columns: 1fr; min-height: 0; padding-top: 300px; }
+      .team__content { grid-column: 1; }
+      .team__photo-wrap { width: 100%; bottom: auto; height: 420px; }
       .hero__logo { width: min(72vw, 340px); }
-      .expertise__grid { grid-template-columns: 1fr; }
+      .expertise__grid { grid-template-columns: 1fr; padding-left: 0; }
+      .expertise__header-grid { grid-template-columns: 1fr; }
+      .expertise__lamp { justify-self: start; }
       .footer__grid { grid-template-columns: 1fr 1fr; }
     }
 
@@ -1073,6 +1550,21 @@
       .hero__coords { display: none; }
       .footer__grid { grid-template-columns: 1fr; }
     }
+
+    /* Typografisch raster (hele site): titels links, tekstblokken uitgevuld,
+       acties links als tekstlink met pijltje. Woordafbreking (lang="nl")
+       voorkomt gaten in de uitgevulde regels. De korte bijschriften in smalle
+       kolommen (expertises, waarden) blijven links: uitgevuld geven die gaten. */
+    .missie__text, .portal-col__body, .koers__text, .waarden__intro,
+    .expertise__intro, .team__body, .faq__intro, .faq__a,
+    .contact__sub, .visie-tip__body {
+      text-align: justify;
+      -webkit-hyphens: auto;
+      hyphens: auto;
+    }
+
+    /* in de smalle mobiele kolom van het traject geeft uitvullen gaten */
+    @media (max-width: 767px) { .koers__text { text-align: left; } }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
@@ -1098,9 +1590,8 @@
       <ul class="nav__links">
         <li><a href="#missie">Missie</a></li>
         <li><a href="#visie">Onze visie</a></li>
-        <li><a href="#advies">Advies</a></li>
-        <li><a href="#expertise">Expertise</a></li>
         <li><a href="#team">Team</a></li>
+        <li><a href="#expertise">Expertise</a></li>
         <li><a href="#faq">Vragen</a></li>
         <li><a class="nav__cta" href="#contact">Contact</a></li>
       </ul>
@@ -1124,17 +1615,13 @@
         <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
         Onze visie
       </a>
-      <a href="#advies" class="overlay__link">
+      <a href="#team" class="overlay__link">
         <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-        Advies
+        Team
       </a>
       <a href="#expertise" class="overlay__link">
         <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
         Expertise
-      </a>
-      <a href="#team" class="overlay__link">
-        <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-        Team
       </a>
       <a href="#faq" class="overlay__link">
         <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
@@ -1178,7 +1665,7 @@
              width="1464" height="463"
              fetchpriority="high">
         <div class="hero__rule" aria-hidden="true"></div>
-        <p class="hero__sub label label--on-navy">UW VERTROUWENSPERSOON VOOR FAMILIE EN BEDRIJF</p>
+        <p class="hero__sub label label--on-navy">Zoals de noordpoolster<br>helder en richtinggevend voor uw vermogen</p>
       </div>
 
       <p class="hero__coords" aria-hidden="true">50.94° N — 4.04° O · AALST</p>
@@ -1193,23 +1680,38 @@
 
     <!-- ── I — Missie ─────────────────────────────────────────── -->
     <section id="missie" aria-labelledby="missie-h2">
-      <div class="container">
+      <div class="container missie__flow" id="missieFlow">
+        <!-- Gestippelde lijn (desktop): ontstaat onder de kernwoorden en loopt langs de
+             satelliet naar Uw familie en daarna Uw bedrijf. Getekend door JS. -->
+        <svg class="missie__path" id="missiePath" aria-hidden="true" focusable="false">
+          <defs>
+            <mask id="missieMask" maskUnits="userSpaceOnUse" x="-100" y="-100" width="6000" height="12000">
+              <path class="koers__reveal" data-r="main" d=""/>
+            </mask>
+            <clipPath id="missieClipLicht" clipPathUnits="userSpaceOnUse">
+              <rect data-c="boven" x="-5000" y="-5000" width="20000" height="40000"/>
+              <rect data-c="onder" x="-5000" y="0" width="20000" height="0"/>
+            </clipPath>
+            <clipPath id="missieClipDonker" clipPathUnits="userSpaceOnUse">
+              <rect data-c="band" x="-5000" y="0" width="20000" height="0"/>
+            </clipPath>
+          </defs>
+          <!-- op wit navy, over het donkerblauw van hoofdstuk II licht -->
+          <g mask="url(#missieMask)">
+            <path class="koers__dots" data-p="main" d="" clip-path="url(#missieClipLicht)"/>
+            <path class="koers__dots missie__dots-donker" data-l="main" d="" clip-path="url(#missieClipDonker)"/>
+          </g>
+          <g class="koers__head" data-h="main"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></g>
+        </svg>
         <div class="chapter-head" data-reveal>
           <svg class="chapter-head__star" aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor" style="color:var(--navy-600)"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
           <span class="label">I — MISSIE</span>
           <span class="chapter-head__line" aria-hidden="true"></span>
         </div>
 
-        <div class="missie__grid" data-reveal>
-          <h2 class="missie__h2" id="missie-h2">Als onafhankelijke vertrouwenspartner kijken we verder dan cijfers alleen.</h2>
-          <div class="missie__body">
-            <p>We verdiepen ons in uw context, denken vooruit en handelen met de discretie, zorgvuldigheid en aandacht die uw situatie vraagt. Zo blijft uw vermogen niet alleen beschermd, maar vooral afgestemd op wat voor u werkelijk van waarde is.</p>
-            <p>Onderneming en familie staan nooit los van elkaar. Elke begeleiding bij Polares vertrekt vanuit één kompas: uw kapitaalgeluk.</p>
-          </div>
-        </div>
-
+        <h2 class="sr-only" id="missie-h2">Onze missie</h2>
         <div class="missie__triade" data-reveal>
-          <span class="missie__triade-item">Duidelijk, helder en aanwezig</span>
+          <span class="missie__triade-item">Duidelijk en helder</span>
           <span class="missie__triade-sep" aria-hidden="true">
             <svg width="10" height="10" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
           </span>
@@ -1217,101 +1719,174 @@
           <span class="missie__triade-sep" aria-hidden="true">
             <svg width="10" height="10" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
           </span>
-          <span class="missie__triade-item">Altijd en overal</span>
+          <span class="missie__triade-item">Nu en morgen</span>
+        </div>
+
+        <div class="missie__grid" data-reveal>
+          <img class="missie__kompas" src="assets/uv/satelliet.svg" alt="" width="38" height="36" loading="lazy" decoding="async">
+          <p class="missie__text">Voor ondernemers en vermogende families beschermen en structureren we hun vermogen en laten we het duurzaam groeien, privé én professioneel, met oog voor vandaag én de generaties van morgen.</p>
+        </div>
+
+        <!-- Uw familie & uw bedrijf (voorheen hoofdstuk III). Het anker #advies
+             blijft bestaan voor de navigatie, de detailpagina's en oude redirects. -->
+        <div class="missie__portals" id="advies">
+          <div class="advies__grid">
+            <!-- Uw familie -->
+            <div class="portal-col" data-reveal>
+              <div class="portal__copy">
+                <h3 class="portal__label">Uw familie</h3>
+                <p class="portal-col__body">Wat u opbouwt, draagt meer dan waarde alleen. Het vertelt een verhaal van ondernemerschap, verantwoordelijkheid en toekomstvisie.</p>
+                <a href="uw-familie.html" class="more-link">
+                  Meer over uw familie
+                  <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9">
+                  <line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/>
+                </svg>
+                </a>
+              </div>
+              <img class="portal__art" src="assets/uv/familie.webp" alt="" width="600" height="283" loading="lazy" decoding="async">
+            </div>
+
+            <!-- Uw bedrijf (gespiegeld: illustratie links, tekst rechts) -->
+            <div class="portal-col portal-col--rev" data-reveal>
+              <div class="portal__copy">
+                <h3 class="portal__label">Uw bedrijf</h3>
+                <p class="portal-col__body">Uw onderneming is meer dan een activiteit of balans. Ze weerspiegelt visie, engagement en jaren van opgebouwd vertrouwen.</p>
+                <a href="uw-bedrijf.html" class="more-link">
+                  Meer over uw bedrijf
+                  <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9">
+                  <line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/>
+                </svg>
+                </a>
+              </div>
+              <img class="portal__art" src="assets/uv/tandwielen.webp" alt="" width="520" height="348" loading="lazy" decoding="async">
+            </div>
+          </div>
+        </div>
+
+        <!-- Afsluiter: kernwoorden in dezelfde vorm als bovenaan; ze vervangen de
+             scheidingslijn met hoofdstuk II. De stippellijn eindigt er net boven. -->
+        <div class="missie__slot" data-reveal>
+          <div class="missie__triade missie__triade--slot">
+            <span class="missie__triade-item">Nooit los van elkaar</span>
+            <span class="missie__triade-sep" aria-hidden="true">
+              <svg width="10" height="10" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+            </span>
+            <span class="missie__triade-item">Eén kompas</span>
+            <span class="missie__triade-sep" aria-hidden="true">
+              <svg width="10" height="10" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+            </span>
+            <span class="missie__triade-item">Uw kapitaalgeluk</span>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- ── II — Onze visie ────────────────────────────────────── -->
     <section id="visie" aria-labelledby="visie-h2">
-      <div class="container">
-        <div class="chapter-head" data-reveal>
-          <svg class="chapter-head__star" aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor" style="color:var(--navy-600)"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+      <div class="visie__sky-laag" aria-hidden="true"><div class="visie__sky"><canvas id="visieSky"></canvas></div></div>
+      <!-- Scrollspoor: bij het scrollen blijft de scène staan (sticky), zoomt ze in
+           op de wereldbol en verdwijnen de andere hemellichamen. Daarna schuift het
+           traject in zeven stappen eroverheen. Zonder JS of bij "beperkte beweging"
+           is dit gewoon een statische opbouw. -->
+      <div class="visie__track" id="visieTrack">
+      <div class="visie__stage" id="visieStage">
+      <div class="container visie__head">
+        <div class="chapter-head chapter-head--light" data-reveal>
+          <svg class="chapter-head__star" aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor" style="color:var(--white)"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
           <span class="label">II — ONZE VISIE</span>
           <span class="chapter-head__line" aria-hidden="true"></span>
         </div>
-        <h2 class="sr-only" id="visie-h2">Onze visie</h2>
-        <p class="visie__intro" data-reveal>Eén geheel waarin alles met elkaar verbonden is. Wij begeleiden onze klant als partner en gids — met een brede blik en een sterke focus op de lange termijn.</p>
+        <h2 class="visie__intro" id="visie-h2" data-reveal>Een volledig beeld. Een heldere koers.</h2>
       </div>
 
-      <!-- Universum SVG — verbatim van oude site r.923–1003 -->
+      <!-- Universum SVG — officiële constellatie (POLARES_VOLL_ILL_SVG), bijgesneden
+           tot de tekening. Banen en trajecten staan inline; elk hemellichaam is een
+           apart bestand in assets/uv/ zodat de HTML licht blijft en het in de cache gaat. -->
       <div class="visie__scene" id="visieScene" data-reveal>
         <div class="visie__scroll" id="visieScroll">
-        <svg class="uv-scene" viewBox="0 0 2560 1240" width="100%" style="display:block;height:auto;overflow:visible;" role="group" aria-label="Universum Polares — interactief overzicht">
+        <svg class="uv-scene" viewBox="337 248 741 359" width="100%" style="display:block;height:auto;overflow:visible;" role="group" aria-label="Universum Polares — interactief overzicht">
 
-          <!-- Concentric ecliptic orbits -->
-          <g fill="none" stroke="var(--navy-400)" stroke-width="1.6" opacity="0.5">
-            <ellipse cx="1290" cy="880" rx="250" ry="66"></ellipse>
-            <ellipse cx="1290" cy="880" rx="430" ry="113"></ellipse>
-            <ellipse cx="1290" cy="880" rx="610" ry="160"></ellipse>
-            <ellipse cx="1290" cy="880" rx="795" ry="208"></ellipse>
-            <ellipse cx="1290" cy="880" rx="980" ry="256"></ellipse>
-            <ellipse cx="1290" cy="880" rx="1175" ry="308"></ellipse>
+          <!-- Concentrische banen (onderbroken waar ze achter een hemellichaam lopen) -->
+          <g class="uv-orbits" fill="none" stroke="#11314d" stroke-width=".25" stroke-miterlimit="10">
+            <path d="M594.1,472.72c21.97-11.68,67.84-19.71,120.86-19.71,74.38,0,134.68,15.81,134.68,35.3s-60.3,35.3-134.68,35.3c-49.77,0-93.23-7.08-116.54-17.6"/>
+            <path d="M780.24,504.73c-16.46,4.5-39.63,7.3-65.28,7.3-49.96,0-90.46-10.62-90.46-23.71,0-8.48,16.97-15.92,42.5-20.11,2.61-.43,5.3-.82,8.08-1.18"/>
+            <path d="M751.46,466.61c13.35,1.55,25.01,3.91,34.04,6.86"/>
+            <path d="M881.07,513.76c-31.99,15.44-94.38,25.92-166.11,25.92-104.33,0-188.91-22.17-188.91-49.52s84.58-49.52,188.91-49.52c75.73,0,141.05,11.68,171.17,28.54"/>
+            <path d="M475.73,469.2c37.23-23.85,130.3-40.76,239.22-40.76,141.7,0,256.57,28.61,256.57,63.91s-114.87,63.91-256.57,63.91c-112.55,0-208.18-18.05-242.76-43.17"/>
+            <path d="M1017.08,519.52c-39.82,32.71-160.02,56.47-302.13,56.47-174.59,0-316.13-35.88-316.13-80.13s141.54-80.13,316.13-80.13c129.81,0,241.35,19.83,290.03,48.2"/>
+            <path d="M388.85,464.6c50.6-36.61,177.53-62.58,326.11-62.58,193.06,0,349.56,43.84,349.56,97.92s-156.51,97.92-349.56,97.92c-176.23,0-322-36.53-346.08-84.03"/>
           </g>
 
-          <!-- Dashed celestial trajectories -->
-          <g fill="none" stroke="var(--navy-400)" stroke-width="1.6" stroke-dasharray="2 10" stroke-linecap="round" opacity="0.6">
-            <path d="M120,700 C350,180 750,80 1290,75 C1830,80 2230,180 2460,700"></path>
-            <path d="M250,560 C600,210 950,120 1290,116 C1630,120 1980,210 2330,560"></path>
-            <path d="M120,748 C300,470 380,360 458,325 C730,200 1015,150 1290,150 C1565,150 1850,200 2030,322 C2160,395 2300,520 2440,748"></path>
-            <path d="M1290,150 L1290,900"></path>
-            <path d="M548,300 C528,600 522,955 558,1142"></path>
-            <path d="M2032,300 C2052,600 2058,955 2022,1142"></path>
+          <!-- Gestippelde hemeltrajecten -->
+          <g class="uv-paths" fill="none" stroke="#11314d" stroke-width=".25" stroke-miterlimit="10" stroke-dasharray="3 5">
+            <path d="M713.19,452.45V273.02"/>
+            <path d="M450.81,350.43c-41.27,31.09-69.39,69.7-79.08,112.35"/>
+            <path d="M1064.75,495.97c0-123.67-159.16-222.96-351.56-222.96-86.78,0-165.5,20.2-225.78,53.72"/>
+            <path d="M879.26,326.16c46.85,33.01,78.1,74.95,90.51,106.14"/>
+            <path d="M460.45,566.54c0-130.4,105.42-292.59,250.7-293.53,63.03-.41,116.67,19.43,158.84,46.86"/>
+            <path d="M857.08,328.92c-40.96-33.8-90.27-55.56-143.89-55.9-141.91-.9-228.99,93.4-252.75,157.89"/>
+            <path d="M973.93,563.99c0-76.12-39.62-163.17-102.11-222.07"/>
           </g>
 
           <!-- Kompas -->
           <g class="uv-node" data-key="kompas" tabindex="0" role="button" aria-label="Het kompas">
-            <image class="uv-art" href="assets/uv/kompas.webp" x="12" y="772" width="215" height="215"></image>
-            <circle cx="120" cy="880" r="120" fill="transparent"></circle>
+            <image class="uv-art" href="assets/uv/kompas.svg" x="347.9" y="463.82" width="46.03" height="45.98"></image>
+            <circle class="uv-ring" cx="371" cy="487" r="25" style="--i:3"></circle>
+            <circle cx="371" cy="487" r="38" fill="transparent"></circle>
           </g>
           <!-- GPS / kaart -->
           <g class="uv-node" data-key="gps" tabindex="0" role="button" aria-label="De GPS">
-            <image class="uv-art" href="assets/uv/gps.webp" x="335" y="783" width="190" height="190"></image>
-            <circle cx="430" cy="878" r="125" fill="transparent"></circle>
+            <image class="uv-art" href="assets/uv/gps.svg" x="445.47" y="470.99" width="35.67" height="35.66"></image>
+            <circle class="uv-ring" cx="463" cy="489" r="20" style="--i:4"></circle>
+            <circle cx="463" cy="489" r="36" fill="transparent"></circle>
           </g>
           <!-- Munt -->
           <g class="uv-node" data-key="munt" tabindex="0" role="button" aria-label="Financiële rust">
-            <image class="uv-art" href="assets/uv/munt.webp" x="732" y="784" width="175" height="175"></image>
-            <circle cx="820" cy="872" r="125" fill="transparent"></circle>
+            <image class="uv-art" href="assets/uv/munt.svg" x="565.1" y="471.61" width="34.29" height="34.42"></image>
+            <circle class="uv-ring" cx="582" cy="489" r="19" style="--i:5"></circle>
+            <circle cx="582" cy="489" r="38" fill="transparent"></circle>
           </g>
-          <!-- Leefwereld (globe, center) -->
+          <!-- Leefwereld (globe, centrum) -->
           <g class="uv-node" data-key="leefwereld" tabindex="0" role="button" aria-label="De leefwereld">
-            <image class="uv-art" href="assets/uv/leefwereld.webp" x="1130" y="710" width="320" height="320"></image>
-            <circle cx="1290" cy="870" r="140" fill="transparent"></circle>
+            <image class="uv-art" href="assets/uv/leefwereld.svg" x="680.29" y="455.78" width="66.07" height="66.07"></image>
+            <circle class="uv-ring" cx="713" cy="489" r="36" style="--i:6"></circle>
+            <circle cx="713" cy="489" r="42" fill="transparent"></circle>
           </g>
           <!-- Satelliet -->
           <g class="uv-node" data-key="satelliet" tabindex="0" role="button" aria-label="Onze rol">
-            <image class="uv-art" href="assets/uv/satelliet.webp" x="1462" y="769" width="205" height="205"></image>
-            <circle cx="1565" cy="872" r="120" fill="transparent"></circle>
+            <image class="uv-art" href="assets/uv/satelliet.svg" x="783.98" y="470.63" width="38.07" height="36.37"></image>
+            <circle class="uv-ring" cx="803" cy="489" r="21" style="--i:7"></circle>
+            <circle cx="803" cy="489" r="36" fill="transparent"></circle>
           </g>
           <!-- Expertise (lamp) -->
           <g class="uv-node" data-key="expertise" tabindex="0" role="button" aria-label="Onze expertise">
-            <image class="uv-art" href="assets/uv/expertise.webp" x="1872" y="769" width="205" height="205"></image>
-            <circle cx="1975" cy="872" r="125" fill="transparent"></circle>
+            <image class="uv-art" href="assets/uv/expertise.svg" x="883.12" y="468.43" width="36.09" height="40.77"></image>
+            <circle class="uv-ring" cx="901" cy="488" r="22" style="--i:8"></circle>
+            <circle cx="901" cy="488" r="38" fill="transparent"></circle>
           </g>
           <!-- Vermogen (diamant) -->
           <g class="uv-node" data-key="vermogen" tabindex="0" role="button" aria-label="Het vermogen">
-            <image class="uv-art" href="assets/uv/vermogen.webp" x="2217" y="707" width="315" height="315"></image>
-            <circle cx="2375" cy="865" r="135" fill="transparent"></circle>
+            <image class="uv-art" href="assets/uv/vermogen.svg" x="981.6" y="468.59" width="74.84" height="40.49"></image>
+            <circle class="uv-ring" cx="1019" cy="489" r="31" style="--i:9"></circle>
+            <circle cx="1019" cy="489" r="42" fill="transparent"></circle>
           </g>
           <!-- Komeet -->
           <g class="uv-node" data-key="komeet" tabindex="0" role="button" aria-label="De buitenwereld">
-            <image class="uv-art" href="assets/uv/komeet.webp" x="1865" y="150" width="330" height="330"></image>
-            <circle cx="2030" cy="320" r="125" fill="transparent"></circle>
+            <image class="uv-art" href="assets/uv/komeet.svg" x="847.2" y="312.07" width="37.57" height="43.12"></image>
+            <circle class="uv-ring" cx="866" cy="333" r="23" style="--i:2"></circle>
+            <circle cx="866" cy="333" r="34" fill="transparent"></circle>
           </g>
           <!-- Zwart gat -->
           <g class="uv-node" data-key="zwartgat" tabindex="0" role="button" aria-label="Het zwarte gat">
-            <circle cx="455" cy="325" r="123" fill="none" stroke="var(--navy-200)" stroke-width="1.4" stroke-dasharray="1 10" opacity="0.55"></circle>
-            <circle cx="455" cy="325" r="116" fill="none" stroke="var(--navy-300)" stroke-width="1.6" stroke-dasharray="1.5 6" opacity="0.7"></circle>
-            <circle class="uv-art" cx="455" cy="325" r="104" fill="var(--navy-700)"></circle>
-            <circle cx="455" cy="325" r="130" fill="transparent"></circle>
+            <image class="uv-art" href="assets/uv/zwartgat-ring.webp" x="446" y="314" width="45" height="45"></image>
+            <circle class="uv-ring" cx="468.5" cy="336.5" r="25" style="--i:1"></circle>
+            <circle cx="468.5" cy="336.5" r="34" fill="transparent"></circle>
           </g>
           <!-- Poolster -->
           <g class="uv-node" data-key="poolster" tabindex="0" role="button" aria-label="De Poolster">
-            <g transform="translate(1232,30) scale(1.16)">
-              <path class="uv-art uv-twinkle" d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z" fill="var(--navy-700)"></path>
-            </g>
-            <circle cx="1290" cy="90" r="120" fill="transparent"></circle>
+            <path class="uv-art uv-twinkle" fill="#11314d" d="M722.97,270.75h-.95c-3.73-.25-6.69-3.34-6.69-7.14v-4.1h-4.27v4.4c-.15,3.66-3.04,6.6-6.67,6.84h-4.57v4.27h4.18c3.81.05,6.9,3.07,7.06,6.86v4.39h4.27v-4.08c0-3.93,3.16-7.11,7.08-7.16h4.17v-4.27h-3.6Z"/>
+            <circle class="uv-ring" cx="713.5" cy="273.5" r="16" style="--i:0"></circle>
+            <circle cx="713.5" cy="273.5" r="26" fill="transparent"></circle>
           </g>
 
         </svg>
@@ -1321,8 +1896,15 @@
         <div id="visieTip" class="visie-tip visie-tip--float" role="status" aria-live="polite"></div>
       </div>
 
+      <div class="visie__foot">
+        <p class="visie__caption label">Klik op een hemellichaam en ontdek zijn betekenis</p>
+        <!-- De pagina houdt hier even halt; deze knop laat haar verder glijden -->
+        <button type="button" class="more-link more-link--light visie__next" id="visieNext">Ontdek meer <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></button>
+      </div>
+      </div><!-- /.visie__stage -->
+      </div><!-- /.visie__track -->
+
       <div class="container">
-        <p class="visie__caption label" style="color:var(--text-soft);">HET UNIVERSUM POLARES — BEWEEG OVER DE HEMELLICHAMEN</p>
 
         <!-- Legenda: de betekenis van elk hemellichaam staat hier in de HTML en
              niet langer alleen in JavaScript. Zo is de tekst ook zonder hover of
@@ -1372,153 +1954,212 @@
           </div>
         </dl>
       </div>
+
+      <!-- Het traject in zeven stappen (offertemap, laatste pagina). De gestippelde
+           lijn wordt door JS getekend tussen de iconen, zoals in de print. -->
+      <div class="koers-sheet">
+      <div class="container koers" id="visieKoers">
+        <svg class="koers__path" id="koersPath" aria-hidden="true" focusable="false">
+          <defs>
+            <mask id="koersMask" maskUnits="userSpaceOnUse" x="-100" y="-100" width="6000" height="20000">
+              <path class="koers__reveal" d=""/>
+            </mask>
+          </defs>
+          <path class="koers__dots" d="" mask="url(#koersMask)"/>
+          <g class="koers__head"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></g>
+        </svg>
+        <ol class="koers__list" aria-label="Ons traject in zeven stappen">
+          <li class="koers__step koers__step--lead">
+            <h3 class="koers__title">Helder overzicht.</h3>
+            <div class="koers__row">
+              <span class="koers__icon koers__icon--overzicht" aria-hidden="true"><img src="assets/uv/leefwereld.svg" alt="" width="66" height="66" loading="lazy" decoding="async"></span>
+              <p class="koers__text">We brengen uw volledig vermogen en situatie in kaart zodat alles transparant is.</p>
+            </div>
+          </li>
+          <li class="koers__step">
+            <span class="koers__icon koers__icon--analyse" aria-hidden="true"><svg class="koers__star" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></span>
+            <div class="koers__copy">
+              <h3 class="koers__title">Grondige analyse.</h3>
+              <p class="koers__text">Onze specialisten schatten het potentieel in en brengen kansen en risico’s in kaart.</p>
+            </div>
+          </li>
+          <li class="koers__step">
+            <span class="koers__icon koers__icon--richting" aria-hidden="true"><img src="assets/uv/kompas.svg" alt="" width="46" height="46" loading="lazy" decoding="async"></span>
+            <div class="koers__copy">
+              <h3 class="koers__title">Duidelijke richting.</h3>
+              <p class="koers__text">Samen bepalen we uw doel, dit is richtinggevend voor onze dienstverlening.</p>
+            </div>
+          </li>
+          <li class="koers__step">
+            <span class="koers__icon koers__icon--strategie" aria-hidden="true"><img src="assets/uv/gps.svg" alt="" width="36" height="36" loading="lazy" decoding="async"></span>
+            <div class="koers__copy">
+              <h3 class="koers__title">Bewuste strategie.</h3>
+              <p class="koers__text">Op basis van uw doel worden samen doordachte keuzes gemaakt.</p>
+            </div>
+          </li>
+          <li class="koers__step">
+            <span class="koers__icon koers__icon--uitvoering" aria-hidden="true"><img src="assets/uv/zegel.webp" alt="" width="247" height="300" loading="lazy" decoding="async"></span>
+            <div class="koers__copy">
+              <h3 class="koers__title">Uitvoering.</h3>
+              <p class="koers__text">We voeren de acties uit en spreken ons netwerk aan om de juiste dingen tijdig te doen in lijn met uw doel.</p>
+            </div>
+          </li>
+          <li class="koers__step">
+            <span class="koers__icon koers__icon--opvolging" aria-hidden="true"><img src="assets/uv/satelliet.svg" alt="" width="38" height="36" loading="lazy" decoding="async"></span>
+            <div class="koers__copy">
+              <h3 class="koers__title">Permanente opvolging.</h3>
+              <p class="koers__text">We volgen continu op welke zaken impact hebben op uw vermogen en sturen bij waar nodig.</p>
+            </div>
+          </li>
+          <li class="koers__step">
+            <span class="koers__icon koers__icon--partnerschap" aria-hidden="true"><img src="assets/uv/leefwereld.svg" alt="" width="66" height="66" loading="lazy" decoding="async"></span>
+            <div class="koers__copy">
+              <h3 class="koers__title">Partnerschap.</h3>
+              <p class="koers__text">Elk jaar herbekijken we uw doel en situatie, en maken we een nieuw overzicht als basis voor het volgende jaar.</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+      </div><!-- /.koers-sheet -->
     </section>
 
-    <!-- ── III — Advies ───────────────────────────────────────── -->
-    <section id="advies" aria-labelledby="advies-h2">
-      <div class="container">
+    <!-- ── III — Team ─────────────────────────────────────────── -->
+    <section id="team" aria-labelledby="team-h2">
+      <!-- Foto van de partners als zachte, transparante achtergrond rechts (zoals bij Waarden) -->
+      <div class="team__photo-wrap" aria-hidden="true" data-reveal>
+        <img class="team__photo" src="assets/partners-polares.webp" alt="" width="1100" height="1651" loading="lazy" decoding="async">
+      </div>
+      <div class="container team__flow" id="teamFlow">
+        <!-- Gestippelde lijn (desktop): de voortzetting van het traject; komt boven
+             de titel, loopt links langs de tekst naar beneden (die dan verschijnt)
+             en de sterrenhemel in, tot boven de lamp van Expertise -->
+        <svg class="team__path" id="teamPath" aria-hidden="true" focusable="false">
+          <defs>
+            <mask id="teamMask" maskUnits="userSpaceOnUse" x="-3000" y="-3000" width="9000" height="12000">
+              <path class="koers__reveal" d=""/>
+            </mask>
+            <clipPath id="teamClipLicht" clipPathUnits="userSpaceOnUse"><rect data-c="licht" x="-5000" y="-5000" width="20000" height="40000"/></clipPath>
+            <clipPath id="teamClipDonker" clipPathUnits="userSpaceOnUse"><rect data-c="donker" x="-5000" y="0" width="20000" height="0"/></clipPath>
+          </defs>
+          <g mask="url(#teamMask)">
+            <path class="koers__dots" data-p="main" d="" clip-path="url(#teamClipLicht)"/>
+            <path class="koers__dots missie__dots-donker" data-l="main" d="" clip-path="url(#teamClipDonker)"/>
+          </g>
+          <g class="koers__head"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></g>
+        </svg>
         <div class="chapter-head" data-reveal>
           <svg class="chapter-head__star" aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor" style="color:var(--navy-600)"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-          <span class="label">III — ADVIES</span>
+          <span class="label">III — TEAM</span>
           <span class="chapter-head__line" aria-hidden="true"></span>
         </div>
-
-        <h2 class="advies__h2" id="advies-h2">Advies voor uw familie en uw bedrijf.</h2>
-
-        <div class="advies__grid">
-
-          <!-- Familie -->
-          <div class="portal-col" data-reveal>
-            <div class="portal__circle">
-              <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-              <span class="portal__label">Uw familie</span>
-            </div>
-            <p class="portal-col__body">Uw family office, als centraal vertrouwensorgaan, staat in voor de afhandeling van de privézaken van u, de ondernemer en/of vermogende familie. Financiële planning, groeiplanning, successieplanning en overdracht naar de volgende generatie krijgen volle aandacht.</p>
-            <ul class="portal-col__services" aria-label="Diensten familie">
-              <li class="portal-col__service-item">
-                <svg aria-hidden="true" width="8" height="8" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-                Vermogensarchitectuur
-              </li>
-              <li class="portal-col__service-item">
-                <svg aria-hidden="true" width="8" height="8" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-                Vermogensmonitoring
-              </li>
-              <li class="portal-col__service-item">
-                <svg aria-hidden="true" width="8" height="8" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-                Successieplanning
-              </li>
-              <li class="portal-col__service-item">
-                <svg aria-hidden="true" width="8" height="8" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-                Vastgoedplanning
-              </li>
-            </ul>
+        <div class="team__grid">
+          <div class="team__content">
+            <h2 class="team__h2" id="team-h2">Naast u.</h2>
+            <p class="team__body">Bij Polares begeleiden we niet alleen vermogens, maar vooral de mensen erachter. Met betrokkenheid, expertise en heldere inzichten zorgen we dat elke beslissing bijdraagt aan wat voor u werkelijk van waarde is.</p>
             <a href="#contact" class="more-link">
-              Bespreek uw situatie
+              Maak kennis met Polares
               <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9">
                 <line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/>
               </svg>
             </a>
           </div>
-
-          <!-- Bedrijf -->
-          <div class="portal-col" data-reveal>
-            <div class="portal__circle">
-              <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-              <span class="portal__label">Uw bedrijf</span>
-            </div>
-            <p class="portal-col__body">Wij begeleiden u bij de realisatie van de toekomstplannen van uw bedrijf. We verschaffen inzicht in de rendabiliteit door analyse van kostenstructuur, marges en cashflow, en bepalen samen een toekomstplan. Polares is tevens uw vertrouwenspersoon bij fusie en overname.</p>
-            <ul class="portal-col__services" aria-label="Diensten bedrijf">
-              <li class="portal-col__service-item">
-                <svg aria-hidden="true" width="8" height="8" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-                Financiële analyse
-              </li>
-              <li class="portal-col__service-item">
-                <svg aria-hidden="true" width="8" height="8" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-                Fusies &amp; overnames
-              </li>
-              <li class="portal-col__service-item">
-                <svg aria-hidden="true" width="8" height="8" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-                Bedrijfsoverdracht
-              </li>
-            </ul>
-            <a href="#contact" class="more-link">
-              Bespreek uw plannen
-              <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9">
-                <line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/>
-              </svg>
-            </a>
-          </div>
-
         </div>
       </div>
     </section>
 
     <!-- ── IV — Expertise ─────────────────────────────────────── -->
     <section id="expertise" aria-labelledby="expertise-h2">
-      <div class="container">
+      <div class="expertise__sky" aria-hidden="true"><canvas id="expertiseSky"></canvas></div>
+      <div class="container expertise__flow" id="expertiseFlow">
+        <!-- Gestippelde lijn (desktop): van de lamp speels langs alle sterretjes
+             (kolom 1 omlaag, 2 omhoog, 3 omlaag) naar de slotregel. Getekend door JS;
+             elke expertise verschijnt wanneer de lijn zijn sterretje bereikt. -->
+        <svg class="expertise__path" id="expertisePath" aria-hidden="true" focusable="false">
+          <defs>
+            <mask id="expertiseMask" maskUnits="userSpaceOnUse" x="-200" y="-200" width="6000" height="12000">
+              <path class="koers__reveal" d=""/>
+            </mask>
+          </defs>
+          <path class="koers__dots" d="" mask="url(#expertiseMask)"/>
+          <g class="koers__head"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></g>
+        </svg>
         <div class="chapter-head chapter-head--light" data-reveal>
           <svg class="chapter-head__star" aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
           <span class="label">IV — EXPERTISE</span>
           <span class="chapter-head__line" aria-hidden="true"></span>
         </div>
 
+        <h2 class="sr-only" id="expertise-h2">Expertise die overzicht brengt. Regie die vertrouwen geeft.</h2>
         <div class="expertise__header-grid" data-reveal>
-          <h2 class="expertise__h2" id="expertise-h2">
-            Expertise die overzicht brengt.
-            <span class="expertise__h2-soft">Regie die vertrouwen geeft.</span>
-          </h2>
+          <img class="expertise__lamp" src="assets/uv/expertise.svg" alt="" width="36" height="41" loading="lazy" decoding="async">
           <p class="expertise__intro">Polares combineert diepgaande expertise met een zorgvuldig uitgebouwd netwerk van gespecialiseerde partners — boekhouders, advocaten en notarissen. Zo benaderen we elke vraag rond vermogen, onderneming en familie vanuit één geïntegreerde visie, met heldere regie over het geheel.</p>
         </div>
 
         <div class="expertise__grid">
-          <div class="expertise__item" data-reveal>
+          <div class="expertise__item">
             <div class="expertise__item-head">
               <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-              <span class="expertise__item-title">Vermogensstructuur</span>
+              <span class="expertise__item-title">Vermogensplanning</span>
             </div>
             <p class="expertise__item-desc">Overzicht en structuren die beschermen, optimaliseren en groeien</p>
           </div>
-          <div class="expertise__item" data-reveal>
+          <div class="expertise__item">
             <div class="expertise__item-head">
               <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-              <span class="expertise__item-title">Fiscaliteit</span>
+              <span class="expertise__item-title">Beleggen</span>
             </div>
             <p class="expertise__item-desc">Opportuniteiten gesignaleerd, afgestemd op de lange termijn</p>
           </div>
-          <div class="expertise__item" data-reveal>
+          <div class="expertise__item">
             <div class="expertise__item-head">
               <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-              <span class="expertise__item-title">Investeringen</span>
+              <span class="expertise__item-title">Investeren</span>
             </div>
             <p class="expertise__item-desc">Rendement, risico en levensdoelen in evenwicht</p>
           </div>
-          <div class="expertise__item" data-reveal>
+          <div class="expertise__item">
             <div class="expertise__item-head">
               <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
               <span class="expertise__item-title">Overdracht &amp; successie</span>
             </div>
             <p class="expertise__item-desc">Helder, correct en gedragen voor alle betrokkenen</p>
           </div>
-          <div class="expertise__item" data-reveal>
+          <div class="expertise__item">
             <div class="expertise__item-head">
               <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
               <span class="expertise__item-title">Ondernemingsstrategie</span>
             </div>
             <p class="expertise__item-desc">Samenhang tussen bedrijfsbeslissingen en privévermogen</p>
           </div>
-          <div class="expertise__item" data-reveal>
+          <div class="expertise__item">
             <div class="expertise__item-head">
               <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-              <span class="expertise__item-title">Risico-monitoring</span>
+              <span class="expertise__item-title">Fiscaliteit</span>
             </div>
             <p class="expertise__item-desc">Vroeg detecteren, tijdig bijsturen</p>
           </div>
+        </div>
+
+        <!-- Afsluiter: zelfde vorm als de kernwoorden van hoofdstuk I, in het wit -->
+        <div class="missie__triade missie__triade--light expertise__slot">
+          <span class="missie__triade-item">Opbouw</span>
+          <span class="missie__triade-sep" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+          </span>
+          <span class="missie__triade-item">Behoud</span>
+          <span class="missie__triade-sep" aria-hidden="true">
+            <svg width="10" height="10" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+          </span>
+          <span class="missie__triade-item">Overdracht</span>
         </div>
       </div>
     </section>
 
     <!-- ── V — Waarden ────────────────────────────────────────── -->
     <section id="waarden" aria-labelledby="waarden-h2">
+      <div class="waarden__photo" aria-hidden="true" data-reveal>
+        <img src="assets/waarden-team.webp" alt="" width="1600" height="1068" loading="lazy" decoding="async">
+      </div>
       <div class="container">
         <div class="chapter-head" data-reveal>
           <svg class="chapter-head__star" aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor" style="color:var(--navy-600)"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
@@ -1548,36 +2189,6 @@
       </div>
     </section>
 
-    <!-- ── VI — Team ──────────────────────────────────────────── -->
-    <section id="team" aria-labelledby="team-h2">
-      <div class="container">
-        <div class="chapter-head" data-reveal>
-          <svg class="chapter-head__star" aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor" style="color:var(--navy-600)"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-          <span class="label">VI — TEAM</span>
-          <span class="chapter-head__line" aria-hidden="true"></span>
-        </div>
-        <div class="team__grid">
-          <img class="team__photo"
-               src="assets/Team-Polares.webp"
-               alt="Het team van Polares"
-               width="1000" height="1017"
-               loading="lazy"
-               decoding="async"
-               data-reveal>
-          <div class="team__content" data-reveal>
-            <h2 class="team__h2" id="team-h2">De mensen achter uw koers.</h2>
-            <p class="team__body">Bij Polares begeleiden we niet alleen vermogens, maar vooral de mensen erachter. Met betrokkenheid, expertise en heldere inzichten zorgen we dat elke beslissing bijdraagt aan wat voor u werkelijk van waarde is.</p>
-            <a href="#contact" class="more-link">
-              Maak kennis met Polares
-              <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9">
-                <line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <!-- ── VII — Veelgestelde vragen ──────────────────────────────
          De antwoorden staan woordelijk gelijk in de FAQPage-structured data
          in de <head>; pas ze altijd samen aan. -->
@@ -1585,7 +2196,7 @@
       <div class="container">
         <div class="chapter-head" data-reveal>
           <svg class="chapter-head__star" aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor" style="color:var(--navy-600)"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-          <span class="label">VII — VEELGESTELDE VRAGEN</span>
+          <span class="label">VI — VEELGESTELDE VRAGEN</span>
           <span class="chapter-head__line" aria-hidden="true"></span>
         </div>
 
@@ -1661,12 +2272,12 @@
         <svg class="contact__poolster" aria-hidden="true" viewBox="0 0 100 100" fill="currentColor">
           <path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/>
         </svg>
-        <p class="label label--on-navy" data-reveal>VIII — CONTACT</p>
+        <p class="label label--on-navy" data-reveal>VII — CONTACT</p>
         <h2 class="contact__h2" id="contact-h2" data-reveal>Vertrouwen begint met een gesprek.</h2>
         <p class="contact__sub" data-reveal>Discreet, vrijblijvend en met volle aandacht voor uw verhaal.</p>
         <div class="contact__actions" data-reveal>
-          <a href="mailto:info@polares.be" class="btn btn--primary">info@polares.be</a>
-          <a href="tel:+3254235050" class="btn btn--ghost">+32 54 23 50 50</a>
+          <a href="mailto:info@polares.be" class="more-link more-link--light">info@polares.be <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+          <a href="tel:+3254235050" class="more-link more-link--light">+32 54 23 50 50 <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
         </div>
       </div>
     </section>
@@ -1684,21 +2295,21 @@
         </div>
         <!-- Kolom 2 — Uw familie -->
         <div>
-          <p class="footer__col-title">Uw familie</p>
+          <p class="footer__col-title"><a href="uw-familie.html">Uw familie</a></p>
           <ul class="footer__links">
-            <li>Vermogensarchitectuur</li>
-            <li>Vermogensmonitoring</li>
-            <li>Successieplanning</li>
-            <li>Vastgoedplanning</li>
+            <li><a href="uw-familie.html#vermogensarchitectuur">Vermogensarchitectuur</a></li>
+            <li><a href="uw-familie.html#vermogensmonitoring">Vermogensmonitoring</a></li>
+            <li><a href="uw-familie.html#successieplanning">Successieplanning</a></li>
+            <li><a href="uw-familie.html#vastgoedplanning">Vastgoedplanning</a></li>
           </ul>
         </div>
         <!-- Kolom 3 — Uw onderneming -->
         <div>
-          <p class="footer__col-title">Uw onderneming</p>
+          <p class="footer__col-title"><a href="uw-bedrijf.html">Uw onderneming</a></p>
           <ul class="footer__links">
-            <li>Financiële analyse</li>
-            <li>Fusies &amp; overnames</li>
-            <li>Bedrijfsoverdracht</li>
+            <li><a href="uw-bedrijf.html#financiele-analyse">Financiële analyse</a></li>
+            <li><a href="uw-bedrijf.html#fusies-en-overnames">Fusies &amp; overnames</a></li>
+            <li><a href="uw-bedrijf.html#bedrijfsoverdracht">Bedrijfsoverdracht</a></li>
           </ul>
         </div>
         <!-- Kolom 4 — Contact -->
@@ -2012,9 +2623,9 @@
       var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       var chapters = [
-        ['missie', 'I — MISSIE'], ['visie', 'II — ONZE VISIE'], ['advies', 'III — ADVIES'],
-        ['expertise', 'IV — EXPERTISE'], ['waarden', 'V — WAARDEN'], ['team', 'VI — TEAM'],
-        ['faq', 'VII — VEELGESTELDE VRAGEN']
+        ['missie', 'I — MISSIE'], ['visie', 'II — ONZE VISIE'],
+        ['team', 'III — TEAM'], ['expertise', 'IV — EXPERTISE'], ['waarden', 'V — WAARDEN'],
+        ['faq', 'VI — VEELGESTELDE VRAGEN']
       ].map(function (c) {
         var el = document.getElementById(c[0]);
         return el ? { el: el, name: c[1] } : null;
@@ -2022,6 +2633,8 @@
       if (!chapters.length) return;
 
       var darkSection = document.getElementById('expertise');
+      var darkTrack = document.getElementById('visieTrack');
+      var sheet = document.querySelector('.koers-sheet');
 
       var startY = 0, endY = 0, lineH = 0, starH = 10, ticking = false;
 
@@ -2056,6 +2669,12 @@
           var dr = darkSection.getBoundingClientRect();
           dark = dr.top < window.innerHeight / 2 && dr.bottom > window.innerHeight / 2;
         }
+        // ook boven het donkere podium van hoofdstuk II (tot het witte blad komt)
+        if (!dark && darkTrack) {
+          var tr = darkTrack.getBoundingClientRect(), h2 = window.innerHeight / 2;
+          var sheetTop = sheet ? sheet.getBoundingClientRect().top : Infinity;
+          dark = tr.top < h2 && sheetTop > h2 && document.getElementById('visie').getBoundingClientRect().top < h2;
+        }
         mer.classList.toggle('meridian--dark', dark);
       }
 
@@ -2081,16 +2700,16 @@
       // Alleen de plaatsing staat hier; titel en tekst komen uit de HTML-legenda
       // (#visieLegenda), zodat die inhoud ook zonder interactie in de pagina staat.
       var MAP = {
-        poolster:  { below: true, xPct: 50.4, yPct: 7.3 },
-        zwartgat:  { below: true, xPct: 17.8, yPct: 26.2 },
-        komeet:    { below: true, xPct: 79.3, yPct: 25.4 },
-        kompas:    { below: true, xPct: 4.7,  yPct: 71.0 },
-        gps:       { below: true, xPct: 16.8, yPct: 70.8 },
-        munt:      { below: true, xPct: 32.0, yPct: 70.3 },
-        leefwereld:{ below: true, xPct: 50.4, yPct: 70.2 },
-        satelliet: { below: true, xPct: 61.1, yPct: 70.3 },
-        expertise: { below: true, xPct: 77.1, yPct: 70.3 },
-        vermogen:  { below: true, xPct: 92.8, yPct: 69.8 }
+        poolster:  { below: true, xPct: 50.8, yPct: 10.8 },
+        zwartgat:  { below: true, xPct: 17.8, yPct: 30.6 },
+        komeet:    { below: true, xPct: 71.4, yPct: 29.6 },
+        kompas:    { below: true, xPct: 4.6,  yPct: 72.6 },
+        gps:       { below: true, xPct: 17.0, yPct: 72.0 },
+        munt:      { below: true, xPct: 33.0, yPct: 71.8 },
+        leefwereld:{ below: true, xPct: 50.8, yPct: 76.1 },
+        satelliet: { below: true, xPct: 62.9, yPct: 72.1 },
+        expertise: { below: true, xPct: 76.1, yPct: 72.4 },
+        vermogen:  { below: true, xPct: 92.1, yPct: 72.4 }
       };
 
       var legenda = document.getElementById('visieLegenda');
@@ -2106,8 +2725,8 @@
 
       var STAR = '<svg width="13" height="13" viewBox="0 0 100 100" fill="var(--navy-600)" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"></path></svg>';
       var DEFAULT_PANEL = { title: 'Het universum', body: 'Tik op een hemellichaam om zijn betekenis te lezen.' };
-      var CAP_HOVER = 'HET UNIVERSUM POLARES — BEWEEG OVER DE HEMELLICHAMEN';
-      var CAP_TAP = 'HET UNIVERSUM POLARES — SWIPE EN TIK OP DE HEMELLICHAMEN';
+      var CAP_HOVER = 'Klik op een hemellichaam en ontdek zijn betekenis';
+      var CAP_TAP = 'Swipe en tik op een hemellichaam om zijn betekenis te ontdekken';
 
       var nodes = [].slice.call(scene.querySelectorAll('.uv-node'));
       var caption = document.querySelector('.visie__caption');
@@ -2142,14 +2761,19 @@
         }
         tip.className = 'visie-tip visie-tip--float is-open';
         var tx = d.xPct < 20 ? '-9%' : d.xPct > 80 ? '-91%' : '-50%';
-        var ty = d.below ? 'calc(0% + 22px)' : 'calc(-100% - 22px)';
+        var ty = d.below ? 'calc(0% + 12px)' : 'calc(-100% - 12px)';
         tip.style.left = d.xPct + '%';
         tip.style.top = d.yPct + '%';
         tip.style.transform = 'translate(' + tx + ',' + ty + ')';
         content(d);
       }
 
-      function setActive(k) { active = k; render(); }
+      function setActive(k) {
+        active = k;
+        // eenmaal ontdekt, hoeven de uitnodigende pings niet meer
+        if (k) { var svgEl = scene.querySelector('.uv-scene'); if (svgEl) svgEl.classList.add('uv-explored'); }
+        render();
+      }
 
       function syncCaption() {
         if (caption) caption.textContent = isPanel() ? CAP_TAP : CAP_HOVER;
@@ -2177,6 +2801,8 @@
       });
 
       document.addEventListener('click', function () { setActive(null); });
+      // De zoom (hieronder) sluit een open tooltip zodra hij begint
+      scene.addEventListener('uv:reset', function () { if (active) setActive(null); });
       document.addEventListener('keydown', function (e) {
         if (e.key === 'Escape') setActive(null);
       });
@@ -2187,6 +2813,755 @@
       syncCaption();
       render();
       centerScene();
+    })();
+
+    // ── Van het universum naar het traject ───────────────────────
+    // Het podium (#visieStage) blijft sticky staan terwijl het spoor voorbijscrolt.
+    // Voortgang p (0→1): de andere hemellichamen, banen en titel vervagen en de
+    // wereldbol zweeft (licht aanzwellend) naar de wereldbol van stap 1
+    // "Helder overzicht", die intussen van onderen binnenschuift. Een vaste kopie
+    // (.visie__flyer) doet de vlucht; bij p = 1 neemt het echte icoon over.
+    (function () {
+      var sec = document.getElementById('visie');
+      var track = document.getElementById('visieTrack');
+      var stage = document.getElementById('visieStage');
+      var scene = document.getElementById('visieScene');
+      var scroller = document.getElementById('visieScroll');
+      var landing = document.querySelector('.koers__icon--overzicht img');
+      if (!sec || !track || !stage || !scene || !scroller || !landing) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      var globe = scroller.querySelector('[data-key="leefwereld"]');
+      var globeArt = globe && globe.querySelector('.uv-art');
+      if (!globeArt) return;
+      var fadeSvg = [].slice.call(scroller.querySelectorAll('.uv-node:not([data-key="leefwereld"]), .uv-orbits, .uv-paths'));
+      var fadeHtml = [].slice.call(stage.querySelectorAll('.visie__head, .visie__foot, #visieTip'));
+
+      var flyer = document.createElement('img');
+      flyer.className = 'visie__flyer';
+      flyer.src = 'assets/uv/leefwereld.svg';
+      flyer.alt = '';
+      flyer.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(flyer);
+
+      sec.classList.add('visie--zoom');
+
+      var NAV = 76, HOLD = .08;
+      var stickTop = NAV, zooming = false, ticking = false;
+
+      function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
+      function ease(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+      function lerp(a, b, t) { return a + (b - a) * t; }
+
+      function measure() {
+        // Is het podium hoger dan het scherm (kleine telefoons), dan kleeft het
+        // zo dat de onderkant zichtbaar blijft.
+        stickTop = Math.min(NAV, window.innerHeight - stage.offsetHeight);
+        stage.style.top = stickTop + 'px';
+      }
+
+      function setOpacity(list, o) {
+        list.forEach(function (el) {
+          el.style.opacity = o >= 1 ? '' : o;
+          el.style.visibility = o <= 0 ? 'hidden' : '';
+        });
+      }
+
+      function update() {
+        ticking = false;
+        var r = track.getBoundingClientRect();
+        var dist = r.height - stage.offsetHeight;
+        if (dist <= 0) return;
+        var p = clamp((stickTop - r.top) / dist);
+        var z = clamp((p - HOLD) / (1 - HOLD));
+
+        var nowZooming = z > 0;
+        if (nowZooming !== zooming) {
+          zooming = nowZooming;
+          sec.classList.toggle('is-zooming', zooming);
+          if (zooming) scene.dispatchEvent(new Event('uv:reset'));
+        }
+        setOpacity(fadeSvg, 1 - clamp(z / .3));
+        // het witte venster lost mee op; de wereldbol vliegt er (op een witte schijf) uit
+        scene.style.opacity = z >= .35 ? '0' : z > 0 ? (1 - z / .35).toFixed(3) : '';
+        setOpacity(fadeHtml, 1 - clamp(z / .2));
+
+        if (z <= 0 || z >= .995) {
+          // rust: ofwel de bol in het universum, ofwel het icoon van stap 1
+          flyer.style.visibility = 'hidden';
+          landing.style.opacity = z <= 0 ? '0' : '';
+          globe.style.visibility = z > 0 ? 'hidden' : '';
+          return;
+        }
+        var e = ease(z);
+        var a = globeArt.getBoundingClientRect();
+        var b = landing.getBoundingClientRect();
+        // zachte zwelling halverwege: inzoomen zonder te "ontploffen"
+        var swell = 1 + .55 * Math.sin(Math.PI * e);
+        var w = lerp(a.width, b.width, e) * swell;
+        var h = lerp(a.height, b.height, e) * swell;
+        var cx = lerp(a.left + a.width / 2, b.left + b.width / 2, e);
+        var cy = lerp(a.top + a.height / 2, b.top + b.height / 2, e);
+        flyer.style.width = w.toFixed(1) + 'px';
+        flyer.style.height = h.toFixed(1) + 'px';
+        flyer.style.transform = 'translate(' + (cx - w / 2).toFixed(1) + 'px,' + (cy - h / 2).toFixed(1) + 'px)';
+        flyer.style.visibility = 'visible';
+        // vertrekt als witte lijntekening (zoals in de constellatie) en krijgt
+        // onderweg zijn witte schijf, zodat hij naadloos in stap 1 landt
+        var k = 1 - clamp(e / .45);
+        flyer.style.filter = k > 0 ? 'brightness(' + (1 - k).toFixed(3) + ') invert(' + k.toFixed(3) + ')' : '';
+        flyer.style.backgroundColor = 'rgba(255,255,255,' + (1 - k).toFixed(3) + ')';
+        flyer.style.boxShadow = '0 10px 40px rgba(7,24,38,' + (.25 * (1 - k) * (1 - e)).toFixed(3) + ')';
+        globe.style.visibility = 'hidden';
+        landing.style.opacity = '0';
+      }
+
+      function onScroll() {
+        if (!ticking) { ticking = true; requestAnimationFrame(update); }
+      }
+      function onResize() { measure(); update(); }
+
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', onResize);
+      window.addEventListener('load', onResize);
+      onResize();
+    })();
+
+    // ── Sterrenhemel achter hoofdstuk II en Expertise (zelfde sfeer als de hero) ──
+    [['visieSky', 'visie'], ['expertiseSky', 'expertise']].forEach(function (pair) {
+      var canvas = document.getElementById(pair[0]);
+      var sec = document.getElementById(pair[1]);
+      if (!canvas || !sec) return;
+      var ctx = canvas.getContext('2d');
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var stars = [], W = 0, H = 0, dpr = 1, running = false, visible = false;
+
+      function build() {
+        dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+        W = canvas.clientWidth; H = canvas.clientHeight;
+        if (!W || !H) return;
+        canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+        var count = Math.round((W * H) / 9000);
+        stars = [];
+        for (var i = 0; i < count; i++) {
+          stars.push({
+            x: Math.random() * W, y: Math.random() * H,
+            s: 0.4 + Math.random() * 1.2,
+            base: 0.25 + Math.random() * 0.6,
+            tw: 0.4 + Math.random() * 1.6,
+            ph: Math.random() * Math.PI * 2,
+            warm: Math.random() < 0.12
+          });
+        }
+        draw(performance.now());
+      }
+
+      function draw(now) {
+        var t = now / 1000;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.clearRect(0, 0, W, H);
+        for (var i = 0; i < stars.length; i++) {
+          var st = stars[i];
+          var a = reduce ? st.base : st.base * (0.6 + 0.4 * Math.sin(t * st.tw + st.ph));
+          ctx.fillStyle = st.warm ? 'rgba(255,236,210,' + a + ')' : 'rgba(255,255,255,' + a + ')';
+          ctx.beginPath(); ctx.arc(st.x, st.y, st.s, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+
+      function loop(now) {
+        if (!visible) { running = false; return; }
+        draw(now);
+        requestAnimationFrame(loop);
+      }
+      function start() { if (!running && !reduce) { running = true; requestAnimationFrame(loop); } }
+
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (en) {
+          visible = en[0].isIntersecting;
+          if (visible) start();
+        }).observe(sec);
+      }
+      var t;
+      window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(build, 150); });
+      build();
+    });
+
+    // ── Scroll-stop bij de constellatie ──────────────────────────
+    // Wie naar beneden scrolt, houdt halt zodra het witte venster met de
+    // constellatie volledig in beeld staat: zo kan men rustig klikken. "Ontdek
+    // meer" laat de pagina dan zelf verder glijden (de wereldbol vliegt naar het
+    // traject) en geeft het scrollen weer vrij. Naar boven kan altijd; menulinks,
+    // Tab-navigatie en een pagina die al voorbij de constellatie opent, heffen de
+    // stop ook op. Eén keer per bezoek.
+    (function () {
+      var track = document.getElementById('visieTrack');
+      var stage = document.getElementById('visieStage');
+      var btn = document.getElementById('visieNext');
+      if (!track || !stage || !btn) return;
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var released = false, gliding = false;
+
+      function holdY() {
+        var top = parseFloat(stage.style.top) || 76;
+        return Math.round(track.getBoundingClientRect().top + window.scrollY - top);
+      }
+      function endY() {
+        return holdY() + Math.max(0, track.offsetHeight - stage.offsetHeight);
+      }
+      function atHold() { return !released && window.scrollY >= holdY() - 1; }
+      function release() { released = true; document.documentElement.classList.add('visie-vrij'); }
+
+      // opent de pagina al voorbij de constellatie (herladen) of met een anker
+      // naar iets verderop (bv. /#expertise), dan geen stop
+      function initial() {
+        if (window.scrollY > holdY() + 4) { release(); return; }
+        var id = decodeURIComponent((location.hash || '').slice(1));
+        var el = id && document.getElementById(id);
+        if (el && !track.contains(el) && (track.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)) release();
+      }
+      initial();
+      window.addEventListener('load', initial);
+
+      window.addEventListener('scroll', function () {
+        if (released || gliding) return;
+        var h = holdY();
+        if (window.scrollY > h) window.scrollTo({ top: h, behavior: 'instant' });
+      }, { passive: true });
+
+      window.addEventListener('wheel', function (e) {
+        if (e.deltaY > 0 && atHold()) e.preventDefault();
+      }, { passive: false });
+
+      var tx = 0, ty = 0;
+      window.addEventListener('touchstart', function (e) {
+        tx = e.touches[0].clientX; ty = e.touches[0].clientY;
+      }, { passive: true });
+      window.addEventListener('touchmove', function (e) {
+        var dx = tx - e.touches[0].clientX, dy = ty - e.touches[0].clientY;
+        // enkel verticaal naar beneden tegenhouden: horizontaal swipen in de kaart blijft vrij
+        if (dy > 0 && Math.abs(dy) > Math.abs(dx) && atHold()) e.preventDefault();
+      }, { passive: false });
+
+      window.addEventListener('keydown', function (e) {
+        var t = e.target, tag = t && t.tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA' || (t && t.isContentEditable)) return;
+        var keys = ['ArrowDown', 'PageDown', 'End', ' ', 'Spacebar'];
+        if (keys.indexOf(e.key) !== -1 && !(e.key === ' ' && (tag === 'BUTTON' || tag === 'A')) && atHold()) e.preventDefault();
+      });
+
+      // navigeren naar iets verderop = de stop opheffen
+      document.addEventListener('click', function (e) {
+        var a = e.target.closest && e.target.closest('a[href^="#"]');
+        if (a && a.getAttribute('href') !== '#visie') release();
+      }, true);
+      window.addEventListener('hashchange', release);
+      document.addEventListener('focusin', function (e) {
+        if (released || !e.target || track.contains(e.target)) return;
+        if (track.compareDocumentPosition(e.target) & Node.DOCUMENT_POSITION_FOLLOWING) release();
+      });
+
+      function glide(to) {
+        var from = window.scrollY, d = to - from;
+        if (reduce || Math.abs(d) < 2) { window.scrollTo({ top: to, behavior: 'instant' }); return; }
+        var dur = Math.min(2200, 900 + Math.abs(d) * .9), t0 = null;
+        gliding = true;
+        function ease(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+        function step(ts) {
+          if (t0 === null) t0 = ts;
+          var t = Math.min(1, (ts - t0) / dur);
+          window.scrollTo({ top: from + d * ease(t), behavior: 'instant' });
+          if (t < 1) requestAnimationFrame(step); else gliding = false;
+        }
+        requestAnimationFrame(step);
+      }
+
+      btn.addEventListener('click', function () {
+        release();
+        glide(endY());
+      });
+    })();
+
+    // ── Hoofdstuk I: lijn van de kernwoorden naar satelliet en doelgroepen ──
+    // Zelfde principe als het traject: de lijn tekent zich mee bij het scrollen,
+    // met een sterretje aan de kop. Ze loopt van de kernwoorden naar de satelliet
+    // (links), dan naar de illustratie van Uw familie (rechts), terug naar links
+    // naar de tandwielen van Uw bedrijf, langs de slotregel en tot slot naar de
+    // Poolster van de constellatie in hoofdstuk II, waarna de titel verschijnt. Alleen als de kolommen naast elkaar staan; op
+    // mobiel zou de lijn door de tekst lopen.
+    (function () {
+      var wrap = document.getElementById('missieFlow');
+      var svg = document.getElementById('missiePath');
+      if (!wrap || !svg) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var triade = wrap.querySelector('.missie__triade');
+      var grid = wrap.querySelector('.missie__grid');
+      var sat = wrap.querySelector('.missie__kompas');
+      var portals = wrap.querySelector('.missie__portals');
+      var cols = [].slice.call(wrap.querySelectorAll('.portal-col'));
+      var arts = cols.map(function (c) { return c.querySelector('.portal__art'); });
+      var slot = wrap.querySelector('.missie__slot');
+      var slotLine = slot && slot.querySelector('.missie__triade--slot');
+      // Doorloop naar hoofdstuk II: de lijn landt op de Poolster van de constellatie
+      var track = document.getElementById('visieTrack');
+      var stage = document.getElementById('visieStage');
+      var scene = document.getElementById('visieScene');
+      var pool = scene && scene.querySelector('[data-key="poolster"] .uv-art');
+      var vTitle = document.querySelector('.visie__intro');
+      if (!triade || !grid || !sat || !portals || arts.length !== 2 || !slotLine) return;
+      var line = { dots: svg.querySelector('[data-p="main"]'), rev: svg.querySelector('[data-r="main"]'), head: svg.querySelector('[data-h="main"]') };
+      var lightCopy = svg.querySelector('[data-l="main"]');
+      var clip = { boven: svg.querySelector('[data-c="boven"]'), onder: svg.querySelector('[data-c="onder"]'), band: svg.querySelector('[data-c="band"]') };
+      var visieSec = document.getElementById('visie');
+      var mq = matchMedia('(min-width: 768px)');
+      var live = false, ticking = false, geo = null;
+
+      function box(el) {
+        var x = 0, y = 0, n = el;
+        while (n && n !== wrap) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+        return { x: x + el.offsetWidth / 2, left: x, right: x + el.offsetWidth, top: y, bottom: y + el.offsetHeight };
+      }
+      // Positie van de Poolster t.o.v. deze sectie, alsof het podium niet kleeft:
+      // het podium staat van nature bovenaan het spoor. De scroll-reveal van de
+      // scène (translateY) wordt eruit gerekend.
+      function poolster() {
+        if (!pool || !track || !stage || !vTitle) return null;
+        var w = wrap.getBoundingClientRect(), tr = track.getBoundingClientRect();
+        var st = stage.getBoundingClientRect(), r = pool.getBoundingClientRect();
+        var m = getComputedStyle(scene).transform, ty = 0;
+        if (m && m !== 'none') ty = new DOMMatrixReadOnly(m).m42;
+        var base = tr.top - w.top;
+        var sc = scene.getBoundingClientRect();
+        return {
+          x: r.left - w.left + r.width / 2,
+          top: base + (r.top - st.top) - ty,
+          titleTop: base + vTitle.offsetTop,
+          // donkere band: van de bovenrand van hoofdstuk II tot het witte venster
+          darkTop: document.getElementById('missie').getBoundingClientRect().bottom - w.top,
+          cardTop: base + (sc.top - st.top) - ty
+        };
+      }
+      function sample(p) {
+        p.total = p.dots.getTotalLength();
+        p.s = [];
+        for (var i = 0; i <= 200; i++) {
+          var l = p.total * i / 200, pt = p.dots.getPointAtLength(l);
+          p.s.push({ l: l, x: pt.x, y: pt.y });
+        }
+        p.rev.style.strokeDasharray = p.total + ' ' + p.total;
+      }
+      // lengte langs een pad bij een gegeven hoogte (het pad daalt monotoon;
+      // op een horizontaal stuk schuift de kop verder naarmate men scrolt)
+      function at(p, yHead) {
+        var s = p.s, k = 0;
+        if (!s.length || yHead < s[0].y) return { len: 0, x: s[0] ? s[0].x : 0, y: s[0] ? s[0].y : 0 };
+        while (k < s.length - 1 && s[k + 1].y <= yHead) k++;
+        var a = s[k], b = s[Math.min(k + 1, s.length - 1)];
+        if (b.y === a.y && b !== a) {
+          var j = k; while (j < s.length - 1 && s[j + 1].y === a.y) j++;
+          var len = a.l + (s[j].l - a.l) * Math.min(1, (yHead - a.y) / 90);
+          var pt = p.dots.getPointAtLength(len);
+          return { len: len, x: pt.x, y: pt.y };
+        }
+        // sprong over een illustratie: de kop wacht aan de rand
+        if (b.l - a.l < .5 && b.y - a.y > 8) return { len: a.l, x: a.x, y: a.y };
+        var t = b.y > a.y ? Math.max(0, Math.min(1, (yHead - a.y) / (b.y - a.y))) : 1;
+        return { len: a.l + (b.l - a.l) * t, x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+      }
+
+      function draw() {
+        live = mq.matches;
+        wrap.classList.toggle('missie--live', live);
+        if (!live) {
+          if (vTitle) vTitle.classList.remove('is-waiting');
+          return;
+        }
+        var t = box(triade), g = box(grid), s = box(sat), p = box(portals);
+        var f = box(arts[0]), b = box(arts[1]), e = box(slotLine), P = poolster();
+        // liggen het midden van de slotrij en de Poolster vlak bij elkaar, dan
+        // één rechte verticaal (geen knikje van een paar pixels)
+        var ex = P && Math.abs(P.x - e.x) < 16 ? P.x : e.x;
+        var yA = (t.bottom + g.top) / 2;
+        var yB = (g.bottom + p.top) / 2;
+        // haaks, door de witruimte; over de illustraties springt de lijn (M)
+        // vanonder het midden van de kernwoorden, haaks naar de satelliet
+        var d = 'M' + t.x + ',' + (t.bottom + 12) + ' V' + yA + ' H' + s.x + ' V' + (s.top - 12) +
+          ' M' + s.x + ',' + (s.bottom + 12) + ' V' + yB + ' H' + f.x + ' V' + (f.top - 14) +
+          ' M' + f.x + ',' + (f.bottom + 14) +
+          // tussen de twee rijen door naar de illustratie van Uw bedrijf
+          (Math.abs(b.x - f.x) > 2 ? ' V' + ((box(cols[0]).bottom + box(cols[1]).top) / 2) + ' H' + b.x : '') + ' V' + (b.top - 14) +
+          // en tot slot tot net boven de afsluitende regel
+          ' M' + b.x + ',' + (b.bottom + 14) + ' V' + ((box(cols[1]).bottom + box(slot).top) / 2) +
+          ' H' + ex + ' V' + (e.top - 22) +
+          // over de slotregel heen, recht naar de Poolster in hoofdstuk II
+          (P ? ' M' + ex + ',' + (e.bottom + 22) +
+               (Math.abs(P.x - ex) > 2 ? ' V' + ((e.bottom + P.titleTop) / 2) + ' H' + P.x : '') +
+               ' V' + (P.top - 9) : '');
+        line.dots.setAttribute('d', d);
+        if (lightCopy) lightCopy.setAttribute('d', d);
+        var bTop = P ? P.darkTop : 1e6, bBot = 1e6;
+        clip.boven.setAttribute('height', bTop + 5000);
+        clip.onder.setAttribute('y', bBot); clip.onder.setAttribute('height', 40000);
+        clip.band.setAttribute('y', bTop); clip.band.setAttribute('height', Math.max(0, bBot - bTop));
+        line.rev.setAttribute('d', d);
+        sample(line);
+        geo = { satTop: s.top - 12, fTop: f.top - 14, bTop: b.top - 14, eTop: e.top - 22, pool: !!P, band: [bTop, bBot] };
+        update();
+      }
+
+      function head(p, r) {
+        p.rev.style.strokeDashoffset = (p.total - r.len).toFixed(1);
+        p.head.setAttribute('transform', 'translate(' + (r.x - 7).toFixed(1) + ',' + (r.y - 7).toFixed(1) + ') scale(.14)');
+        p.head.style.opacity = r.len > 2 && r.len < p.total - 2 ? '' : '0';
+      }
+
+      function update() {
+        ticking = false;
+        if (!live || !geo) return;
+        var yHead = window.innerHeight * .7 - wrap.getBoundingClientRect().top;
+        var r = at(line, yHead);
+        head(line, r);
+        // boven het donkerblauw is het sterretje wit
+        line.head.style.fill = r.y > geo.band[0] && r.y < geo.band[1] ? '#fff' : '';
+        grid.classList.toggle('is-reached', r.y >= geo.satTop - 20);
+        cols[0].classList.toggle('is-reached', r.y >= geo.fTop - 2);
+        cols[1].classList.toggle('is-reached', r.y >= geo.bTop - 2);
+        slot.classList.toggle('is-reached', r.y >= geo.eTop - 2);
+        // pas als de ster op de Poolster valt, verschijnt de titel van hoofdstuk II
+        var landed = !geo.pool || r.len >= line.total - 2;
+        if (vTitle) vTitle.classList.toggle('is-waiting', !landed);
+        if (scene) scene.classList.toggle('is-landed', landed);
+        // en dan mag de lijn van hoofdstuk I zachtjes verdwijnen
+        svg.classList.toggle('is-landed', landed && geo.pool);
+      }
+
+      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+      var tm;
+      function later() { clearTimeout(tm); tm = setTimeout(draw, 80); }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', later);
+      window.addEventListener('load', draw);
+      if (window.ResizeObserver) new ResizeObserver(later).observe(wrap);
+      // de scène schuift bij het in beeld komen nog op zijn plaats: daarna hertekenen
+      if (scene) scene.addEventListener('transitionend', function (ev) { if (ev.target === scene) later(); });
+      draw();
+    })();
+
+    // ── Team: de voortzetting van het traject ────────────────────
+    // Neemt de lijn over waar het traject-blad eindigt (zelfde x, zelfde
+    // scroll-anker, dus naadloos), komt boven de titel, loopt links langs de
+    // tekst naar beneden (die dan verschijnt) en de sterrenhemel in tot boven
+    // de lamp van Expertise. Over het donker is ze licht.
+    (function () {
+      var sec = document.getElementById('team');
+      var wrap = document.getElementById('teamFlow');
+      var svg = document.getElementById('teamPath');
+      var koersList = document.querySelector('#visieKoers .koers__list');
+      var lamp = document.querySelector('.expertise__lamp');
+      var expHeader = document.querySelector('.expertise__header-grid');
+      if (!sec || !wrap || !svg || !koersList || !lamp) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var grid = wrap.querySelector('.team__grid');
+      var h2 = wrap.querySelector('.team__h2');
+      var content = wrap.querySelector('.team__content');
+      var dots = svg.querySelector('[data-p="main"]'), light = svg.querySelector('[data-l="main"]');
+      var reveal = svg.querySelector('.koers__reveal'), head = svg.querySelector('.koers__head');
+      var clipL = svg.querySelector('[data-c="licht"]'), clipD = svg.querySelector('[data-c="donker"]');
+      var mq = matchMedia('(min-width: 768px)');
+      var live = false, ticking = false, samples = [], total = 0, geo = null;
+
+      function shift(el) {
+        var m = el ? getComputedStyle(el).transform : 'none';
+        return m && m !== 'none' ? new DOMMatrixReadOnly(m).m42 : 0;
+      }
+
+      function draw() {
+        live = mq.matches;
+        sec.classList.toggle('team--live', live);
+        if (!live) return;
+        var w = wrap.getBoundingClientRect();
+        var xR = koersList.getBoundingClientRect().right - w.left;
+        var secR = sec.getBoundingClientRect();
+        var top = secR.top - w.top, bottom = secR.bottom - w.top;
+        var lr = lamp.getBoundingClientRect(), lampTy = shift(expHeader);
+        var lampX = lr.left - w.left + lr.width / 2, lampTop = lr.top - w.top - lampTy;
+        // offsets: niet beïnvloed door de onthul-animaties
+        var xL = content.offsetLeft - 32;
+        var yT = h2.offsetTop - 36;
+        var d = 'M' + xR + ',' + top + ' V' + yT + ' H' + xL +
+                ' V' + ((bottom + lampTop) / 2) + ' H' + lampX + ' V' + (lampTop - 12);
+        dots.setAttribute('d', d); light.setAttribute('d', d); reveal.setAttribute('d', d);
+        clipL.setAttribute('height', bottom + 5000);
+        clipD.setAttribute('y', bottom); clipD.setAttribute('height', 40000);
+        total = dots.getTotalLength();
+        samples = [];
+        for (var i = 0; i <= 300; i++) {
+          var l = total * i / 300, pt = dots.getPointAtLength(l);
+          samples.push({ l: l, x: pt.x, y: pt.y });
+        }
+        reveal.style.strokeDasharray = total + ' ' + total;
+        geo = { yT: yT, bottom: bottom };
+        update();
+      }
+
+      // lengte langs de (monotoon dalende) lijn bij een gegeven hoogte
+      function at(yHead) {
+        var s = samples, k = 0;
+        if (yHead < s[0].y) return { len: 0, x: s[0].x, y: s[0].y };
+        while (k < s.length - 1 && s[k + 1].y <= yHead) k++;
+        var a = s[k], b = s[Math.min(k + 1, s.length - 1)];
+        if (b.y === a.y && b !== a) {
+          var j = k; while (j < s.length - 1 && s[j + 1].y === a.y) j++;
+          var len = a.l + (s[j].l - a.l) * Math.min(1, (yHead - a.y) / 90);
+          var pt = dots.getPointAtLength(len);
+          return { len: len, x: pt.x, y: pt.y };
+        }
+        // sprong over de foto: de kop wacht bij het sterretje
+        if (b.l - a.l < .5 && b.y - a.y > 8) return { len: a.l, x: a.x, y: a.y };
+        var t = b.y > a.y ? Math.max(0, Math.min(1, (yHead - a.y) / (b.y - a.y))) : 1;
+        return { len: a.l + (b.l - a.l) * t, x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+      }
+
+      function update() {
+        ticking = false;
+        if (!live || !samples.length) return;
+        var yHead = window.innerHeight * .7 - wrap.getBoundingClientRect().top;
+        var r = at(yHead);
+        reveal.style.strokeDashoffset = (total - r.len).toFixed(1);
+        head.setAttribute('transform', 'translate(' + (r.x - 7).toFixed(1) + ',' + (r.y - 7).toFixed(1) + ') scale(.14)');
+        head.style.opacity = r.len > 2 && r.len < total - 2 ? '' : '0';
+        head.style.fill = r.y > geo.bottom ? '#fff' : '';
+        grid.classList.toggle('is-reached', r.y >= geo.yT - 2);
+      }
+
+      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+      var tm;
+      function later() { clearTimeout(tm); tm = setTimeout(draw, 80); }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', later);
+      window.addEventListener('load', draw);
+      if (window.ResizeObserver) { var ro = new ResizeObserver(later); ro.observe(wrap); ro.observe(document.getElementById('visie')); }
+      draw();
+    })();
+
+    // ── Expertise: een lijn die speels langs alle sterretjes loopt ─
+    // Van de lamp omlaag, dan kolom per kolom door de sterretjes van de
+    // expertises (om beurt omlaag en omhoog) en tot slot naar de slotregel.
+    // De voortgang volgt de scroll over de hele lengte van de lijn, zodat ze
+    // ook omhoog mag lopen. Elke expertise verschijnt als de lijn haar raakt.
+    (function () {
+      var wrap = document.getElementById('expertiseFlow');
+      var svg = document.getElementById('expertisePath');
+      var sec = document.getElementById('expertise');
+      if (!wrap || !svg || !sec) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var dots = svg.querySelector('.koers__dots');
+      var reveal = svg.querySelector('.koers__reveal');
+      var head = svg.querySelector('.koers__head');
+      var header = wrap.querySelector('.expertise__header-grid');
+      var lamp = wrap.querySelector('.expertise__lamp');
+      var grid = wrap.querySelector('.expertise__grid');
+      var slot = wrap.querySelector('.expertise__slot');
+      var items = [].slice.call(wrap.querySelectorAll('.expertise__item'));
+      if (!lamp || !grid || !slot || !items.length) return;
+      var mq = matchMedia('(min-width: 768px)');
+      var live = false, ticking = false, total = 0, y0 = 0, y1 = 1, hits = [];
+
+      // positie t.o.v. de lijn; de scroll-reveal van de kop (translateY) eruit
+      function rel(el, ty) {
+        var r = el.getBoundingClientRect(), w = wrap.getBoundingClientRect();
+        ty = ty || 0;
+        return { x: r.left - w.left + r.width / 2, y: r.top - w.top + r.height / 2 - ty,
+                 top: r.top - w.top - ty, bottom: r.bottom - w.top - ty, left: r.left - w.left, right: r.right - w.left };
+      }
+      function shift(el) {
+        var m = getComputedStyle(el).transform;
+        return m && m !== 'none' ? new DOMMatrixReadOnly(m).m42 : 0;
+      }
+
+      function draw() {
+        live = mq.matches;
+        sec.classList.toggle('expertise--live', live);
+        if (!live) return;
+        var L = rel(lamp, shift(header)), G = rel(grid), E = rel(slot);
+        var stars = items.map(function (it) { return rel(it.querySelector('.expertise__item-head svg')); });
+        // sterretjes per kolom groeperen
+        var cols = [];
+        stars.forEach(function (p, i) {
+          var c = cols.filter(function (c) { return Math.abs(c.x - p.x) < 10; })[0];
+          if (!c) { c = { x: p.x, s: [] }; cols.push(c); }
+          c.s.push(i);
+        });
+        cols.sort(function (a, b) { return a.x - b.x; });
+        var top = G.top - 16, bot = G.bottom + 16;
+        y0 = L.bottom + 12;
+        var d = 'M' + L.x + ',' + y0 + ' V' + top, down = true, y = top;
+        cols.forEach(function (c) {
+          d += ' H' + c.x + ' V' + (down ? bot : top);
+          y = down ? bot : top;
+          down = !down;
+        });
+        // eindigt de slinger bovenaan (even aantal kolommen): rechts van het raster naar beneden
+        if (y === top) d += ' H' + (G.right + 24) + ' V' + bot;
+        // na het laatste sterretje nog verder omlaag, tot halverwege de slotregel,
+        // en pas dan opzij: zo is het laatste stuk kort en vloeit het rustig uit
+        var yMid = (bot + (E.top - 14)) / 2;
+        d += ' V' + yMid + ' H' + E.x + ' V' + (E.top - 14);
+        y1 = E.top - 14;
+        dots.setAttribute('d', d);
+        reveal.setAttribute('d', d);
+        total = dots.getTotalLength();
+        reveal.style.strokeDasharray = total + ' ' + total;
+        // lengte langs de lijn waarop elk sterretje ligt
+        var samples = [];
+        for (var k = 0; k <= 500; k++) {
+          var l = total * k / 500, pt = dots.getPointAtLength(l);
+          samples.push({ l: l, x: pt.x, y: pt.y });
+        }
+        hits = stars.map(function (p) {
+          var best = 0, bd = Infinity;
+          samples.forEach(function (sm) {
+            var dd = (sm.x - p.x) * (sm.x - p.x) + (sm.y - p.y) * (sm.y - p.y);
+            if (dd < bd) { bd = dd; best = sm.l; }
+          });
+          return best;
+        });
+        update();
+      }
+
+      function update() {
+        ticking = false;
+        if (!live || !total) return;
+        var yHead = window.innerHeight * .7 - wrap.getBoundingClientRect().top;
+        var f = Math.max(0, Math.min(1, (yHead - y0) / (y1 - y0)));
+        var len = f * total;
+        reveal.style.strokeDashoffset = (total - len).toFixed(1);
+        var pt = dots.getPointAtLength(len);
+        head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
+        head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
+        items.forEach(function (it, i) { it.classList.toggle('is-reached', len >= hits[i] - 4); });
+        slot.classList.toggle('is-reached', f >= .999);
+      }
+
+      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+      var tm;
+      function later() { clearTimeout(tm); tm = setTimeout(draw, 80); }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', later);
+      window.addEventListener('load', draw);
+      if (header) header.addEventListener('transitionend', function (ev) { if (ev.target === header) later(); });
+      if (window.ResizeObserver) new ResizeObserver(later).observe(wrap);
+      draw();
+    })();
+
+    // ── Het traject: een lijn die zichzelf tekent ────────────────
+    // De gestippelde lijn loopt zoals in de offertemap: van boven, onder
+    // "Helder overzicht" door naar het kompas, dan naar de GPS en tot slot rechts
+    // naar beneden (op mobiel één verticale lijn door de iconen). Bij het scrollen
+    // tekent ze zich mee, met een sterretje aan de kop; elke stap komt tot leven
+    // zodra de lijn hem bereikt.
+    (function () {
+      var wrap = document.getElementById('visieKoers');
+      var svg = document.getElementById('koersPath');
+      if (!wrap || !svg) return;
+      var dots = svg.querySelector('.koers__dots');
+      var reveal = svg.querySelector('.koers__reveal');
+      var head = svg.querySelector('.koers__head');
+      var steps = [].slice.call(wrap.querySelectorAll('.koers__step'));
+      var icons = steps.map(function (st) { return st.querySelector('.koers__icon'); });
+      if (icons.length !== 7 || !dots || !reveal || !head) return;
+
+      var live = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var samples = [], total = 0, iconY = [], ticking = false;
+
+      // offsets i.p.v. getBoundingClientRect: animaties verschuiven elementen
+      // tijdelijk met een transform, dat mag de lijn niet volgen
+      function box(el) {
+        var x = 0, y = 0, n = el;
+        while (n && n !== wrap) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+        var w = el.offsetWidth, h = el.offsetHeight;
+        return { x: x + w / 2, y: y + h / 2, top: y, bottom: y + h, left: x, right: x + w, width: w };
+      }
+
+      function draw() {
+        var c = icons.map(box), row = steps.map(box);
+        var list = box(wrap.querySelector('.koers__list'));
+        var d;
+        // de lijn loopt door tot onderaan het witte blad, waar Team ze overneemt
+        var sheet = wrap.closest('.koers-sheet');
+        var endY = sheet ? sheet.getBoundingClientRect().bottom - wrap.getBoundingClientRect().top : list.bottom + 24;
+        if (Math.abs(c[1].x - c[2].x) < 4) {
+          d = 'M' + c[0].x + ',0 V' + endY;
+        } else {
+          var copy = box(steps[1].querySelector('.koers__copy'));
+          var x0 = copy.left + copy.width * .4;
+          var yA = (row[0].bottom + Math.min(row[1].top, row[2].top)) / 2;
+          var yB = (Math.max(row[1].bottom, row[2].bottom) + Math.min(row[3].top, row[4].top)) / 2;
+          var yC = (Math.max(row[3].bottom, row[4].bottom) + Math.min(row[5].top, row[6].top)) / 2;
+          d = 'M' + x0 + ',0 V' + yA + ' H' + c[2].x + ' V' + yB + ' H' + c[3].x +
+              ' V' + yC + ' H' + list.right + ' V' + endY;
+        }
+        dots.setAttribute('d', d);
+        reveal.setAttribute('d', d);
+        iconY = c.map(function (b) { return b.y; });
+
+        // de lijn daalt monotoon: bemonster lengte ↔ hoogte eenmaal per opbouw
+        total = dots.getTotalLength();
+        samples = [];
+        for (var i = 0; i <= 240; i++) {
+          var l = total * i / 240, pt = dots.getPointAtLength(l);
+          samples.push({ l: l, x: pt.x, y: pt.y });
+        }
+        reveal.style.strokeDasharray = total + ' ' + total;
+        update();
+      }
+
+      function update() {
+        ticking = false;
+        if (!samples.length) return;
+        var top = wrap.getBoundingClientRect().top;
+        // de kop van de lijn volgt een punt op ~70% van de schermhoogte
+        var yHead = window.innerHeight * .7 - top;
+        var k = 0;
+        while (k < samples.length - 1 && samples[k + 1].y <= yHead) k++;
+        var sA = samples[k], sB = samples[Math.min(k + 1, samples.length - 1)];
+        var t = sB.y > sA.y ? Math.max(0, Math.min(1, (yHead - sA.y) / (sB.y - sA.y))) : 0;
+        if (yHead < 0) t = 0;
+        var len = yHead < 0 ? 0 : sA.l + (sB.l - sA.l) * t;
+        var hx = sA.x + (sB.x - sA.x) * t, hy = sA.y + (sB.y - sA.y) * t;
+        // op een horizontaal stuk schuift de kop verder naarmate men scrolt
+        if (sB.y === sA.y && yHead >= sA.y) {
+          var j = k; while (j < samples.length - 1 && samples[j + 1].y === sA.y) j++;
+          var span = samples[j].l - sA.l;
+          var extra = Math.min(1, (yHead - sA.y) / 90);
+          len = sA.l + span * extra;
+          var pt = dots.getPointAtLength(len); hx = pt.x; hy = pt.y;
+        }
+        reveal.style.strokeDashoffset = (total - len).toFixed(1);
+        head.setAttribute('transform', 'translate(' + (hx - 7).toFixed(1) + ',' + (hy - 7).toFixed(1) + ') scale(.14)');
+        head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
+        steps.forEach(function (st, i) {
+          // stap 1 verschijnt al terwijl de wereldbol erin landt
+          st.classList.toggle('is-reached', hy >= iconY[i] - (i === 0 ? 90 : 12) || len >= total - 2);
+        });
+      }
+
+      function onScroll() {
+        if (!ticking) { ticking = true; requestAnimationFrame(update); }
+      }
+      var t;
+      function later() { clearTimeout(t); t = setTimeout(draw, 80); }
+
+      if (live) {
+        wrap.classList.add('koers--live');
+        window.addEventListener('scroll', onScroll, { passive: true });
+      } else {
+        dots.removeAttribute('mask');
+        head.style.display = 'none';
+      }
+      window.addEventListener('resize', later);
+      window.addEventListener('load', draw);
+      if (window.ResizeObserver) new ResizeObserver(later).observe(wrap);
+      draw();
     })();
   </script>
 

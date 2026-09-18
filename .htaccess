@@ -22,13 +22,14 @@ Options -Indexes
   # ── 2. Oude Craft-pagina's → secties op de nieuwe pagina ───────────────────
   # De vlag NE is hier essentieel: zonder NE maakt Apache van # een %23 en
   # komt de bezoeker op een kapotte URL uit.
-  # Komen er later aparte dienstpagina's, dan wijzen deze regels daarheen.
+  # Familie en onderneming hebben nu elk een eigen pagina.
   RewriteRule ^contact/?$                          /#contact   [R=301,L,NE]
   RewriteRule ^expertise/?$                        /#expertise [R=301,L,NE]
-  RewriteRule ^uw-familie/?$                       /#advies    [R=301,L,NE]
-  RewriteRule ^uw-familie/vermogensarchitectuur/?$ /#advies    [R=301,L,NE]
-  RewriteRule ^uw-familie/vermogensmonitoring/?$   /#advies    [R=301,L,NE]
-  RewriteRule ^uw-familie/concrete-uitwerking/?$   /#advies    [R=301,L,NE]
+  RewriteRule ^uw-familie/?$                       /uw-familie.html [R=301,L]
+  RewriteRule ^uw-familie/vermogensarchitectuur/?$ /uw-familie.html#vermogensarchitectuur [R=301,L,NE]
+  RewriteRule ^uw-familie/vermogensmonitoring/?$   /uw-familie.html#vermogensmonitoring   [R=301,L,NE]
+  RewriteRule ^uw-familie/concrete-uitwerking/?$   /uw-familie.html [R=301,L]
+  RewriteRule ^uw-(onderneming|bedrijf)/?$         /uw-bedrijf.html [R=301,L]
 </IfModule>
 
 # ── 3. Alles wat niet polares.be is, blijft uit de zoekresultaten ────────────

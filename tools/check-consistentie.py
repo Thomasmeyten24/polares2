@@ -53,6 +53,8 @@ def controleer(naam: str, ok: bool, detail: str = "") -> None:
 index = lees("index.html")
 privacy = lees("privacyverklaring.html")
 voorwaarden = lees("algemene-voorwaarden.html")
+familie = lees("uw-familie.html")
+bedrijf = lees("uw-bedrijf.html")
 
 # ── De structured data is de referentie: daar staan de feiten gestructureerd ──
 ld_ruw = re.search(r'application/ld\+json">([\s\S]*?)</script>', index)
@@ -110,6 +112,8 @@ for bestand, inhoud in (
     ("index.html", index),
     ("privacyverklaring.html", privacy),
     ("algemene-voorwaarden.html", voorwaarden),
+    ("uw-familie.html", familie),
+    ("uw-bedrijf.html", bedrijf),
 ):
     tekst = zichtbare_tekst(inhoud)
     controleer(f"juridische naam in {bestand}", naam in tekst, naam)
@@ -135,6 +139,19 @@ for href in set(re.findall(r'href="#([^"]+)"', index)):
 for href in set(re.findall(r'href="([a-z0-9-]+\.html)"', index)):
     controleer(f"pagina {href} bestaat", (ROOT / href).exists())
 
+# De dienstpagina's linken naar ankers op de homepage en naar elkaar
+for bestand, inhoud in (("uw-familie.html", familie), ("uw-bedrijf.html", bedrijf)):
+    for href in set(re.findall(r'href="index\.html#([^"]+)"', inhoud)):
+        controleer(f"anker index.html#{href} (vanuit {bestand}) bestaat", href in ankers)
+    for href in set(re.findall(r'href="([a-z0-9-]+\.html)', inhoud)):
+        controleer(f"pagina {href} (vanuit {bestand}) bestaat", (ROOT / href).exists())
+    for pad in set(re.findall(r'(?:src|href)="(assets/[^"]+)"', inhoud)):
+        controleer(f"bestand {pad} (vanuit {bestand}) aanwezig", (ROOT / pad).exists())
+
+# Footer-links naar diensten moeten op de dienstpagina's een anker hebben
+for pagina, anker in set(re.findall(r'href="(uw-[a-z]+\.html)#([^"]+)"', index)):
+    controleer(f"anker {pagina}#{anker} bestaat", f'id="{anker}"' in lees(pagina))
+
 # ── 5. Verwezen bestanden moeten op schijf staan ─────────────────────────────
 verwijzingen = set(re.findall(r'(?:src|href)="(assets/[^"]+)"', index))
 verwijzingen |= {
@@ -146,7 +163,7 @@ for pad in sorted(verwijzingen):
 # ── 6. Hoofdstuknummering moet doorlopen ─────────────────────────────────────
 # Toen de FAQ erbij kwam moest Contact met de hand van VII naar VIII; zoiets
 # wil je niet nog eens over het hoofd zien.
-romeins = re.findall(r'class="label[^"]*">([IVX]+) —', index)
+romeins = re.findall(r'class="label[^"]*"[^>]*>([IVX]+) —', index)
 verwacht = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"][: len(romeins)]
 controleer(
     "hoofdstukken doorlopend genummerd",

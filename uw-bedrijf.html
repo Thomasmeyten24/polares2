@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Uw bedrijf — begeleiding voor ondernemers | Polares</title>
+  <meta name="description" content="Van groei en optimalisatie tot overdracht, fusie of overname: Polares brengt structuur, helderheid en inzicht in uw onderneming.">
+  <link rel="canonical" href="https://polares.be/uw-bedrijf.html">
+  <meta name="theme-color" content="#071826">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="nl_BE">
+  <meta property="og:site_name" content="Polares">
+  <meta property="og:title" content="Uw bedrijf — begeleiding voor ondernemers | Polares">
+  <meta property="og:description" content="Van groei en optimalisatie tot overdracht, fusie of overname: Polares brengt structuur, helderheid en inzicht in uw onderneming.">
+  <meta property="og:url" content="https://polares.be/uw-bedrijf.html">
+  <meta property="og:image" content="https://polares.be/assets/og-image.png">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="preload" href="assets/fonts/cantata-one-400.woff2" as="font" type="font/woff2" crossorigin>
+  <!-- Inhoud: intro van subsite.polares.be (homepage) en de dienstenlijst van
+       index.html. De detailpagina's van de subsite waren nog leeg; zodra er per
+       dienst tekst is, kan die hier onder elke dienst komen. -->
+  <style>
+    @font-face{font-family:'Cantata One';font-style:normal;font-weight:400;font-display:swap;
+      src:url(assets/fonts/cantata-one-400.woff2) format('woff2');}
+    @font-face{font-family:'Source Sans Pro';font-style:normal;font-weight:400;font-display:swap;
+      src:url(assets/fonts/source-sans-pro-400.woff2) format('woff2');}
+    @font-face{font-family:'Source Sans Pro';font-style:normal;font-weight:700;font-display:swap;
+      src:url(assets/fonts/source-sans-pro-700.woff2) format('woff2');}
+    /* Tokens: gelijk aan index.html (Polares Design System) */
+    :root{
+      --navy-50:#EEF1F5; --navy-100:#D8DEE5; --navy-200:#A1B2C0; --navy-300:#7E94A6;
+      --navy-400:#5A7388; --navy-500:#2F5471; --navy-600:#10324E; --navy-700:#0D2B43;
+      --navy-800:#0A2236; --navy-900:#071826;
+      --white:#FFFFFF; --paper:#FAFBFC; --line:#E5E5E5;
+      --text:#10324E; --text-soft:#5A7388;
+      --shadow-lg:0 16px 40px rgba(16,50,78,.12);
+      --serif:'Cantata One', Georgia, 'Times New Roman', serif;
+      --sans:'Source Sans Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
+      --ease:cubic-bezier(.4,0,.2,1); --ease-out:cubic-bezier(.16,1,.3,1);
+      --container:1280px; --pad:clamp(1.5rem,5vw,5rem); --section-y:clamp(4.5rem,9vw,7rem);
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{font-size:93.75%;scroll-behavior:smooth}
+    body{font-family:var(--sans);line-height:1.7;color:var(--text);background:var(--white);-webkit-font-smoothing:antialiased}
+    img,svg{display:block}
+    a{color:inherit;text-decoration:none}
+    :focus-visible{outline:2px solid rgba(90,115,136,.6);outline-offset:3px}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+    .container{max-width:var(--container);margin-inline:auto;padding-inline:var(--pad)}
+    .label{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-soft)}
+
+    /* Navigatie */
+    .nav{position:sticky;top:0;z-index:50;background:rgba(250,251,252,.96);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+    .nav__inner{height:76px;display:flex;align-items:center;justify-content:space-between;gap:1.5rem}
+    .brand__logo{display:block;width:clamp(120px,16vw,170px);aspect-ratio:1477/455;background:var(--navy-600);
+      -webkit-mask:url(assets/POLARES_LOGO_WIT.png) no-repeat center/contain;mask:url(assets/POLARES_LOGO_WIT.png) no-repeat center/contain}
+    .nav__links{display:flex;align-items:center;gap:2rem;list-style:none}
+    .nav__links a{font-size:14px;color:var(--navy-600);border-bottom:1px solid transparent;padding-bottom:2px;transition:border-color .3s var(--ease)}
+    .nav__links a:hover,.nav__links a[aria-current="page"]{border-bottom-color:var(--navy-600)}
+    .nav__links a.nav__cta{border:1px solid var(--navy-600);padding:.55rem 1.3rem;transition:background .3s var(--ease),color .3s var(--ease)}
+    .nav__links a.nav__cta:hover{background:var(--navy-600);color:var(--white)}
+    @media (max-width:767px){.nav__links li:not(:last-child){display:none}}
+
+    /* Hoofdstukkop */
+    .chapter-head{display:flex;align-items:center;gap:.75rem;margin-bottom:1.75rem;color:var(--navy-600)}
+    .back{display:inline-flex;align-items:center;gap:.5rem;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--navy-600);margin-bottom:2.5rem;border-bottom:1px solid transparent;padding-bottom:2px}
+    .back:hover{border-bottom-color:var(--navy-600)}
+
+    /* Doorlopende compositie: één witte pagina, verbonden door een gestippelde
+       lijn zoals in de offertemap (laatste pagina). Geen gekleurde blokken. */
+    .flow{position:relative;padding-bottom:clamp(5rem,10vw,8rem)}
+    .flow__path{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+    .flow__dots{fill:none;stroke:var(--navy-400);stroke-width:1.4;stroke-dasharray:0 6;stroke-linecap:round}
+    .flow__reveal{fill:none;stroke:#fff;stroke-width:10}
+    .flow__head{fill:var(--navy-600);transition:opacity .3s var(--ease)}
+
+    /* Hero */
+    .hero{position:relative;padding-top:clamp(3rem,7vw,5.5rem)}
+    .hero__grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,6vw,6rem);align-items:center}
+    .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.1rem,4.2vw,3.6rem);line-height:1.15;letter-spacing:-.01em;text-wrap:balance;text-align:left}
+    .hero__lead{margin-top:1.5rem;font-family:var(--serif);font-size:clamp(1.1rem,1.7vw,1.3rem);line-height:1.6;color:var(--navy-400);max-width:34ch}
+    .hero__art{position:relative;width:100%;height:auto;max-width:560px;justify-self:center;background:var(--white)}
+    @media (max-width:860px){.hero__grid{grid-template-columns:1fr}.hero__art{max-width:420px;order:-1}}
+
+    /* Haltes langs de lijn */
+    .stations{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:clamp(1rem,2.5vw,2rem);row-gap:clamp(5rem,11vw,9rem);margin-top:clamp(5rem,10vw,8rem)}
+    .station{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr);column-gap:clamp(1.25rem,2.5vw,2.25rem);scroll-margin-top:110px}
+    .station--l{grid-column:1 / span 7}
+    .station--r{grid-column:6 / -1}
+    .station--wide{grid-column:1 / span 10}
+    .station__stop{position:relative;width:44px;height:44px;border-radius:50%;background:var(--white);display:flex;align-items:center;justify-content:center;color:var(--navy-600);margin-top:-12px}
+    .station__stop::after{content:"";position:absolute;inset:-6px;border:1px solid var(--navy-300);border-radius:50%;opacity:0;pointer-events:none}
+    .station h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,2.6vw,2.1rem);line-height:1.25;margin:.9rem 0 1.25rem;text-wrap:balance}
+    .station p{font-size:16px;color:var(--text-soft)}
+    .station p+p{margin-top:1.1em}
+    .station__intro{font-family:var(--serif);font-size:clamp(1.15rem,1.8vw,1.4rem)!important;line-height:1.55;color:var(--navy-600)!important;margin-bottom:1.4rem}
+    @media (max-width:860px){
+      .stations{grid-template-columns:1fr}
+      .station--l,.station--r,.station--wide{grid-column:1 / -1}
+    }
+
+    /* Diensten als kleine haltes */
+    .diensten{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.1rem 2rem;margin-top:.25rem}
+    .dienst{display:flex;align-items:center;gap:.8rem;font-family:var(--serif);font-size:clamp(1.1rem,1.5vw,1.25rem);color:var(--navy-600);scroll-margin-top:120px;padding:.2rem 0}
+    .dienst svg{flex-shrink:0;color:var(--navy-400);transition:transform .45s var(--ease),color .45s var(--ease)}
+    .dienst:hover svg,.dienst:target svg{transform:rotate(45deg);color:var(--navy-600)}
+    .dienst:target{text-decoration:underline;text-decoration-color:var(--navy-200);text-underline-offset:6px}
+
+    /* Citaat */
+    .station blockquote{font-family:var(--serif);font-size:clamp(1.35rem,2.4vw,1.85rem);line-height:1.45;color:var(--navy-600);margin-top:.6rem}
+
+    /* Typografisch raster (hele site): titels links, tekstblokken uitgevuld,
+       acties links als tekstlink met pijltje */
+    .hero__lead,.station p,.station blockquote{text-align:justify;-webkit-hyphens:auto;hyphens:auto}
+
+    /* Tekstlink met pijltje */
+    .more-link{display:inline-flex;align-items:center;gap:.6rem;margin-top:2rem;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--navy-600);border-bottom:1px solid transparent;padding-bottom:2px;transition:border-color .3s var(--ease)}
+    .more-link svg{flex-shrink:0;transition:transform .3s var(--ease)}
+    .more-link:hover{border-bottom-color:var(--navy-600)}
+    .more-link:hover svg{transform:translateX(8px)}
+    .more-link + .more-link{margin-left:2rem}
+
+    /* Haltes komen tot leven zodra de lijn ze bereikt (alleen met JS en
+       zonder "beperkte beweging"; anders staat alles gewoon zichtbaar) */
+    .flow--live .station__stop{opacity:0;transform:scale(.4);transition:opacity .5s var(--ease-out),transform .8s cubic-bezier(.34,1.56,.64,1)}
+    .flow--live .station__body{opacity:0;transform:translateY(18px);transition:opacity .7s var(--ease-out) .1s,transform .7s var(--ease-out) .1s}
+    .flow--live .station.is-reached .station__stop,
+    .flow--live .station.is-reached .station__body{opacity:1;transform:none}
+    .flow--live .station.is-reached .station__stop::after{animation:ping 1.4s var(--ease-out) .15s 1 both}
+    @keyframes ping{0%{opacity:.9;transform:scale(.85)}100%{opacity:0;transform:scale(1.4)}}
+
+    /* Footer */
+    .footer{background:var(--navy-900);padding-block:1.75rem}
+    .footer__inner{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.75rem 2rem;font-size:12px;color:rgba(255,255,255,.58)}
+    .footer__inner a{text-decoration:underline;text-underline-offset:2px}
+    .footer__inner a:hover{color:rgba(255,255,255,.9)}
+
+    /* Rustige intro bij het laden */
+    @media (prefers-reduced-motion:no-preference){
+      .hero__copy,.hero__art{animation:rise .9s var(--ease-out) both}
+      .hero__art{animation-delay:.15s}
+      @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+    }
+  </style>
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav__inner">
+      <a href="index.html" aria-label="Polares — naar de homepage"><span class="brand__logo" role="img" aria-label="Polares"></span></a>
+      <nav aria-label="Hoofdnavigatie">
+        <ul class="nav__links">
+          <li><a href="uw-familie.html">Uw familie</a></li>
+          <li><a aria-current="page" href="uw-bedrijf.html">Uw bedrijf</a></li>
+          <li><a class="nav__cta" href="index.html#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container flow" id="flow">
+    <svg class="flow__path" id="flowPath" aria-hidden="true" focusable="false">
+      <defs>
+        <mask id="flowMask" maskUnits="userSpaceOnUse" x="-100" y="-100" width="6000" height="30000">
+          <path class="flow__reveal" d=""/>
+        </mask>
+      </defs>
+      <path class="flow__dots" d="" mask="url(#flowMask)"/>
+      <g class="flow__head"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></g>
+    </svg>
+
+    <section class="hero" aria-labelledby="hero-h1">
+      <a class="back" href="index.html#advies">&#8592; Terug naar polares.be</a>
+      <div class="hero__grid">
+        <div class="hero__copy">
+          <div class="chapter-head"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg><span class="label">Uw bedrijf</span></div>
+          <h1 id="hero-h1">Uw onderneming is meer dan een activiteit of balans.</h1>
+          <p class="hero__lead">Ze weerspiegelt visie, engagement en jaren van opgebouwd vertrouwen.</p>
+        </div>
+        <img class="hero__art" src="assets/uv/tandwielen-groot.webp" alt="Illustratie van in elkaar grijpende tandwielen" width="880" height="590" fetchpriority="high" decoding="async">
+      </div>
+    </section>
+
+    <div class="stations">
+      <section class="station station--l" aria-labelledby="begeleiding-h2">
+        <span class="station__stop" aria-hidden="true"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></span>
+        <div class="station__body">
+          <span class="label">Onze begeleiding</span>
+          <h2 id="begeleiding-h2" class="sr-only">Onze begeleiding</h2>
+          <p class="station__intro">Van groei en optimalisatie tot overdracht, fusie of overname: elke fase vraagt om een partner die verder kijkt dan cijfers alleen en de complexiteit achter de financiële realiteit begrijpt.</p>
+          <p>Polares brengt structuur, helderheid en inzicht in uw onderneming. We vertalen cijfers naar strategische perspectieven, denken proactief mee over uw toekomstplannen en begeleiden u bij doordachte beslissingen — steeds in nauwe afstemming met uw vertrouwde adviseurs.</p>
+          <p>Wij begeleiden u bij de realisatie van de toekomstplannen van uw bedrijf. We verschaffen inzicht in de rendabiliteit door analyse van kostenstructuur, marges en cashflow, en bepalen samen een toekomstplan. Polares is tevens uw vertrouwenspersoon bij fusie en overname.</p>
+        </div>
+      </section>
+
+      <section class="station station--r" aria-labelledby="diensten-h2">
+        <span class="station__stop" aria-hidden="true"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></span>
+        <div class="station__body">
+          <span class="label">Waarmee we u begeleiden</span>
+          <h2 id="diensten-h2" class="sr-only">Waarmee we u begeleiden</h2>
+          <ul class="diensten">
+            <li class="dienst" id="financiele-analyse"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>Financiële analyse</li>
+            <li class="dienst" id="fusies-en-overnames"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>Fusies &amp; overnames</li>
+            <li class="dienst" id="bedrijfsoverdracht"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>Bedrijfsoverdracht</li>
+          </ul>
+          <a class="more-link" href="index.html#visieKoers">Bekijk ons traject in zeven stappen <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+        </div>
+      </section>
+
+      <section class="station station--l" aria-label="Familie en onderneming">
+        <span class="station__stop" aria-hidden="true"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></span>
+        <div class="station__body">
+          <span class="label">Eén kompas</span>
+          <blockquote>Onderneming en familie staan nooit los van elkaar. Elke begeleiding bij Polares vertrekt vanuit één kompas: uw kapitaalgeluk.</blockquote>
+          <a class="more-link" href="uw-familie.html">Ontdek ook: uw familie <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+        </div>
+      </section>
+
+      <section class="station station--r" aria-labelledby="gesprek-h2">
+        <span class="station__stop" aria-hidden="true"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></span>
+        <div class="station__body">
+          <span class="label">Kennismaken</span>
+          <h2 id="gesprek-h2">Vertrouwen begint met een gesprek.</h2>
+          <p>We nemen graag de tijd om uw wereld te begrijpen en te bekijken waar we kunnen begeleiden.</p>
+          <a class="more-link" href="index.html#contact">Maak een afspraak <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>&copy; 2026 Polares BV &middot; Dirk Martensstraat 41, 9300 Aalst &middot; KBO BE 1032.172.446</p>
+      <p><a href="algemene-voorwaarden.html">Algemene voorwaarden</a> &middot; <a href="privacyverklaring.html">Privacyverklaring</a></p>
+    </div>
+  </footer>
+
+  <script>
+    // De gestippelde lijn: van de illustratie in de hero haaks langs elke halte
+    // (zoals in de offertemap). Bij het scrollen tekent ze zich mee, met een
+    // sterretje aan de kop; een halte komt tot leven zodra de lijn hem bereikt.
+    (function () {
+      var wrap = document.getElementById('flow');
+      var svg = document.getElementById('flowPath');
+      if (!wrap || !svg) return;
+      var dots = svg.querySelector('.flow__dots');
+      var reveal = svg.querySelector('.flow__reveal');
+      var head = svg.querySelector('.flow__head');
+      var start = wrap.querySelector('.hero__art');
+      var stations = [].slice.call(wrap.querySelectorAll('.station'));
+      var stops = stations.map(function (s) { return s.querySelector('.station__stop'); });
+      var live = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var samples = [], total = 0, stopY = [], ticking = false;
+
+      // offsets i.p.v. getBoundingClientRect: de animaties verschuiven elementen
+      // tijdelijk met een transform, dat mag de lijn niet volgen
+      function box(el) {
+        var x = 0, y = 0, n = el;
+        while (n && n !== wrap) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
+        return { x: x + el.offsetWidth / 2, y: y + el.offsetHeight / 2, top: y, bottom: y + el.offsetHeight };
+      }
+
+      function draw() {
+        var a = box(start), c = stops.map(box);
+        var copy = box(wrap.querySelector('.hero__copy'));
+        var prevBottom = box(wrap.querySelector('.hero')).bottom;
+        // Naast elkaar (desktop): de lijn vertrekt onder de illustratie.
+        // Onder elkaar (mobiel): onder de titel, zodat ze niet door de tekst loopt.
+        var naast = a.top < copy.bottom && a.bottom > copy.top;
+        var prev = naast ? { x: a.x, y: a.bottom - 6 } : { x: c[0].x, y: copy.bottom + 16 };
+        var d = 'M' + prev.x + ',' + prev.y;
+        c.forEach(function (p, i) {
+          // haaks, en altijd door de witruimte tússen de onderdelen:
+          // omlaag tot in de tussenruimte, opzij, dan omlaag naar de halte
+          var sb = box(stations[i]);
+          var gap = (prevBottom + sb.top) / 2;
+          if (Math.abs(p.x - prev.x) > 2) d += ' V' + gap + ' H' + p.x;
+          d += ' V' + p.y;
+          prev = p;
+          prevBottom = sb.bottom;
+        });
+        d += ' V' + (prev.y + 120);
+        dots.setAttribute('d', d);
+        reveal.setAttribute('d', d);
+        stopY = c.map(function (p) { return p.y; });
+        total = dots.getTotalLength();
+        samples = [];
+        for (var i = 0; i <= 300; i++) {
+          var l = total * i / 300, pt = dots.getPointAtLength(l);
+          samples.push({ l: l, x: pt.x, y: pt.y });
+        }
+        reveal.style.strokeDasharray = total + ' ' + total;
+        update();
+      }
+
+      function update() {
+        ticking = false;
+        if (!samples.length || !live) return;
+        var yHead = window.innerHeight * .7 - wrap.getBoundingClientRect().top;
+        var k = 0;
+        while (k < samples.length - 1 && samples[k + 1].y <= yHead) k++;
+        var sA = samples[k], sB = samples[Math.min(k + 1, samples.length - 1)];
+        var len, hx, hy;
+        if (yHead < sA.y) { len = 0; hx = sA.x; hy = sA.y; }
+        else if (sB.y === sA.y) {
+          // horizontaal stuk: de kop schuift mee naarmate men verder scrolt
+          var j = k; while (j < samples.length - 1 && samples[j + 1].y === sA.y) j++;
+          len = sA.l + (samples[j].l - sA.l) * Math.min(1, (yHead - sA.y) / 90);
+          var pt = dots.getPointAtLength(len); hx = pt.x; hy = pt.y;
+        } else {
+          var t = Math.max(0, Math.min(1, (yHead - sA.y) / (sB.y - sA.y)));
+          len = sA.l + (sB.l - sA.l) * t; hx = sA.x + (sB.x - sA.x) * t; hy = sA.y + (sB.y - sA.y) * t;
+        }
+        reveal.style.strokeDashoffset = (total - len).toFixed(1);
+        head.setAttribute('transform', 'translate(' + (hx - 7).toFixed(1) + ',' + (hy - 7).toFixed(1) + ') scale(.14)');
+        head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
+        stations.forEach(function (s, i) {
+          s.classList.toggle('is-reached', hy >= stopY[i] - 12 || len >= total - 2);
+        });
+      }
+
+      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+      var t;
+      function later() { clearTimeout(t); t = setTimeout(draw, 80); }
+
+      if (live) {
+        wrap.classList.add('flow--live');
+        window.addEventListener('scroll', onScroll, { passive: true });
+      } else {
+        dots.removeAttribute('mask');
+        head.style.display = 'none';
+      }
+      window.addEventListener('resize', later);
+      window.addEventListener('load', draw);
+      if (window.ResizeObserver) new ResizeObserver(later).observe(wrap);
+      if (start.complete) draw(); else start.addEventListener('load', draw);
+    })();
+  </script>
+</body>
+</html>
