@@ -3525,27 +3525,35 @@
         if (!live) return;
         var L = rel(lamp, shift(header)), G = rel(grid), E = rel(slot);
         var stars = items.map(function (it) { return rel(it.querySelector('.expertise__item-head svg')); });
-        // sterretjes per kolom groeperen
-        var cols = [];
-        stars.forEach(function (p, i) {
-          var c = cols.filter(function (c) { return Math.abs(c.x - p.x) < 10; })[0];
-          if (!c) { c = { x: p.x, s: [] }; cols.push(c); }
-          c.s.push(i);
+        // Sterretjes per rij groeperen, niet per kolom. Kolomsgewijs moest de
+        // lijn een volle rasterhoogte omhoog om de volgende kolom te beginnen —
+        // tegen de scrollrichting in, waardoor de ster boven beeld raakte en de
+        // onderste rij nooit aan de beurt kwam. Per rij daalt ze altijd.
+        var rijen = [];
+        stars.forEach(function (p) {
+          var r = rijen.filter(function (r) { return Math.abs(r.y - p.y) < 20; })[0];
+          if (!r) { r = { y: p.y, x: [] }; rijen.push(r); }
+          r.x.push(p.x);
         });
-        cols.sort(function (a, b) { return a.x - b.x; });
-        var top = G.top - 16, bot = G.bottom + 16;
+        rijen.sort(function (a, b) { return a.y - b.y; });
+        rijen.forEach(function (r) {
+          r.min = Math.min.apply(null, r.x); r.max = Math.max.apply(null, r.x);
+        });
         y0 = L.bottom + 12;
-        var d = 'M' + L.x + ',' + y0 + ' V' + top, down = true, y = top;
-        cols.forEach(function (c) {
-          d += ' H' + c.x + ' V' + (down ? bot : top);
-          y = down ? bot : top;
-          down = !down;
+        var d = 'M' + L.x + ',' + y0, hx = L.x, naarRechts = true;
+        rijen.forEach(function (r, i) {
+          var van = naarRechts ? r.min : r.max, tot = naarRechts ? r.max : r.min;
+          var vorigeY = i === 0 ? y0 : rijen[i - 1].y;
+          // eerst naar het begin van de rij, op de hoogte tussen de rijen in
+          if (Math.abs(van - hx) > 2) d += ' V' + ((vorigeY + r.y) / 2) + ' H' + van;
+          d += ' V' + r.y;
+          if (Math.abs(tot - van) > 2) { d += ' H' + tot; hx = tot; } else hx = van;
+          naarRechts = !naarRechts;
         });
-        // eindigt de slinger bovenaan (even aantal kolommen): rechts van het raster naar beneden
-        if (y === top) d += ' H' + (G.right + 24) + ' V' + bot;
-        // na het laatste sterretje nog verder omlaag, tot halverwege de slotregel,
+        // na de laatste rij nog verder omlaag, tot halverwege de slotregel,
         // en pas dan opzij: zo is het laatste stuk kort en vloeit het rustig uit
-        var yMid = (bot + (E.top - 14)) / 2;
+        var laatsteY = rijen.length ? rijen[rijen.length - 1].y : G.bottom;
+        var yMid = (laatsteY + (E.top - 14)) / 2;
         d += ' V' + yMid + ' H' + E.x + ' V' + (E.top - 14);
         dots.setAttribute('d', d);
         reveal.setAttribute('d', d);
