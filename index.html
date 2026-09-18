@@ -3133,13 +3133,13 @@
     // exact dezelfde stand, en de is-reached-drempels kunnen niet terugklappen.
     // Een regelaar die de ster per frame naar het anker toe trekt zou dat breken.
     var Reis = (function () {
-      var ANKER = .7, BAND = 250, K_MIN = 2.5, TAU = 400, MAX_SCHULD = 300;
+      var ANKER = .7, BAND = 250, BODEM = 95, K_MIN = 2.5, TAU = 150, MAX_SCHULD = 300;
 
       // 'd' bestaat uitsluitend uit M/V/H, dus exact te ontleden. Sampelen zou de
       // korte segmenten missen die tussen twee samples in vallen.
       function bouw(d, band) {
         var t = (d || '').match(/[MVH]-?[\d.]+(?:,-?[\d.]+)?/g) || [];
-        var x = 0, y = 0, l = 0, schuld = 0, segs = [], eerste = true, y0 = 0;
+        var x = 0, y = 0, l = 0, schuld = 0, segs = [], eerste = true, y0 = 0, vast = 0;
         for (var i = 0; i < t.length; i++) {
           var k = t[i][0], v = t[i].slice(1), nx = x, ny = y, soort, dl = 0;
           if (k === 'M') {
@@ -3153,15 +3153,24 @@
           if (soort === 'omlaag') {
             // schuld aflossen: het anker schuift minder op dan de ster daalt,
             // waardoor de ster terugzakt naar zijn ankerhoogte
-            var af = schuld * (1 - Math.exp(-dl / TAU));
-            af = Math.min(af, dl * .85);
+            // hoogstens de helft aflossen: anders zakt de ster sneller terug dan
+            // twee keer de scrollsnelheid en oogt dat als een sprong
+            var af = Math.min(schuld * (1 - Math.exp(-dl / TAU)), dl * .5);
             kost = dl - af; schuld -= af;
           } else if (soort === 'sprong') {
-            // de lijn slaat een illustratie over: de kop wacht aan de rand
-            kost = Math.abs(ny - y); dl = 0;
+            // De lijn slaat een illustratie over en de kop wacht aan de rand.
+            // Die wachttijd is dode tijd: laat ze schuld aflossen door de kop
+            // eerder te laten hervatten. Hoofdstuk I heeft vier van die sprongen
+            // en nauwelijks daling ertussen — zonder dit blijft de ster hangen.
+            var gat = Math.abs(ny - y);
+            var afs = Math.min(schuld * (1 - Math.exp(-gat / TAU)), gat * .7);
+            kost = gat - afs; schuld -= afs; dl = 0;
           } else {
             kost = Math.min(dl / K_MIN, band);
             schuld = Math.min(MAX_SCHULD, schuld + kost + (soort === 'omhoog' ? dl : 0));
+            // een klimmend stuk drijft de ster omhoog hoeveel je de band ook
+            // krimpt: dat deel van de drift zit in de vorm van het pad
+            if (soort === 'omhoog') vast += dl;
           }
           segs.push({ soort: soort, kost: kost, l0: l, dl: dl, x0: x, y0: y, x1: nx, y1: ny });
           l += dl; x = nx; y = ny;
@@ -3172,26 +3181,40 @@
         var s = y0, drift = 0, piek = 0;
         for (var j = 0; j < segs.length; j++) {
           var sg = segs[j]; sg.s0 = s; s += sg.kost;
-          drift += sg.kost - (sg.soort === 'omlaag' ? sg.dl : sg.soort === 'omhoog' ? -sg.dl : 0);
-          if (sg.soort === 'sprong') drift -= sg.kost; // de sprong lost zichzelf op
-          piek = Math.max(piek, drift + (sg.soort === 'sprong' ? sg.kost : 0));
+          if (sg.soort === 'sprong') {
+            // tijdens de sprong wacht de kop, dus loopt de drift op tot kost;
+            // daarna hervat hij lager en zakt de drift terug
+            piek = Math.max(piek, drift + sg.kost);
+            drift += sg.kost - Math.abs(sg.y1 - sg.y0);
+          } else {
+            drift += sg.kost - (sg.soort === 'omlaag' ? sg.dl : sg.soort === 'omhoog' ? -sg.dl : 0);
+            piek = Math.max(piek, drift);
+          }
         }
-        return { segs: segs, lengte: l, sEind: s, sStart: y0, piek: piek, band: band };
+        return { segs: segs, lengte: l, sEind: s, sStart: y0, piek: piek, band: band, vast: vast };
       }
 
       // De band krimpen tot de ster binnen het plafond blijft. Hoofdstuk I steekt
       // 1998px over terwijl het maar 582px daalt — daar is simpelweg te weinig
       // daling om de opgelopen schuld op af te lossen, dus moet de oversteek daar
       // krapper. Dat gebeurt automatisch in plaats van met een getal per hoofdstuk.
-      // hoe ver de ster boven zijn anker mag uitkomen: net genoeg marge onder de
-      // nav zodat hij altijd zichtbaar blijft, ook op een laag scherm
-      function plafondNu() { return Math.max(180, window.innerHeight * ANKER - 175); }
+      // Hoe ver de ster boven zijn anker mag uitkomen. Als aandeel van de
+      // vensterhoogte, niet als vaste marge: op een hoog scherm zou een vaste
+      // marge zoveel speling geven dat de ster halverwege blijft hangen en het
+      // onderste deel van de pagina leeg oogt.
+      function plafondNu() { return Math.max(180, window.innerHeight * .27); }
 
       function tabel(d, plafond) {
         plafond = plafond || plafondNu();
         var band = BAND, tb = bouw(d, band);
-        for (var i = 0; i < 6 && tb.piek > plafond; i++) {
-          band *= Math.max(.4, plafond / tb.piek);
+        // Zit de onvermijdelijke drift al boven het plafond, dan haalt krimpen
+        // niets uit: Expertise klimt 298px omhoog en komt daar sowieso niet
+        // onder. Dan liever een rustige oversteek dan een snelle die de ster
+        // toch niet lager zet.
+        if (tb.vast >= plafond) return tb;
+        // en ook anders niet verder krimpen dan BODEM
+        for (var i = 0; i < 6 && tb.piek > plafond && band > BODEM; i++) {
+          band = Math.max(BODEM, band * Math.max(.4, plafond / tb.piek));
           tb = bouw(d, band);
         }
         return tb;
