@@ -338,49 +338,17 @@
     .brand__logo {
       display: block;
       width: clamp(120px, 16vw, 180px);
-      aspect-ratio: 1477 / 455;
+      aspect-ratio: 1463 / 250;
       background: var(--white);
-      -webkit-mask: url(assets/POLARES_LOGO_WIT.png) no-repeat center / contain;
-      mask: url(assets/POLARES_LOGO_WIT.png) no-repeat center / contain;
+      -webkit-mask: url(assets/POLARES_LOGO_WIT_woordmerk.png) no-repeat center / contain;
+      mask: url(assets/POLARES_LOGO_WIT_woordmerk.png) no-repeat center / contain;
       transition: background var(--dur-2) var(--ease);
     }
     .nav.scrolled .brand__logo { background: var(--navy-600); }
 
-    /* Desktop links */
-    .nav__links {
-      display: flex;
-      align-items: center;
-      gap: 2rem;
-    }
-    .nav__links a {
-      font-family: var(--sans);
-      font-size: 13px;
-      letter-spacing: .04em;
-      color: rgba(255,255,255,.85);
-      transition: color var(--dur-1) var(--ease);
-    }
-    .nav__links a:hover { color: var(--white); }
-    .nav.scrolled .nav__links a { color: var(--text); }
-    .nav.scrolled .nav__links a:hover { color: var(--navy-700); }
-
-    /* CTA */
-    .nav__cta {
-      font-family: var(--sans);
-      font-size: 13px;
-      letter-spacing: .04em;
-      color: var(--white);
-      border: 1px solid rgba(255,255,255,.7);
-      padding: .55rem 1.3rem;
-      transition: background var(--dur-2) var(--ease), color var(--dur-2) var(--ease),
-                  border-color var(--dur-2) var(--ease);
-    }
-    .nav__cta:hover { background: var(--white); color: var(--navy-800); }
-    .nav.scrolled .nav__cta { color: var(--navy-600); border-color: var(--navy-600); }
-    .nav.scrolled .nav__cta:hover { background: var(--navy-600); color: var(--white); }
-
-    /* Hamburger */
+    /* Hamburger: op elke breedte de enige ingang naar het menu */
     .nav__burger {
-      display: none;
+      display: flex;
       flex-direction: column;
       justify-content: center;
       gap: 5px;
@@ -1150,6 +1118,19 @@
       border-radius: 28px 28px 0 0;
     }
     #waarden > .container { position: relative; z-index: 1; }
+    .waarden__flow { position: relative; }
+    .waarden__path {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+      display: none;
+    }
+    .waarden--live .waarden__path { display: block; }
+    .waarden--live .waarden__item { transition: opacity .7s var(--ease-out), transform .7s var(--ease-out); }
+    .waarden--live .waarden__item:not(.is-reached) { opacity: 0; transform: translateY(12px); }
     /* Teamfoto als zachte, transparante achtergrond rechtsboven: ze lost via een
        ovaal masker op in het papier, zodat de titel en de waarden leesbaar blijven. */
     .waarden__photo {
@@ -1188,8 +1169,7 @@
     }
     .waarden__intro { font-size: 15px; color: var(--text-soft); max-width: 560px; margin-bottom: 3rem; }
     .waarden__grid { display: grid; grid-template-columns: repeat(4, 1fr); }
-    .waarden__item { border-left: 1px solid var(--line); padding: 0 2rem; }
-    .waarden__item:first-child { border-left: none; padding-left: 0; }
+    .waarden__item { padding-right: 2rem; }
     .waarden__name { font-family: var(--serif); font-size: 1.4rem; color: var(--navy-600); margin-bottom: .6rem; }
     .waarden__desc { font-size: 13.5px; color: var(--text-soft); line-height: 1.65; }
 
@@ -1246,7 +1226,7 @@
       display: block;
       object-fit: cover;
       object-position: 45% 18%;
-      opacity: .4;
+      opacity: .7;
       filter: saturate(.5) contrast(.93) brightness(1.04);
       mix-blend-mode: multiply;
     }
@@ -1273,7 +1253,16 @@
     .team__body { font-size: 15px; color: var(--text-soft); }
 
     /* ── VII — Veelgestelde vragen ───────────────────────────── */
-    #faq { padding-block: var(--section-y); background: var(--paper); border-top: 1px solid var(--line); }
+    /* ligt als papieren kaart over de donkere contactsectie, zoals #waarden
+       over Expertise */
+    #faq {
+      position: relative;
+      z-index: 2;
+      margin-top: -28px;
+      padding-block: var(--section-y);
+      background: var(--paper);
+      border-radius: 28px 28px 0 0;
+    }
     .faq__h2 {
       font-family: var(--serif);
       font-size: clamp(2rem, 3.6vw, 3.2rem);
@@ -1283,8 +1272,7 @@
       color: var(--text);
       margin-bottom: 1rem;
     }
-    .faq__intro { font-size: 15px; color: var(--text-soft); max-width: 560px; margin-bottom: 3rem; }
-    .faq__list { max-width: 820px; }
+    .faq__list { max-width: 820px; margin-top: 3rem; }
     .faq__item { border-top: 1px solid var(--line); padding-block: 1.6rem; }
     .faq__q {
       font-family: var(--serif);
@@ -1296,10 +1284,10 @@
     }
     .faq__a { font-size: 15px; color: var(--text-soft); }
 
-    /* ── VIII — Contact ──────────────────────────────────────── */
+    /* ── VI — Contact ────────────────────────────────────────── */
     #contact {
       position: relative;
-      padding-block: clamp(7rem, 14vw, 11rem);
+      padding-block: clamp(5rem, 9vw, 7.5rem);
       background: var(--navy-900);
       text-align: left;
       overflow: hidden;
@@ -1320,19 +1308,63 @@
       gap: 1.25rem;
     }
     .contact__poolster { width: 16px; height: 16px; color: var(--white); margin-bottom: .75rem; }
+    @media (min-width: 1200px) { .contact__label { display: none; } }
+    /* de ster verschijnt pas wanneer de gestippelde lijn haar bereikt */
+    .contact--live .contact__poolster { opacity: 0; transition: opacity .5s var(--ease-out); }
+    .contact--live.contact--aangekomen .contact__poolster { opacity: 1; }
+    .contact__path {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+      pointer-events: none;
+      display: none;
+    }
+    .contact--live .contact__path { display: block; }
+    .contact__path .koers__dots { stroke: rgba(255,255,255,.55); }
+    .contact__path .koers__head { fill: var(--white); }
     .contact__h2 {
       font-family: var(--serif);
-      font-size: clamp(2.4rem, 5vw, 4.2rem);
-      line-height: 1.12;
+      font-size: clamp(1.6rem, 2.6vw, 2.3rem);
+      line-height: 1.22;
       color: var(--white);
     }
-    .contact__sub { font-size: 15px; color: var(--navy-200); max-width: 480px; }
+    .contact__sub { font-size: 15px; color: var(--navy-200); max-width: 560px; }
+    /* de kaart uit hoofdstuk II, rechts naast de tekst */
+    .contact__kaart {
+      position: absolute;
+      top: 50%;
+      /* rechterrand op de gestippelde lijn: die loopt 24px buiten het raster,
+         en het raster eindigt op var(--pad) van de rand van de container */
+      right: calc(var(--pad) - 24px);
+      transform: translateY(-50%);
+      width: clamp(140px, 16vw, 230px);
+      height: auto;
+      opacity: .5;
+      pointer-events: none;
+    }
+    /* eigen reveal: de generieke regel zou het centreren-transform wissen */
+    .reveal-ready .contact__kaart[data-reveal] {
+      opacity: 0;
+      transform: translateY(-50%) translateY(24px);
+      transition: opacity 1.4s var(--ease-out), transform 1.4s var(--ease-out);
+    }
+    .reveal-ready .contact__kaart[data-reveal].is-in { opacity: .5; transform: translateY(-50%); }
+    @media (max-width: 1024px) { .contact__kaart { display: none; } }
     .contact__actions {
       display: flex;
-      flex-wrap: wrap;
-      gap: .75rem 2.5rem;
-      justify-content: flex-start;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: .75rem;
       margin-top: .75rem;
+    }
+    /* de afsluiter staat gecentreerd over de volle schermbreedte */
+    .contact__slot {
+      position: relative;
+      z-index: 1;
+      margin: clamp(3rem, 6vw, 5rem) 0 0;
+      padding-block: 0;
     }
     .btn {
       display: inline-flex;
@@ -1365,7 +1397,7 @@
     }
     .footer__grid {
       display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr 1fr;
+      grid-template-columns: 2fr 1fr 1fr;
       gap: 2.5rem;
     }
     .footer__logo { width: 150px; margin-bottom: 1.25rem; }
@@ -1528,14 +1560,11 @@
       .expertise__item:nth-child(2n) { padding-right: 0; }
       .expertise__item:nth-child(2n+1) { padding-right: 2rem; }
       .waarden__grid { grid-template-columns: repeat(2, 1fr); }
-      .waarden__item:nth-child(3) { border-left: none; padding-left: 0; }
       .waarden__item { padding-block: 1.5rem; }
       .footer__grid { grid-template-columns: 1fr 1fr; }
     }
 
     @media (max-width: 768px) {
-      .nav__links { display: none; }
-      .nav__burger { display: flex; }
       .team__grid { grid-template-columns: 1fr; min-height: 0; padding-top: 300px; }
       .team__content { grid-column: 1; }
       .team__photo-wrap { width: 100%; bottom: auto; height: 420px; }
@@ -1548,7 +1577,7 @@
 
     @media (max-width: 480px) {
       .waarden__grid { grid-template-columns: 1fr; }
-      .waarden__item { border-left: none; padding-left: 0; border-top: 1px solid var(--line); padding-top: 1.5rem; }
+      .waarden__item { padding-right: 0; border-top: 1px solid var(--line); padding-top: 1.5rem; }
       .waarden__item:first-child { border-top: none; padding-top: 0; }
       .btn { width: 100%; max-width: 320px; }
       .hero__coords { display: none; }
@@ -1560,7 +1589,7 @@
        voorkomt gaten in de uitgevulde regels. De korte bijschriften in smalle
        kolommen (expertises, waarden) blijven links: uitgevuld geven die gaten. */
     .missie__text, .portal-col__body, .koers__text, .waarden__intro,
-    .expertise__intro, .team__body, .faq__intro, .faq__a,
+    .expertise__intro, .team__body, .faq__a,
     .contact__sub, .visie-tip__body {
       text-align: justify;
       -webkit-hyphens: auto;
@@ -1590,17 +1619,6 @@
       <span class="brand__logo" role="img" aria-label="Polares"></span>
     </a>
 
-    <nav aria-label="Hoofdnavigatie">
-      <ul class="nav__links">
-        <li><a href="#missie">Missie</a></li>
-        <li><a href="#visie">Onze visie</a></li>
-        <li><a href="#team">Team</a></li>
-        <li><a href="#expertise">Expertise</a></li>
-        <li><a href="#faq">Vragen</a></li>
-        <li><a class="nav__cta" href="#contact">Contact</a></li>
-      </ul>
-    </nav>
-
     <button class="nav__burger" id="burgerBtn"
             aria-expanded="false" aria-controls="overlay" aria-label="Menu openen">
       <span></span><span></span><span></span>
@@ -1610,26 +1628,14 @@
   <!-- ── Overlay ──────────────────────────────────────────────── -->
   <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Navigatiemenu">
     <button class="overlay__close" id="overlayClose" aria-label="Menu sluiten">&#x00D7;</button>
-    <nav class="overlay__nav" aria-label="Mobiele navigatie">
-      <a href="#missie" class="overlay__link" id="overlayFirstLink">
+    <nav class="overlay__nav" aria-label="Hoofdnavigatie">
+      <a href="uw-familie.html" class="overlay__link" id="overlayFirstLink">
         <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-        Missie
+        Uw familie
       </a>
-      <a href="#visie" class="overlay__link">
+      <a href="uw-bedrijf.html" class="overlay__link">
         <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-        Onze visie
-      </a>
-      <a href="#team" class="overlay__link">
-        <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-        Team
-      </a>
-      <a href="#expertise" class="overlay__link">
-        <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-        Expertise
-      </a>
-      <a href="#faq" class="overlay__link">
-        <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-        Vragen
+        Uw onderneming
       </a>
       <a href="#contact" class="overlay__link">
         <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
@@ -2164,7 +2170,19 @@
       <div class="waarden__photo" aria-hidden="true" data-reveal>
         <img src="assets/waarden-team.webp" alt="" width="1600" height="1068" loading="lazy" decoding="async">
       </div>
-      <div class="container">
+      <div class="container waarden__flow" id="waardenFlow">
+        <!-- Gestippelde lijn: sluit aan op de afsluiter van Expertise, loopt links
+             langs de titel omlaag en dan als rail over de vier waarden. Getekend
+             door JS; elke waarde verschijnt wanneer de lijn haar bereikt. -->
+        <svg class="waarden__path" id="waardenPath" aria-hidden="true" focusable="false">
+          <defs>
+            <mask id="waardenMask" maskUnits="userSpaceOnUse" x="-200" y="-200" width="6000" height="12000">
+              <path class="koers__reveal" d=""/>
+            </mask>
+          </defs>
+          <path class="koers__dots" d="" mask="url(#waardenMask)"/>
+          <g class="koers__head"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></g>
+        </svg>
         <div class="chapter-head" data-reveal>
           <svg class="chapter-head__star" aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor" style="color:var(--navy-600)"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
           <span class="label">V — WAARDEN</span>
@@ -2173,23 +2191,99 @@
         <h2 class="waarden__h2" id="waarden-h2">Waarden die richting geven.</h2>
         <p class="waarden__intro">Onze begeleiding vertrekt vanuit duidelijke waarden die bepalen hoe we luisteren, denken en handelen — in elk gesprek, elke analyse en elke beslissing.</p>
         <div class="waarden__grid">
-          <div class="waarden__item" data-reveal>
+          <div class="waarden__item">
             <p class="waarden__name">Warmte</p>
-            <p class="waarden__desc">We luisteren eerst, adviseren daarna. Uw situatie is het vertrekpunt, niet onze oplossingen.</p>
+            <p class="waarden__desc">We luisteren eerst, adviseren daarna.</p>
           </div>
-          <div class="waarden__item" data-reveal>
+          <div class="waarden__item">
             <p class="waarden__name">Vakmanschap</p>
-            <p class="waarden__desc">We streven naar uitmuntendheid in elk detail. Kennis die breed is, en diep genoeg om het verschil te maken.</p>
+            <p class="waarden__desc">We streven naar uitmuntendheid in elk detail.</p>
           </div>
-          <div class="waarden__item" data-reveal>
+          <div class="waarden__item">
             <p class="waarden__name">Eenvoud</p>
-            <p class="waarden__desc">We maken complexe materie helder en hanteerbaar. Zodat u begrijpt wat er speelt en met vertrouwen beslist.</p>
+            <p class="waarden__desc">We maken complexe materie helder en hanteerbaar.</p>
           </div>
-          <div class="waarden__item" data-reveal>
+          <div class="waarden__item">
             <p class="waarden__name">Integriteit</p>
-            <p class="waarden__desc">We doen wat juist is voor u — ook als niemand kijkt. Geen vergoedingen van derden, enkel uw belang.</p>
+            <p class="waarden__desc">We doen wat juist is voor u — ook als niemand kijkt.</p>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- ── VI — Contact / CTA ─────────────────────────────────── -->
+    <section id="contact" aria-labelledby="contact-h2">
+      <!-- Decoratieve sterren (inline SVG, aria-hidden) -->
+      <svg class="contact__stars" aria-hidden="true" viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid slice">
+        <circle cx="42"  cy="38"  r="0.8" fill="white" opacity="0.3"/>
+        <circle cx="118" cy="112" r="0.6" fill="white" opacity="0.25"/>
+        <circle cx="187" cy="58"  r="1.1" fill="white" opacity="0.4"/>
+        <circle cx="263" cy="145" r="0.7" fill="white" opacity="0.22"/>
+        <circle cx="315" cy="22"  r="0.9" fill="white" opacity="0.35"/>
+        <circle cx="398" cy="88"  r="1.3" fill="white" opacity="0.45"/>
+        <circle cx="455" cy="162" r="0.6" fill="white" opacity="0.2"/>
+        <circle cx="522" cy="34"  r="1.0" fill="white" opacity="0.38"/>
+        <circle cx="589" cy="118" r="0.8" fill="white" opacity="0.28"/>
+        <circle cx="645" cy="52"  r="1.2" fill="white" opacity="0.42"/>
+        <circle cx="712" cy="178" r="0.6" fill="white" opacity="0.22"/>
+        <circle cx="768" cy="26"  r="0.9" fill="white" opacity="0.33"/>
+        <circle cx="834" cy="138" r="1.1" fill="white" opacity="0.4"/>
+        <circle cx="890" cy="72"  r="0.7" fill="white" opacity="0.26"/>
+        <circle cx="952" cy="155" r="0.8" fill="white" opacity="0.3"/>
+        <circle cx="78"  cy="290" r="0.9" fill="white" opacity="0.28"/>
+        <circle cx="155" cy="340" r="0.6" fill="white" opacity="0.2"/>
+        <circle cx="228" cy="268" r="1.0" fill="white" opacity="0.35"/>
+        <circle cx="344" cy="320" r="0.7" fill="white" opacity="0.25"/>
+        <circle cx="468" cy="285" r="1.2" fill="white" opacity="0.42"/>
+        <circle cx="555" cy="355" r="0.8" fill="white" opacity="0.3"/>
+        <circle cx="672" cy="302" r="0.6" fill="white" opacity="0.22"/>
+        <circle cx="748" cy="372" r="1.0" fill="white" opacity="0.38"/>
+        <circle cx="845" cy="258" r="0.9" fill="white" opacity="0.33"/>
+        <circle cx="918" cy="338" r="0.7" fill="white" opacity="0.25"/>
+        <circle cx="988" cy="280" r="1.1" fill="white" opacity="0.4"/>
+      </svg>
+
+      <!-- Slotstuk van de gestippelde lijn: ze komt binnen waar ze Waarden
+           verliet en eindigt precies in de poolster links. -->
+      <svg class="contact__path" id="contactPath" aria-hidden="true" focusable="false">
+        <defs>
+          <mask id="contactMask" maskUnits="userSpaceOnUse" x="-200" y="-200" width="6000" height="12000">
+            <path class="koers__reveal" d=""/>
+          </mask>
+        </defs>
+        <path class="koers__dots" d="" mask="url(#contactMask)"/>
+        <g class="koers__head"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></g>
+      </svg>
+
+      <div class="contact__inner container">
+        <!-- De kaart uit hoofdstuk II, hier in het wit: het traject komt aan -->
+        <img class="contact__kaart" src="assets/uv/gps-wit.svg" alt="" width="360" height="360" aria-hidden="true" loading="lazy" decoding="async" data-reveal>
+        <svg class="contact__poolster" aria-hidden="true" viewBox="0 0 100 100" fill="currentColor">
+          <path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/>
+        </svg>
+        <!-- vanaf 1200px staat dit hoofdstuk verticaal in de meridiaan links -->
+        <p class="label label--on-navy contact__label" data-reveal>VI — CONTACT</p>
+        <h2 class="contact__h2" id="contact-h2" data-reveal>Vertrouwen begint met een gesprek.</h2>
+        <p class="contact__sub" data-reveal>We nemen graag de tijd om uw wereld te begrijpen en te bekijken waar we kunnen begeleiden.</p>
+        <div class="contact__actions" data-reveal>
+          <a href="mailto:info@polares.be" class="more-link more-link--light">info@polares.be <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+          <a href="tel:+3254235050" class="more-link more-link--light">+32 54 23 50 50 <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+        </div>
+      </div>
+
+      <!-- Afsluiter: zelfde vorm als de kernwoorden van hoofdstuk I en IV,
+           gecentreerd over de volle breedte en dus buiten de container -->
+      <div class="missie__triade missie__triade--light contact__slot" data-reveal>
+        <span class="missie__triade-item">Discreet</span>
+        <span class="missie__triade-sep" aria-hidden="true">
+          <svg width="10" height="10" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+        </span>
+        <span class="missie__triade-item">Vrijblijvend</span>
+        <span class="missie__triade-sep" aria-hidden="true">
+          <svg width="10" height="10" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+        </span>
+        <span class="missie__triade-item">Met volle aandacht voor uw verhaal</span>
+      </div>
       </div>
     </section>
 
@@ -2200,12 +2294,11 @@
       <div class="container">
         <div class="chapter-head" data-reveal>
           <svg class="chapter-head__star" aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor" style="color:var(--navy-600)"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-          <span class="label">VI — VEELGESTELDE VRAGEN</span>
+          <span class="label">VII — VEELGESTELDE VRAGEN</span>
           <span class="chapter-head__line" aria-hidden="true"></span>
         </div>
 
         <h2 class="faq__h2" id="faq-h2">Vragen die vaak terugkomen.</h2>
-        <p class="faq__intro">Staat uw vraag er niet bij? Neem gerust contact op — een eerste gesprek is discreet en vrijblijvend.</p>
 
         <div class="faq__list">
           <div class="faq__item" data-reveal>
@@ -2240,83 +2333,27 @@
       </div>
     </section>
 
-    <!-- ── VIII — Contact / CTA ───────────────────────────────── -->
-    <section id="contact" aria-labelledby="contact-h2">
-      <!-- Decoratieve sterren (inline SVG, aria-hidden) -->
-      <svg class="contact__stars" aria-hidden="true" viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid slice">
-        <circle cx="42"  cy="38"  r="0.8" fill="white" opacity="0.3"/>
-        <circle cx="118" cy="112" r="0.6" fill="white" opacity="0.25"/>
-        <circle cx="187" cy="58"  r="1.1" fill="white" opacity="0.4"/>
-        <circle cx="263" cy="145" r="0.7" fill="white" opacity="0.22"/>
-        <circle cx="315" cy="22"  r="0.9" fill="white" opacity="0.35"/>
-        <circle cx="398" cy="88"  r="1.3" fill="white" opacity="0.45"/>
-        <circle cx="455" cy="162" r="0.6" fill="white" opacity="0.2"/>
-        <circle cx="522" cy="34"  r="1.0" fill="white" opacity="0.38"/>
-        <circle cx="589" cy="118" r="0.8" fill="white" opacity="0.28"/>
-        <circle cx="645" cy="52"  r="1.2" fill="white" opacity="0.42"/>
-        <circle cx="712" cy="178" r="0.6" fill="white" opacity="0.22"/>
-        <circle cx="768" cy="26"  r="0.9" fill="white" opacity="0.33"/>
-        <circle cx="834" cy="138" r="1.1" fill="white" opacity="0.4"/>
-        <circle cx="890" cy="72"  r="0.7" fill="white" opacity="0.26"/>
-        <circle cx="952" cy="155" r="0.8" fill="white" opacity="0.3"/>
-        <circle cx="78"  cy="290" r="0.9" fill="white" opacity="0.28"/>
-        <circle cx="155" cy="340" r="0.6" fill="white" opacity="0.2"/>
-        <circle cx="228" cy="268" r="1.0" fill="white" opacity="0.35"/>
-        <circle cx="344" cy="320" r="0.7" fill="white" opacity="0.25"/>
-        <circle cx="468" cy="285" r="1.2" fill="white" opacity="0.42"/>
-        <circle cx="555" cy="355" r="0.8" fill="white" opacity="0.3"/>
-        <circle cx="672" cy="302" r="0.6" fill="white" opacity="0.22"/>
-        <circle cx="748" cy="372" r="1.0" fill="white" opacity="0.38"/>
-        <circle cx="845" cy="258" r="0.9" fill="white" opacity="0.33"/>
-        <circle cx="918" cy="338" r="0.7" fill="white" opacity="0.25"/>
-        <circle cx="988" cy="280" r="1.1" fill="white" opacity="0.4"/>
-      </svg>
-
-      <div class="contact__inner container">
-        <svg class="contact__poolster" aria-hidden="true" viewBox="0 0 100 100" fill="currentColor">
-          <path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/>
-        </svg>
-        <p class="label label--on-navy" data-reveal>VII — CONTACT</p>
-        <h2 class="contact__h2" id="contact-h2" data-reveal>Vertrouwen begint met een gesprek.</h2>
-        <p class="contact__sub" data-reveal>Discreet, vrijblijvend en met volle aandacht voor uw verhaal.</p>
-        <div class="contact__actions" data-reveal>
-          <a href="mailto:info@polares.be" class="more-link more-link--light">info@polares.be <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
-          <a href="tel:+3254235050" class="more-link more-link--light">+32 54 23 50 50 <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
-        </div>
-      </div>
-    </section>
-
   </main>
 
   <!-- ── Footer ────────────────────────────────────────────────── -->
   <footer class="footer">
     <div class="container">
       <div class="footer__grid">
-        <!-- Kolom 1 — Logo + tagline -->
+        <!-- Kolom 1 — Logo + slagzin -->
         <div>
-          <img class="footer__logo" src="assets/POLARES_LOGO_WIT.png" alt="Polares" width="1464" height="463" loading="lazy" decoding="async">
+          <img class="footer__logo" src="assets/POLARES_LOGO_WIT_woordmerk.png" alt="Polares" width="1463" height="250" loading="lazy" decoding="async">
           <p class="footer__tagline">Zoals de noordpoolster, helder en richtinggevend voor uw vermogen.</p>
         </div>
-        <!-- Kolom 2 — Uw familie -->
+        <!-- Kolom 2 — Pagina's -->
         <div>
-          <p class="footer__col-title"><a href="uw-familie.html">Uw familie</a></p>
+          <p class="footer__col-title">Pagina's</p>
           <ul class="footer__links">
-            <li><a href="uw-familie.html#vermogensarchitectuur">Vermogensarchitectuur</a></li>
-            <li><a href="uw-familie.html#vermogensmonitoring">Vermogensmonitoring</a></li>
-            <li><a href="uw-familie.html#successieplanning">Successieplanning</a></li>
-            <li><a href="uw-familie.html#vastgoedplanning">Vastgoedplanning</a></li>
+            <li><a href="uw-familie.html">Uw familie</a></li>
+            <li><a href="uw-bedrijf.html">Uw onderneming</a></li>
+            <li><a href="#contact">Contact</a></li>
           </ul>
         </div>
-        <!-- Kolom 3 — Uw onderneming -->
-        <div>
-          <p class="footer__col-title"><a href="uw-bedrijf.html">Uw onderneming</a></p>
-          <ul class="footer__links">
-            <li><a href="uw-bedrijf.html#financiele-analyse">Financiële analyse</a></li>
-            <li><a href="uw-bedrijf.html#fusies-en-overnames">Fusies &amp; overnames</a></li>
-            <li><a href="uw-bedrijf.html#bedrijfsoverdracht">Bedrijfsoverdracht</a></li>
-          </ul>
-        </div>
-        <!-- Kolom 4 — Contact -->
+        <!-- Kolom 3 — Contact -->
         <div>
           <p class="footer__col-title">Contact</p>
           <p class="footer__contact-item">Dirk Martensstraat 41<br>9300 Aalst</p>
@@ -2629,7 +2666,7 @@
       var chapters = [
         ['missie', 'I — MISSIE'], ['visie', 'II — ONZE VISIE'],
         ['team', 'III — TEAM'], ['expertise', 'IV — EXPERTISE'], ['waarden', 'V — WAARDEN'],
-        ['faq', 'VI — VEELGESTELDE VRAGEN']
+        ['contact', 'VI — CONTACT'], ['faq', 'VII — VEELGESTELDE VRAGEN']
       ].map(function (c) {
         var el = document.getElementById(c[0]);
         return el ? { el: el, name: c[1] } : null;
@@ -3454,6 +3491,162 @@
       window.addEventListener('load', draw);
       if (header) header.addEventListener('transitionend', function (ev) { if (ev.target === header) later(); });
       if (window.ResizeObserver) new ResizeObserver(later).observe(wrap);
+      draw();
+    })();
+
+    // ── Waarden: de lijn loopt door over de vier waarden ─────────
+    // Ze pikt de draad op bij de afsluiter van Expertise, komt links langs de
+    // titel omlaag en hangt dan als rail boven de waarden: elke waarde
+    // verschijnt zodra de lijn haar bereikt.
+    (function () {
+      var sec = document.getElementById('waarden');
+      var wrap = document.getElementById('waardenFlow');
+      var svg = document.getElementById('waardenPath');
+      if (!sec || !wrap || !svg) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var dots = svg.querySelector('.koers__dots');
+      var reveal = svg.querySelector('.koers__reveal');
+      var head = svg.querySelector('.koers__head');
+      var h2 = wrap.querySelector('.waarden__h2');
+      var grid = wrap.querySelector('.waarden__grid');
+      var items = [].slice.call(wrap.querySelectorAll('.waarden__item'));
+      var slot = document.querySelector('.expertise__slot');
+      if (!h2 || !grid || !items.length) return;
+      // de rail veronderstelt de vier waarden naast elkaar; daaronder breekt
+      // het raster in twee rijen en tonen we ze gewoon
+      var mq = matchMedia('(min-width: 1025px)');
+      var live = false, ticking = false, total = 0, y0 = 0, y1 = 1, hits = [];
+
+      function rel(el) {
+        var r = el.getBoundingClientRect(), w = wrap.getBoundingClientRect();
+        return { x: r.left - w.left + r.width / 2, y: r.top - w.top + r.height / 2,
+                 top: r.top - w.top, bottom: r.bottom - w.top,
+                 left: r.left - w.left, right: r.right - w.left };
+      }
+
+      function draw() {
+        live = mq.matches;
+        sec.classList.toggle('waarden--live', live);
+        if (!live) return;
+        var w = wrap.getBoundingClientRect();
+        var secR = sec.getBoundingClientRect();
+        var top = secR.top - w.top, bottom = secR.bottom - w.top;
+        // sluit aan op de afsluiter van Expertise; ontbreekt die, dan op het midden
+        var xIn = slot ? rel(slot).x : w.width / 2;
+        var xL = h2.offsetLeft - 32;
+        // onder 1200px staat de hoofdstukkop nog boven de titel; knik dan daarboven
+        var ch = wrap.querySelector('.chapter-head');
+        var yT = (ch && ch.offsetParent ? ch.offsetTop : h2.offsetTop) - 28;
+        var G = rel(grid);
+        var yRail = G.top - 18;
+        var d = 'M' + xIn + ',' + top + ' V' + yT + ' H' + xL + ' V' + yRail +
+                ' H' + (G.right + 24) + ' V' + bottom;
+        dots.setAttribute('d', d);
+        reveal.setAttribute('d', d);
+        total = dots.getTotalLength();
+        reveal.style.strokeDasharray = total + ' ' + total;
+        var samples = [];
+        for (var k = 0; k <= 400; k++) {
+          var l = total * k / 400, pt = dots.getPointAtLength(l);
+          samples.push({ l: l, x: pt.x, y: pt.y });
+        }
+        // lengte langs de lijn waarop de rail elke waarde passeert
+        hits = items.map(function (it) {
+          var p = rel(it), best = 0, bd = Infinity;
+          samples.forEach(function (sm) {
+            var dx = sm.x - p.x, dy = sm.y - yRail;
+            var dd = dx * dx + dy * dy;
+            if (dd < bd) { bd = dd; best = sm.l; }
+          });
+          return best;
+        });
+        y0 = top; y1 = bottom;
+        update();
+      }
+
+      function update() {
+        ticking = false;
+        if (!live || !total) return;
+        var yHead = window.innerHeight * .7 - wrap.getBoundingClientRect().top;
+        var f = Math.max(0, Math.min(1, (yHead - y0) / (y1 - y0)));
+        var len = f * total;
+        reveal.style.strokeDashoffset = (total - len).toFixed(1);
+        var pt = dots.getPointAtLength(len);
+        head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
+        head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
+        items.forEach(function (it, i) { it.classList.toggle('is-reached', len >= hits[i] - 4); });
+      }
+
+      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+      var tm;
+      function later() { clearTimeout(tm); tm = setTimeout(draw, 80); }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', later);
+      window.addEventListener('load', draw);
+      if (window.ResizeObserver) new ResizeObserver(later).observe(wrap);
+      draw();
+    })();
+
+    // ── Contact: het slotstuk, tot in de poolster ────────────────
+    // De lijn komt binnen op de x waar ze Waarden verliet, buigt links af en
+    // eindigt precies op de poolster: de meereizende ster dooft daar, zodat
+    // de vaste ster overblijft.
+    (function () {
+      var sec = document.getElementById('contact');
+      var svg = document.getElementById('contactPath');
+      if (!sec || !svg) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      var dots = svg.querySelector('.koers__dots');
+      var reveal = svg.querySelector('.koers__reveal');
+      var head = svg.querySelector('.koers__head');
+      var ster = sec.querySelector('.contact__poolster');
+      var grid = document.querySelector('.waarden__grid');
+      if (!ster) return;
+      var mq = matchMedia('(min-width: 1025px)');
+      var live = false, ticking = false, total = 0, y1 = 1;
+
+      function rel(el) {
+        var r = el.getBoundingClientRect(), w = sec.getBoundingClientRect();
+        return { x: r.left - w.left + r.width / 2, y: r.top - w.top + r.height / 2,
+                 top: r.top - w.top, right: r.right - w.left };
+      }
+
+      function draw() {
+        live = mq.matches;
+        sec.classList.toggle('contact--live', live);
+        if (!live) return;
+        var S = rel(ster);
+        var xIn = grid ? rel(grid).right + 24 : sec.getBoundingClientRect().width - 40;
+        var yBend = Math.max(24, S.top * .45);
+        dots.setAttribute('d', 'M' + xIn + ',0 V' + yBend + ' H' + S.x + ' V' + S.y);
+        reveal.setAttribute('d', dots.getAttribute('d'));
+        total = dots.getTotalLength();
+        reveal.style.strokeDasharray = total + ' ' + total;
+        // rustig tempo: de lijn is vooral horizontaal, de scroll is dat niet
+        y1 = S.y + 200;
+        update();
+      }
+
+      function update() {
+        ticking = false;
+        if (!live || !total) return;
+        var yHead = window.innerHeight * .7 - sec.getBoundingClientRect().top;
+        var len = Math.max(0, Math.min(1, yHead / y1)) * total;
+        reveal.style.strokeDashoffset = (total - len).toFixed(1);
+        var pt = dots.getPointAtLength(len);
+        head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
+        head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
+        // de meereizende ster dooft precies waar de vaste ster verschijnt
+        sec.classList.toggle('contact--aangekomen', len >= total - 2);
+      }
+
+      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+      var tm;
+      function later() { clearTimeout(tm); tm = setTimeout(draw, 80); }
+      window.addEventListener('scroll', onScroll, { passive: true });
+      window.addEventListener('resize', later);
+      window.addEventListener('load', draw);
+      if (window.ResizeObserver) new ResizeObserver(later).observe(sec);
       draw();
     })();
 
