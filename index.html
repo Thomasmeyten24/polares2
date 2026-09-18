@@ -1229,9 +1229,13 @@
       /* eindigt vóór de stippellijn tussen foto en tekst */
       width: min(33%, 480px);
       pointer-events: none;
-      /* ruime volle kern: enkel de uiterste randen vloeien zacht uit */
-      -webkit-mask-image: radial-gradient(closest-side ellipse at 50% 48%, #000 62%, rgba(0,0,0,.75) 80%, transparent 100%);
-      mask-image: radial-gradient(closest-side ellipse at 50% 48%, #000 62%, rgba(0,0,0,.75) 80%, transparent 100%);
+      /* rechthoekig uitvloeien: twee lineaire maskers (horizontaal en verticaal) die elkaar snijden */
+      -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16%, #000 84%, transparent 100%),
+                          linear-gradient(to bottom, transparent 0, #000 14%, #000 86%, transparent 100%);
+      -webkit-mask-composite: source-in;
+      mask-image: linear-gradient(to right, transparent 0, #000 16%, #000 84%, transparent 100%),
+                  linear-gradient(to bottom, transparent 0, #000 14%, #000 86%, transparent 100%);
+      mask-composite: intersect;
       /* de lichte uitzoom bij het infaden blijft binnen de sectie */
       -webkit-clip-path: inset(0);
       clip-path: inset(0);
