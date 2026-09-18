@@ -3122,6 +3122,125 @@
       });
     })();
 
+    // ── Reis: één ankermodel voor alle trajecten ─────────────────
+    // De ster staat op het snijpunt van het traject met een ankerlijn op 70%
+    // schermhoogte. Bij een vlak segment bestaat dat snijpunt niet — daar zijn er
+    // oneindig veel. Daar schuift de ster opzij met scroll/k, met k zo gekozen dat
+    // hij nooit verder dan BAND pixels boven het anker uitkomt.
+    //
+    // De kost per segment wordt één keer bij het meten uitgerekend, niet per frame.
+    // Daardoor is s → booglengte een vaste, monotone functie: terugscrollen geeft
+    // exact dezelfde stand, en de is-reached-drempels kunnen niet terugklappen.
+    // Een regelaar die de ster per frame naar het anker toe trekt zou dat breken.
+    var Reis = (function () {
+      var ANKER = .7, BAND = 250, K_MIN = 2.5, TAU = 400, MAX_SCHULD = 300;
+
+      // 'd' bestaat uitsluitend uit M/V/H, dus exact te ontleden. Sampelen zou de
+      // korte segmenten missen die tussen twee samples in vallen.
+      function bouw(d, band) {
+        var t = (d || '').match(/[MVH]-?[\d.]+(?:,-?[\d.]+)?/g) || [];
+        var x = 0, y = 0, l = 0, schuld = 0, segs = [], eerste = true, y0 = 0;
+        for (var i = 0; i < t.length; i++) {
+          var k = t[i][0], v = t[i].slice(1), nx = x, ny = y, soort, dl = 0;
+          if (k === 'M') {
+            var p = v.split(','); nx = +p[0]; ny = +p[1];
+            if (eerste) { x = nx; y = ny; y0 = ny; eerste = false; continue; }
+            soort = 'sprong';
+          } else if (k === 'H') { nx = +v; soort = 'horiz'; dl = Math.abs(nx - x); }
+          else { ny = +v; soort = ny >= y ? 'omlaag' : 'omhoog'; dl = Math.abs(ny - y); }
+
+          var kost;
+          if (soort === 'omlaag') {
+            // schuld aflossen: het anker schuift minder op dan de ster daalt,
+            // waardoor de ster terugzakt naar zijn ankerhoogte
+            var af = schuld * (1 - Math.exp(-dl / TAU));
+            af = Math.min(af, dl * .85);
+            kost = dl - af; schuld -= af;
+          } else if (soort === 'sprong') {
+            // de lijn slaat een illustratie over: de kop wacht aan de rand
+            kost = Math.abs(ny - y); dl = 0;
+          } else {
+            kost = Math.min(dl / K_MIN, band);
+            schuld = Math.min(MAX_SCHULD, schuld + kost + (soort === 'omhoog' ? dl : 0));
+          }
+          segs.push({ soort: soort, kost: kost, l0: l, dl: dl, x0: x, y0: y, x1: nx, y1: ny });
+          l += dl; x = nx; y = ny;
+        }
+        // cumulatieve kost, beginnend op de y van het startpunt zodat s === yHead.
+        // Onderweg bijhouden hoe ver de ster boven het anker uitkomt: dat bepaalt
+        // of de band krap genoeg is om hem in beeld te houden.
+        var s = y0, drift = 0, piek = 0;
+        for (var j = 0; j < segs.length; j++) {
+          var sg = segs[j]; sg.s0 = s; s += sg.kost;
+          drift += sg.kost - (sg.soort === 'omlaag' ? sg.dl : sg.soort === 'omhoog' ? -sg.dl : 0);
+          if (sg.soort === 'sprong') drift -= sg.kost; // de sprong lost zichzelf op
+          piek = Math.max(piek, drift + (sg.soort === 'sprong' ? sg.kost : 0));
+        }
+        return { segs: segs, lengte: l, sEind: s, sStart: y0, piek: piek, band: band };
+      }
+
+      // De band krimpen tot de ster binnen het plafond blijft. Hoofdstuk I steekt
+      // 1998px over terwijl het maar 582px daalt — daar is simpelweg te weinig
+      // daling om de opgelopen schuld op af te lossen, dus moet de oversteek daar
+      // krapper. Dat gebeurt automatisch in plaats van met een getal per hoofdstuk.
+      // hoe ver de ster boven zijn anker mag uitkomen: net genoeg marge onder de
+      // nav zodat hij altijd zichtbaar blijft, ook op een laag scherm
+      function plafondNu() { return Math.max(180, window.innerHeight * ANKER - 175); }
+
+      function tabel(d, plafond) {
+        plafond = plafond || plafondNu();
+        var band = BAND, tb = bouw(d, band);
+        for (var i = 0; i < 6 && tb.piek > plafond; i++) {
+          band *= Math.max(.4, plafond / tb.piek);
+          tb = bouw(d, band);
+        }
+        return tb;
+      }
+
+      // waar staat de kop als de ankerlijn op s staat?
+      function zoek(tb, s) {
+        var g = tb.segs;
+        if (!g.length) return { len: 0, x: 0, y: 0 };
+        if (s <= g[0].s0) return { len: 0, x: g[0].x0, y: g[0].y0 };
+        for (var i = 0; i < g.length; i++) {
+          var sg = g[i], eind = sg.s0 + sg.kost;
+          if (s >= eind && i < g.length - 1) continue;
+          var f = sg.kost > 0 ? Math.max(0, Math.min(1, (s - sg.s0) / sg.kost)) : 1;
+          if (s >= eind) f = 1;
+          return {
+            len: sg.l0 + sg.dl * f,
+            x: sg.x0 + (sg.x1 - sg.x0) * f,
+            y: sg.soort === 'sprong' ? sg.y0 : sg.y0 + (sg.y1 - sg.y0) * f
+          };
+        }
+        return { len: tb.lengte, x: g[g.length - 1].x1, y: g[g.length - 1].y1 };
+      }
+
+      function anker(wrap) { return window.innerHeight * ANKER - wrap.getBoundingClientRect().top; }
+
+      // Gedempte volger: de kop loopt soepel naar zijn doel toe in plaats van te
+      // springen bij een ruwe scroll of een trackpad-flick. De drempels gebruiken
+      // het doel, niet de gedempte waarde, zodat is-reached niet kan terugklappen.
+      function volger(doelFn, tekenFn) {
+        var waarde = null, gepland = false;
+        function plan() { if (!gepland) { gepland = true; requestAnimationFrame(stap); } }
+        function stap() {
+          gepland = false;
+          var doel = doelFn();
+          if (doel === null) return;
+          if (waarde === null) waarde = doel;
+          else {
+            waarde += (doel - waarde) * .18;
+            if (Math.abs(doel - waarde) < .5) waarde = doel; else plan();
+          }
+          tekenFn(waarde, doel);
+        }
+        return { duw: plan, herstel: function () { waarde = null; plan(); } };
+      }
+
+      return { tabel: tabel, zoek: zoek, anker: anker, volger: volger, ANKER: ANKER };
+    })();
+
     // ── Hoofdstuk I: lijn van de kernwoorden naar satelliet en doelgroepen ──
     // Zelfde principe als het traject: de lijn tekent zich mee bij het scrollen,
     // met een sterretje aan de kop. Ze loopt van de kernwoorden naar de satelliet
@@ -3154,7 +3273,7 @@
       var clip = { boven: svg.querySelector('[data-c="boven"]'), onder: svg.querySelector('[data-c="onder"]'), band: svg.querySelector('[data-c="band"]') };
       var visieSec = document.getElementById('visie');
       var mq = matchMedia('(min-width: 768px)');
-      var live = false, ticking = false, geo = null;
+      var live = false, geo = null, tb = null, mik = null;
 
       function box(el) {
         var x = 0, y = 0, n = el;
@@ -3181,34 +3300,6 @@
           cardTop: base + (sc.top - st.top) - ty
         };
       }
-      function sample(p) {
-        p.total = p.dots.getTotalLength();
-        p.s = [];
-        for (var i = 0; i <= 200; i++) {
-          var l = p.total * i / 200, pt = p.dots.getPointAtLength(l);
-          p.s.push({ l: l, x: pt.x, y: pt.y });
-        }
-        p.rev.style.strokeDasharray = p.total + ' ' + p.total;
-      }
-      // lengte langs een pad bij een gegeven hoogte (het pad daalt monotoon;
-      // op een horizontaal stuk schuift de kop verder naarmate men scrolt)
-      function at(p, yHead) {
-        var s = p.s, k = 0;
-        if (!s.length || yHead < s[0].y) return { len: 0, x: s[0] ? s[0].x : 0, y: s[0] ? s[0].y : 0 };
-        while (k < s.length - 1 && s[k + 1].y <= yHead) k++;
-        var a = s[k], b = s[Math.min(k + 1, s.length - 1)];
-        if (b.y === a.y && b !== a) {
-          var j = k; while (j < s.length - 1 && s[j + 1].y === a.y) j++;
-          var len = a.l + (s[j].l - a.l) * Math.min(1, (yHead - a.y) / 90);
-          var pt = p.dots.getPointAtLength(len);
-          return { len: len, x: pt.x, y: pt.y };
-        }
-        // sprong over een illustratie: de kop wacht aan de rand
-        if (b.l - a.l < .5 && b.y - a.y > 8) return { len: a.l, x: a.x, y: a.y };
-        var t = b.y > a.y ? Math.max(0, Math.min(1, (yHead - a.y) / (b.y - a.y))) : 1;
-        return { len: a.l + (b.l - a.l) * t, x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
-      }
-
       function draw() {
         live = mq.matches;
         wrap.classList.toggle('missie--live', live);
@@ -3244,38 +3335,42 @@
         clip.onder.setAttribute('y', bBot); clip.onder.setAttribute('height', 40000);
         clip.band.setAttribute('y', bTop); clip.band.setAttribute('height', Math.max(0, bBot - bTop));
         line.rev.setAttribute('d', d);
-        sample(line);
+        line.total = line.dots.getTotalLength();
+        line.rev.style.strokeDasharray = line.total + ' ' + line.total;
+        tb = Reis.tabel(d);
         geo = { satTop: s.top - 12, fTop: f.top - 14, bTop: b.top - 14, eTop: e.top - 22, pool: !!P, band: [bTop, bBot] };
-        update();
+        volg.herstel();
       }
 
-      function head(p, r) {
-        p.rev.style.strokeDashoffset = (p.total - r.len).toFixed(1);
-        p.head.setAttribute('transform', 'translate(' + (r.x - 7).toFixed(1) + ',' + (r.y - 7).toFixed(1) + ') scale(.14)');
-        p.head.style.opacity = r.len > 2 && r.len < p.total - 2 ? '' : '0';
+      function doel() {
+        if (!live || !geo || !tb) return null;
+        mik = Reis.zoek(tb, Reis.anker(wrap));
+        return mik.len;
       }
 
-      function update() {
-        ticking = false;
-        if (!live || !geo) return;
-        var yHead = window.innerHeight * .7 - wrap.getBoundingClientRect().top;
-        var r = at(line, yHead);
-        head(line, r);
+      function teken(len, doelLen) {
+        var pt = line.dots.getPointAtLength(Math.max(0, Math.min(line.total, len)));
+        line.rev.style.strokeDashoffset = (line.total - len).toFixed(1);
+        line.head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
+        line.head.style.opacity = len > 2 && len < line.total - 2 ? '' : '0';
         // boven het donkerblauw is het sterretje wit
-        line.head.style.fill = r.y > geo.band[0] && r.y < geo.band[1] ? '#fff' : '';
-        grid.classList.toggle('is-reached', r.y >= geo.satTop - 20);
-        cols[0].classList.toggle('is-reached', r.y >= geo.fTop - 2);
-        cols[1].classList.toggle('is-reached', r.y >= geo.bTop - 2);
-        slot.classList.toggle('is-reached', r.y >= geo.eTop - 2);
+        line.head.style.fill = pt.y > geo.band[0] && pt.y < geo.band[1] ? '#fff' : '';
+        // drempels op de doelstand: de gedempte waarde mag ze niet laten terugklappen
+        var dy = mik.y;
+        grid.classList.toggle('is-reached', dy >= geo.satTop - 20);
+        cols[0].classList.toggle('is-reached', dy >= geo.fTop - 2);
+        cols[1].classList.toggle('is-reached', dy >= geo.bTop - 2);
+        slot.classList.toggle('is-reached', dy >= geo.eTop - 2);
         // pas als de ster op de Poolster valt, verschijnt de titel van hoofdstuk II
-        var landed = !geo.pool || r.len >= line.total - 2;
+        var landed = !geo.pool || doelLen >= line.total - 2;
         if (vTitle) vTitle.classList.toggle('is-waiting', !landed);
         if (scene) scene.classList.toggle('is-landed', landed);
         // en dan mag de lijn van hoofdstuk I zachtjes verdwijnen
         svg.classList.toggle('is-landed', landed && geo.pool);
       }
 
-      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+      var volg = Reis.volger(doel, teken);
+      function onScroll() { volg.duw(); }
       var tm;
       function later() { clearTimeout(tm); tm = setTimeout(draw, 80); }
       window.addEventListener('scroll', onScroll, { passive: true });
@@ -3308,7 +3403,7 @@
       var reveal = svg.querySelector('.koers__reveal'), head = svg.querySelector('.koers__head');
       var clipL = svg.querySelector('[data-c="licht"]'), clipD = svg.querySelector('[data-c="donker"]');
       var mq = matchMedia('(min-width: 768px)');
-      var live = false, ticking = false, samples = [], total = 0, geo = null;
+      var live = false, total = 0, geo = null, tb = null, mik = null;
 
       function shift(el) {
         var m = el ? getComputedStyle(el).transform : 'none';
@@ -3334,47 +3429,29 @@
         clipL.setAttribute('height', bottom + 5000);
         clipD.setAttribute('y', bottom); clipD.setAttribute('height', 40000);
         total = dots.getTotalLength();
-        samples = [];
-        for (var i = 0; i <= 300; i++) {
-          var l = total * i / 300, pt = dots.getPointAtLength(l);
-          samples.push({ l: l, x: pt.x, y: pt.y });
-        }
         reveal.style.strokeDasharray = total + ' ' + total;
         geo = { yT: yT, bottom: bottom };
-        update();
+        tb = Reis.tabel(d);
+        volg.herstel();
       }
 
-      // lengte langs de (monotoon dalende) lijn bij een gegeven hoogte
-      function at(yHead) {
-        var s = samples, k = 0;
-        if (yHead < s[0].y) return { len: 0, x: s[0].x, y: s[0].y };
-        while (k < s.length - 1 && s[k + 1].y <= yHead) k++;
-        var a = s[k], b = s[Math.min(k + 1, s.length - 1)];
-        if (b.y === a.y && b !== a) {
-          var j = k; while (j < s.length - 1 && s[j + 1].y === a.y) j++;
-          var len = a.l + (s[j].l - a.l) * Math.min(1, (yHead - a.y) / 90);
-          var pt = dots.getPointAtLength(len);
-          return { len: len, x: pt.x, y: pt.y };
-        }
-        // sprong over de foto: de kop wacht bij het sterretje
-        if (b.l - a.l < .5 && b.y - a.y > 8) return { len: a.l, x: a.x, y: a.y };
-        var t = b.y > a.y ? Math.max(0, Math.min(1, (yHead - a.y) / (b.y - a.y))) : 1;
-        return { len: a.l + (b.l - a.l) * t, x: a.x + (b.x - a.x) * t, y: a.y + (b.y - a.y) * t };
+      function doel() {
+        if (!live || !total || !tb) return null;
+        mik = Reis.zoek(tb, Reis.anker(wrap));
+        return mik.len;
       }
 
-      function update() {
-        ticking = false;
-        if (!live || !samples.length) return;
-        var yHead = window.innerHeight * .7 - wrap.getBoundingClientRect().top;
-        var r = at(yHead);
-        reveal.style.strokeDashoffset = (total - r.len).toFixed(1);
-        head.setAttribute('transform', 'translate(' + (r.x - 7).toFixed(1) + ',' + (r.y - 7).toFixed(1) + ') scale(.14)');
-        head.style.opacity = r.len > 2 && r.len < total - 2 ? '' : '0';
-        head.style.fill = r.y > geo.bottom ? '#fff' : '';
-        grid.classList.toggle('is-reached', r.y >= geo.yT - 2);
+      function teken(len, doelLen) {
+        reveal.style.strokeDashoffset = (total - len).toFixed(1);
+        var pt = dots.getPointAtLength(Math.max(0, Math.min(total, len)));
+        head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
+        head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
+        head.style.fill = pt.y > geo.bottom ? '#fff' : '';
+        grid.classList.toggle('is-reached', mik.y >= geo.yT - 2 || doelLen >= total - 2);
       }
 
-      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+      var volg = Reis.volger(doel, teken);
+      function onScroll() { volg.duw(); }
       var tm;
       function later() { clearTimeout(tm); tm = setTimeout(draw, 80); }
       window.addEventListener('scroll', onScroll, { passive: true });
@@ -3405,7 +3482,7 @@
       var items = [].slice.call(wrap.querySelectorAll('.expertise__item'));
       if (!lamp || !grid || !slot || !items.length) return;
       var mq = matchMedia('(min-width: 768px)');
-      var live = false, ticking = false, total = 0, y0 = 0, y1 = 1, hits = [];
+      var live = false, total = 0, y0 = 0, hits = [], tb = null;
 
       // positie t.o.v. de lijn; de scroll-reveal van de kop (translateY) eruit
       function rel(el, ty) {
@@ -3447,7 +3524,6 @@
         // en pas dan opzij: zo is het laatste stuk kort en vloeit het rustig uit
         var yMid = (bot + (E.top - 14)) / 2;
         d += ' V' + yMid + ' H' + E.x + ' V' + (E.top - 14);
-        y1 = E.top - 14;
         dots.setAttribute('d', d);
         reveal.setAttribute('d', d);
         total = dots.getTotalLength();
@@ -3466,24 +3542,26 @@
           });
           return best;
         });
-        update();
+        tb = Reis.tabel(d);
+        volg.herstel();
       }
 
-      function update() {
-        ticking = false;
-        if (!live || !total) return;
-        var yHead = window.innerHeight * .7 - wrap.getBoundingClientRect().top;
-        var f = Math.max(0, Math.min(1, (yHead - y0) / (y1 - y0)));
-        var len = f * total;
+      function doel() {
+        if (!live || !total || !tb) return null;
+        return Reis.zoek(tb, Reis.anker(wrap)).len;
+      }
+
+      function teken(len, doelLen) {
         reveal.style.strokeDashoffset = (total - len).toFixed(1);
-        var pt = dots.getPointAtLength(len);
+        var pt = dots.getPointAtLength(Math.max(0, Math.min(total, len)));
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
-        items.forEach(function (it, i) { it.classList.toggle('is-reached', len >= hits[i] - 4); });
-        slot.classList.toggle('is-reached', f >= .999);
+        items.forEach(function (it, i) { it.classList.toggle('is-reached', doelLen >= hits[i] - 4); });
+        slot.classList.toggle('is-reached', doelLen >= total - 2);
       }
 
-      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+      var volg = Reis.volger(doel, teken);
+      function onScroll() { volg.duw(); }
       var tm;
       function later() { clearTimeout(tm); tm = setTimeout(draw, 80); }
       window.addEventListener('scroll', onScroll, { passive: true });
@@ -3515,7 +3593,7 @@
       // de rail veronderstelt de vier waarden naast elkaar; daaronder breekt
       // het raster in twee rijen en tonen we ze gewoon
       var mq = matchMedia('(min-width: 1025px)');
-      var live = false, ticking = false, total = 0, y0 = 0, y1 = 1, hits = [];
+      var live = false, total = 0, hits = [], tb = null;
 
       function rel(el) {
         var r = el.getBoundingClientRect(), w = wrap.getBoundingClientRect();
@@ -3560,24 +3638,25 @@
           });
           return best;
         });
-        y0 = top; y1 = bottom;
-        update();
+        tb = Reis.tabel(d);
+        volg.herstel();
       }
 
-      function update() {
-        ticking = false;
-        if (!live || !total) return;
-        var yHead = window.innerHeight * .7 - wrap.getBoundingClientRect().top;
-        var f = Math.max(0, Math.min(1, (yHead - y0) / (y1 - y0)));
-        var len = f * total;
+      function doel() {
+        if (!live || !total || !tb) return null;
+        return Reis.zoek(tb, Reis.anker(wrap)).len;
+      }
+
+      function teken(len, doelLen) {
         reveal.style.strokeDashoffset = (total - len).toFixed(1);
-        var pt = dots.getPointAtLength(len);
+        var pt = dots.getPointAtLength(Math.max(0, Math.min(total, len)));
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
-        items.forEach(function (it, i) { it.classList.toggle('is-reached', len >= hits[i] - 4); });
+        items.forEach(function (it, i) { it.classList.toggle('is-reached', doelLen >= hits[i] - 4); });
       }
 
-      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+      var volg = Reis.volger(doel, teken);
+      function onScroll() { volg.duw(); }
       var tm;
       function later() { clearTimeout(tm); tm = setTimeout(draw, 80); }
       window.addEventListener('scroll', onScroll, { passive: true });
@@ -3603,7 +3682,7 @@
       var grid = document.querySelector('.waarden__grid');
       if (!ster) return;
       var mq = matchMedia('(min-width: 1025px)');
-      var live = false, ticking = false, total = 0, y1 = 1;
+      var live = false, total = 0, tb = null;
 
       function rel(el) {
         var r = el.getBoundingClientRect(), w = sec.getBoundingClientRect();
@@ -3622,25 +3701,26 @@
         reveal.setAttribute('d', dots.getAttribute('d'));
         total = dots.getTotalLength();
         reveal.style.strokeDasharray = total + ' ' + total;
-        // rustig tempo: de lijn is vooral horizontaal, de scroll is dat niet
-        y1 = S.y + 200;
-        update();
+        tb = Reis.tabel(dots.getAttribute('d'));
+        volg.herstel();
       }
 
-      function update() {
-        ticking = false;
-        if (!live || !total) return;
-        var yHead = window.innerHeight * .7 - sec.getBoundingClientRect().top;
-        var len = Math.max(0, Math.min(1, yHead / y1)) * total;
+      function doel() {
+        if (!live || !total || !tb) return null;
+        return Reis.zoek(tb, Reis.anker(sec)).len;
+      }
+
+      function teken(len, doelLen) {
         reveal.style.strokeDashoffset = (total - len).toFixed(1);
-        var pt = dots.getPointAtLength(len);
+        var pt = dots.getPointAtLength(Math.max(0, Math.min(total, len)));
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
         // de meereizende ster dooft precies waar de vaste ster verschijnt
-        sec.classList.toggle('contact--aangekomen', len >= total - 2);
+        sec.classList.toggle('contact--aangekomen', doelLen >= total - 2);
       }
 
-      function onScroll() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+      var volg = Reis.volger(doel, teken);
+      function onScroll() { volg.duw(); }
       var tm;
       function later() { clearTimeout(tm); tm = setTimeout(draw, 80); }
       window.addEventListener('scroll', onScroll, { passive: true });
@@ -3668,7 +3748,7 @@
       if (icons.length !== 7 || !dots || !reveal || !head) return;
 
       var live = !matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var samples = [], total = 0, iconY = [], ticking = false;
+      var total = 0, iconY = [], tb = null, mik = null;
 
       // offsets i.p.v. getBoundingClientRect: animaties verschuiven elementen
       // tijdelijk met een transform, dat mag de lijn niet volgen
@@ -3701,50 +3781,32 @@
         reveal.setAttribute('d', d);
         iconY = c.map(function (b) { return b.y; });
 
-        // de lijn daalt monotoon: bemonster lengte ↔ hoogte eenmaal per opbouw
         total = dots.getTotalLength();
-        samples = [];
-        for (var i = 0; i <= 240; i++) {
-          var l = total * i / 240, pt = dots.getPointAtLength(l);
-          samples.push({ l: l, x: pt.x, y: pt.y });
-        }
         reveal.style.strokeDasharray = total + ' ' + total;
-        update();
+        tb = Reis.tabel(d);
+        volg.herstel();
       }
 
-      function update() {
-        ticking = false;
-        if (!samples.length) return;
-        var top = wrap.getBoundingClientRect().top;
-        // de kop van de lijn volgt een punt op ~70% van de schermhoogte
-        var yHead = window.innerHeight * .7 - top;
-        var k = 0;
-        while (k < samples.length - 1 && samples[k + 1].y <= yHead) k++;
-        var sA = samples[k], sB = samples[Math.min(k + 1, samples.length - 1)];
-        var t = sB.y > sA.y ? Math.max(0, Math.min(1, (yHead - sA.y) / (sB.y - sA.y))) : 0;
-        if (yHead < 0) t = 0;
-        var len = yHead < 0 ? 0 : sA.l + (sB.l - sA.l) * t;
-        var hx = sA.x + (sB.x - sA.x) * t, hy = sA.y + (sB.y - sA.y) * t;
-        // op een horizontaal stuk schuift de kop verder naarmate men scrolt
-        if (sB.y === sA.y && yHead >= sA.y) {
-          var j = k; while (j < samples.length - 1 && samples[j + 1].y === sA.y) j++;
-          var span = samples[j].l - sA.l;
-          var extra = Math.min(1, (yHead - sA.y) / 90);
-          len = sA.l + span * extra;
-          var pt = dots.getPointAtLength(len); hx = pt.x; hy = pt.y;
-        }
+      function doel() {
+        if (!live || !total || !tb) return null;
+        mik = Reis.zoek(tb, Reis.anker(wrap));
+        return mik.len;
+      }
+
+      function teken(len, doelLen) {
+        var pt = dots.getPointAtLength(Math.max(0, Math.min(total, len)));
         reveal.style.strokeDashoffset = (total - len).toFixed(1);
-        head.setAttribute('transform', 'translate(' + (hx - 7).toFixed(1) + ',' + (hy - 7).toFixed(1) + ') scale(.14)');
+        head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
+        var dy = mik.y;
         steps.forEach(function (st, i) {
           // stap 1 verschijnt al terwijl de wereldbol erin landt
-          st.classList.toggle('is-reached', hy >= iconY[i] - (i === 0 ? 90 : 12) || len >= total - 2);
+          st.classList.toggle('is-reached', dy >= iconY[i] - (i === 0 ? 90 : 12) || doelLen >= total - 2);
         });
       }
 
-      function onScroll() {
-        if (!ticking) { ticking = true; requestAnimationFrame(update); }
-      }
+      var volg = Reis.volger(doel, teken);
+      function onScroll() { volg.duw(); }
       var t;
       function later() { clearTimeout(t); t = setTimeout(draw, 80); }
 
