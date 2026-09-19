@@ -3277,10 +3277,20 @@
         return { duw: plan, herstel: function () { waarde = null; plan(); } };
       }
 
+      // Staat een blok goed en wel in beeld, dan is het hoe dan ook onthuld.
+      // De lijn bepaalt de volgorde bij rustig scrollen, maar ze mag nooit de
+      // reden zijn dat zichtbare inhoud leeg blijft — bij een snelle scroll of
+      // een sprong naar een anker is de lijn er nog lang niet.
+      function inBeeld(el) {
+        if (!el) return false;
+        var r = el.getBoundingClientRect();
+        return r.top < window.innerHeight * .88 && r.bottom > 0;
+      }
+
       // Voorsprong op de drempels: inhoud verschijnt al een stuk voordat de lijn
-      // er is. Zonder dat blijft het deel van het scherm onder de ster leeg,
-      // want daar is de lijn per definitie nog niet geweest.
-      return { tabel: tabel, zoek: zoek, anker: anker, sBij: sBij, volger: volger, ANKER: ANKER, VOOR: 220 };
+      // er is, zodat het deel van het scherm onder de ster niet leeg blijft.
+      return { tabel: tabel, zoek: zoek, anker: anker, sBij: sBij, volger: volger,
+               inBeeld: inBeeld, ANKER: ANKER, VOOR: 220 };
     })();
 
     // ── Hoofdstuk I: lijn van de kernwoorden naar satelliet en doelgroepen ──
@@ -3399,10 +3409,10 @@
         line.head.style.fill = pt.y > geo.band[0] && pt.y < geo.band[1] ? '#fff' : '';
         // drempels op de doelstand: de gedempte waarde mag ze niet laten terugklappen
         var dy = mik.y + Reis.VOOR;
-        grid.classList.toggle('is-reached', dy >= geo.satTop - 20);
-        cols[0].classList.toggle('is-reached', dy >= geo.fTop - 2);
-        cols[1].classList.toggle('is-reached', dy >= geo.bTop - 2);
-        slot.classList.toggle('is-reached', dy >= geo.eTop - 2);
+        grid.classList.toggle('is-reached', dy >= geo.satTop - 20 || Reis.inBeeld(grid));
+        cols[0].classList.toggle('is-reached', dy >= geo.fTop - 2 || Reis.inBeeld(cols[0]));
+        cols[1].classList.toggle('is-reached', dy >= geo.bTop - 2 || Reis.inBeeld(cols[1]));
+        slot.classList.toggle('is-reached', dy >= geo.eTop - 2 || Reis.inBeeld(slot));
         // pas als de ster op de Poolster valt, verschijnt de titel van hoofdstuk II
         var landed = !geo.pool || doelLen >= line.total - 2;
         if (vTitle) vTitle.classList.toggle('is-waiting', !landed);
@@ -3489,7 +3499,7 @@
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
         head.style.fill = pt.y > geo.bottom ? '#fff' : '';
-        grid.classList.toggle('is-reached', mik.y + Reis.VOOR >= geo.yT - 2 || doelLen >= total - 2);
+        grid.classList.toggle('is-reached', mik.y + Reis.VOOR >= geo.yT - 2 || doelLen >= total - 2 || Reis.inBeeld(grid));
       }
 
       var volg = Reis.volger(doel, teken);
@@ -3552,13 +3562,9 @@
           c.s.push(i);
         });
         cols.sort(function (a, b) { return a.x - b.x; });
-        // De slinger blijft tussen de rijen met sterretjes in plaats van het
-        // hele rastervak af te lopen. Van rand tot rand kostte elke kolom de
-        // volle rasterhoogte, drie keer heen en weer — zoveel verticale weg dat
-        // de onderste rij pas aan de beurt kwam als de sectie al voorbij was
-        // gescrold. Tussen de rijen is dat minder dan de helft.
-        var ys = stars.map(function (p) { return p.y; });
-        var top = Math.min.apply(null, ys), bot = Math.max.apply(null, ys);
+        // De knikken liggen buiten het raster: zo loopt de lijn om de tekst heen
+        // in plaats van op titelhoogte dwars door de woorden.
+        var top = G.top - 16, bot = G.bottom + 16;
         y0 = L.bottom + 12;
         var d = 'M' + L.x + ',' + y0 + ' V' + top, down = true, y = top;
         cols.forEach(function (c) {
@@ -3608,8 +3614,8 @@
         var pt = dots.getPointAtLength(Math.max(0, Math.min(total, len)));
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
-        items.forEach(function (it, i) { it.classList.toggle('is-reached', mikS + Reis.VOOR >= hitS[i]); });
-        slot.classList.toggle('is-reached', doelLen >= total - 2);
+        items.forEach(function (it, i) { it.classList.toggle('is-reached', mikS + Reis.VOOR >= hitS[i] || Reis.inBeeld(it)); });
+        slot.classList.toggle('is-reached', doelLen >= total - 2 || Reis.inBeeld(slot));
       }
 
       var volg = Reis.volger(doel, teken);
@@ -3708,7 +3714,7 @@
         var pt = dots.getPointAtLength(Math.max(0, Math.min(total, len)));
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
-        items.forEach(function (it, i) { it.classList.toggle('is-reached', mikS + Reis.VOOR >= hitS[i]); });
+        items.forEach(function (it, i) { it.classList.toggle('is-reached', mikS + Reis.VOOR >= hitS[i] || Reis.inBeeld(it)); });
       }
 
       var volg = Reis.volger(doel, teken);
@@ -3857,7 +3863,7 @@
         var dy = mik.y + Reis.VOOR;
         steps.forEach(function (st, i) {
           // stap 1 verschijnt al terwijl de wereldbol erin landt
-          st.classList.toggle('is-reached', dy >= iconY[i] - (i === 0 ? 90 : 12) || doelLen >= total - 2);
+          st.classList.toggle('is-reached', dy >= iconY[i] - (i === 0 ? 90 : 12) || doelLen >= total - 2 || Reis.inBeeld(st));
         });
       }
 
