@@ -3241,6 +3241,22 @@
 
       function anker(wrap) { return window.innerHeight * ANKER - wrap.getBoundingClientRect().top; }
 
+      // Bij welke ankerstand bereikt de lijn deze booglengte? Drempels vergelijken
+      // daarop en niet op booglengte zelf: tijdens een snelle oversteek is 200px
+      // booglengte maar een fractie van een scroll, en dan komt de voorsprong
+      // nergens op neer.
+      function sBij(tb, len) {
+        var g = tb.segs;
+        for (var i = 0; i < g.length; i++) {
+          var sg = g[i];
+          if (len <= sg.l0 + sg.dl || i === g.length - 1) {
+            var f = sg.dl > 0 ? Math.max(0, Math.min(1, (len - sg.l0) / sg.dl)) : 1;
+            return sg.s0 + sg.kost * f;
+          }
+        }
+        return tb.sEind;
+      }
+
       // Gedempte volger: de kop loopt soepel naar zijn doel toe in plaats van te
       // springen bij een ruwe scroll of een trackpad-flick. De drempels gebruiken
       // het doel, niet de gedempte waarde, zodat is-reached niet kan terugklappen.
@@ -3261,7 +3277,10 @@
         return { duw: plan, herstel: function () { waarde = null; plan(); } };
       }
 
-      return { tabel: tabel, zoek: zoek, anker: anker, volger: volger, ANKER: ANKER };
+      // Voorsprong op de drempels: inhoud verschijnt al een stuk voordat de lijn
+      // er is. Zonder dat blijft het deel van het scherm onder de ster leeg,
+      // want daar is de lijn per definitie nog niet geweest.
+      return { tabel: tabel, zoek: zoek, anker: anker, sBij: sBij, volger: volger, ANKER: ANKER, VOOR: 220 };
     })();
 
     // ── Hoofdstuk I: lijn van de kernwoorden naar satelliet en doelgroepen ──
@@ -3379,7 +3398,7 @@
         // boven het donkerblauw is het sterretje wit
         line.head.style.fill = pt.y > geo.band[0] && pt.y < geo.band[1] ? '#fff' : '';
         // drempels op de doelstand: de gedempte waarde mag ze niet laten terugklappen
-        var dy = mik.y;
+        var dy = mik.y + Reis.VOOR;
         grid.classList.toggle('is-reached', dy >= geo.satTop - 20);
         cols[0].classList.toggle('is-reached', dy >= geo.fTop - 2);
         cols[1].classList.toggle('is-reached', dy >= geo.bTop - 2);
@@ -3470,7 +3489,7 @@
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
         head.style.fill = pt.y > geo.bottom ? '#fff' : '';
-        grid.classList.toggle('is-reached', mik.y >= geo.yT - 2 || doelLen >= total - 2);
+        grid.classList.toggle('is-reached', mik.y + Reis.VOOR >= geo.yT - 2 || doelLen >= total - 2);
       }
 
       var volg = Reis.volger(doel, teken);
@@ -3505,7 +3524,7 @@
       var items = [].slice.call(wrap.querySelectorAll('.expertise__item'));
       if (!lamp || !grid || !slot || !items.length) return;
       var mq = matchMedia('(min-width: 768px)');
-      var live = false, total = 0, y0 = 0, hits = [], tb = null;
+      var live = false, total = 0, y0 = 0, hits = [], hitS = [], tb = null, mikS = 0;
 
       // positie t.o.v. de lijn; de scroll-reveal van de kop (translateY) eruit
       function rel(el, ty) {
@@ -3525,35 +3544,33 @@
         if (!live) return;
         var L = rel(lamp, shift(header)), G = rel(grid), E = rel(slot);
         var stars = items.map(function (it) { return rel(it.querySelector('.expertise__item-head svg')); });
-        // Sterretjes per rij groeperen, niet per kolom. Kolomsgewijs moest de
-        // lijn een volle rasterhoogte omhoog om de volgende kolom te beginnen —
-        // tegen de scrollrichting in, waardoor de ster boven beeld raakte en de
-        // onderste rij nooit aan de beurt kwam. Per rij daalt ze altijd.
-        var rijen = [];
-        stars.forEach(function (p) {
-          var r = rijen.filter(function (r) { return Math.abs(r.y - p.y) < 20; })[0];
-          if (!r) { r = { y: p.y, x: [] }; rijen.push(r); }
-          r.x.push(p.x);
+        // sterretjes per kolom groeperen
+        var cols = [];
+        stars.forEach(function (p, i) {
+          var c = cols.filter(function (c) { return Math.abs(c.x - p.x) < 10; })[0];
+          if (!c) { c = { x: p.x, s: [] }; cols.push(c); }
+          c.s.push(i);
         });
-        rijen.sort(function (a, b) { return a.y - b.y; });
-        rijen.forEach(function (r) {
-          r.min = Math.min.apply(null, r.x); r.max = Math.max.apply(null, r.x);
-        });
+        cols.sort(function (a, b) { return a.x - b.x; });
+        // De slinger blijft tussen de rijen met sterretjes in plaats van het
+        // hele rastervak af te lopen. Van rand tot rand kostte elke kolom de
+        // volle rasterhoogte, drie keer heen en weer — zoveel verticale weg dat
+        // de onderste rij pas aan de beurt kwam als de sectie al voorbij was
+        // gescrold. Tussen de rijen is dat minder dan de helft.
+        var ys = stars.map(function (p) { return p.y; });
+        var top = Math.min.apply(null, ys), bot = Math.max.apply(null, ys);
         y0 = L.bottom + 12;
-        var d = 'M' + L.x + ',' + y0, hx = L.x, naarRechts = true;
-        rijen.forEach(function (r, i) {
-          var van = naarRechts ? r.min : r.max, tot = naarRechts ? r.max : r.min;
-          var vorigeY = i === 0 ? y0 : rijen[i - 1].y;
-          // eerst naar het begin van de rij, op de hoogte tussen de rijen in
-          if (Math.abs(van - hx) > 2) d += ' V' + ((vorigeY + r.y) / 2) + ' H' + van;
-          d += ' V' + r.y;
-          if (Math.abs(tot - van) > 2) { d += ' H' + tot; hx = tot; } else hx = van;
-          naarRechts = !naarRechts;
+        var d = 'M' + L.x + ',' + y0 + ' V' + top, down = true, y = top;
+        cols.forEach(function (c) {
+          d += ' H' + c.x + ' V' + (down ? bot : top);
+          y = down ? bot : top;
+          down = !down;
         });
-        // na de laatste rij nog verder omlaag, tot halverwege de slotregel,
+        // eindigt de slinger bovenaan (even aantal kolommen): rechts van het raster naar beneden
+        if (y === top) d += ' H' + (G.right + 24) + ' V' + bot;
+        // na het laatste sterretje nog verder omlaag, tot halverwege de slotregel,
         // en pas dan opzij: zo is het laatste stuk kort en vloeit het rustig uit
-        var laatsteY = rijen.length ? rijen[rijen.length - 1].y : G.bottom;
-        var yMid = (laatsteY + (E.top - 14)) / 2;
+        var yMid = (bot + (E.top - 14)) / 2;
         d += ' V' + yMid + ' H' + E.x + ' V' + (E.top - 14);
         dots.setAttribute('d', d);
         reveal.setAttribute('d', d);
@@ -3574,12 +3591,16 @@
           return best;
         });
         tb = Reis.tabel(d);
+        // de booglengtes omzetten naar ankerstanden, zodat de voorsprong
+        // in scroll-pixels telt en niet in booglengte
+        hitS = hits.map(function (l) { return Reis.sBij(tb, l); });
         volg.herstel();
       }
 
       function doel() {
         if (!live || !total || !tb) return null;
-        return Reis.zoek(tb, Reis.anker(wrap)).len;
+        mikS = Reis.anker(wrap);
+        return Reis.zoek(tb, mikS).len;
       }
 
       function teken(len, doelLen) {
@@ -3587,7 +3608,7 @@
         var pt = dots.getPointAtLength(Math.max(0, Math.min(total, len)));
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
-        items.forEach(function (it, i) { it.classList.toggle('is-reached', doelLen >= hits[i] - 4); });
+        items.forEach(function (it, i) { it.classList.toggle('is-reached', mikS + Reis.VOOR >= hitS[i]); });
         slot.classList.toggle('is-reached', doelLen >= total - 2);
       }
 
@@ -3624,7 +3645,7 @@
       // de rail veronderstelt de vier waarden naast elkaar; daaronder breekt
       // het raster in twee rijen en tonen we ze gewoon
       var mq = matchMedia('(min-width: 1025px)');
-      var live = false, total = 0, hits = [], tb = null;
+      var live = false, total = 0, hits = [], hitS = [], tb = null, mikS = 0;
 
       function rel(el) {
         var r = el.getBoundingClientRect(), w = wrap.getBoundingClientRect();
@@ -3670,12 +3691,16 @@
           return best;
         });
         tb = Reis.tabel(d);
+        // de booglengtes omzetten naar ankerstanden, zodat de voorsprong
+        // in scroll-pixels telt en niet in booglengte
+        hitS = hits.map(function (l) { return Reis.sBij(tb, l); });
         volg.herstel();
       }
 
       function doel() {
         if (!live || !total || !tb) return null;
-        return Reis.zoek(tb, Reis.anker(wrap)).len;
+        mikS = Reis.anker(wrap);
+        return Reis.zoek(tb, mikS).len;
       }
 
       function teken(len, doelLen) {
@@ -3683,7 +3708,7 @@
         var pt = dots.getPointAtLength(Math.max(0, Math.min(total, len)));
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
-        items.forEach(function (it, i) { it.classList.toggle('is-reached', doelLen >= hits[i] - 4); });
+        items.forEach(function (it, i) { it.classList.toggle('is-reached', mikS + Reis.VOOR >= hitS[i]); });
       }
 
       var volg = Reis.volger(doel, teken);
@@ -3829,7 +3854,7 @@
         reveal.style.strokeDashoffset = (total - len).toFixed(1);
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
-        var dy = mik.y;
+        var dy = mik.y + Reis.VOOR;
         steps.forEach(function (st, i) {
           // stap 1 verschijnt al terwijl de wereldbol erin landt
           st.classList.toggle('is-reached', dy >= iconY[i] - (i === 0 ? 90 : 12) || doelLen >= total - 2);
