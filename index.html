@@ -1042,7 +1042,13 @@
       isolation: isolate;
       /* schuift onder de afgeronde witte kaarten erboven en eronder door */
       margin-top: -28px;
-      padding-block: calc(var(--section-y) + 28px);
+      /* De inhoud staat hoog in de sectie en de sectie vult minstens één scherm.
+         De ruimte onder de slotregel is geen leegte maar de aanloop van de lijn:
+         hoe verder de onderrand van de sectie onder de inhoud ligt, hoe rustiger
+         de ster het hele pad kan aflopen voordat het hoofdstuk volledig in beeld
+         staat. Wat je daar ziet is de sterrenhemel. */
+      padding-block: calc(var(--section-y) * .8 + 28px) calc(var(--section-y) * 1.4);
+      min-height: min(100svh, 1100px);
       background: var(--navy-900);
     }
     .expertise__sky {
@@ -3137,9 +3143,9 @@
 
       // 'd' bestaat uitsluitend uit M/V/H, dus exact te ontleden. Sampelen zou de
       // korte segmenten missen die tussen twee samples in vallen.
-      function bouw(d, band) {
+      function ontleed(d) {
         var t = (d || '').match(/[MVH]-?[\d.]+(?:,-?[\d.]+)?/g) || [];
-        var x = 0, y = 0, l = 0, schuld = 0, segs = [], eerste = true, y0 = 0, vast = 0;
+        var x = 0, y = 0, l = 0, segs = [], eerste = true, y0 = 0;
         for (var i = 0; i < t.length; i++) {
           var k = t[i][0], v = t[i].slice(1), nx = x, ny = y, soort, dl = 0;
           if (k === 'M') {
@@ -3148,8 +3154,19 @@
             soort = 'sprong';
           } else if (k === 'H') { nx = +v; soort = 'horiz'; dl = Math.abs(nx - x); }
           else { ny = +v; soort = ny >= y ? 'omlaag' : 'omhoog'; dl = Math.abs(ny - y); }
+          segs.push({ soort: soort, kost: 0, l0: l, dl: dl, x0: x, y0: y, x1: nx, y1: ny });
+          l += dl; x = nx; y = ny;
+        }
+        return { segs: segs, lengte: l, start: y0 };
+      }
 
-          var kost;
+      // Kost per segment volgens het ankermodel: dalen kost 1:1 (de ster blijft
+      // op de ankerlijn staan), oversteken en klimmen kosten minder en bouwen
+      // schuld op die op de eerstvolgende daling wordt afgelost.
+      function bouw(d, band) {
+        var o = ontleed(d), segs = o.segs, schuld = 0;
+        for (var i = 0; i < segs.length; i++) {
+          var sg = segs[i], soort = sg.soort, dl = sg.dl, kost;
           if (soort === 'omlaag') {
             // schuld aflossen: het anker schuift minder op dan de ster daalt,
             // waardoor de ster terugzakt naar zijn ankerhoogte
@@ -3162,36 +3179,35 @@
             // Die wachttijd is dode tijd: laat ze schuld aflossen door de kop
             // eerder te laten hervatten. Hoofdstuk I heeft vier van die sprongen
             // en nauwelijks daling ertussen — zonder dit blijft de ster hangen.
-            var gat = Math.abs(ny - y);
+            var gat = Math.abs(sg.y1 - sg.y0);
             var afs = Math.min(schuld * (1 - Math.exp(-gat / TAU)), gat * .7);
-            kost = gat - afs; schuld -= afs; dl = 0;
+            kost = gat - afs; schuld -= afs;
           } else {
+            // een klimmend stuk drijft de ster omhoog hoeveel je de band ook
+            // krimpt: dat deel van de drift zit in de vorm van het pad zelf
             kost = Math.min(dl / K_MIN, band);
             schuld = Math.min(MAX_SCHULD, schuld + kost + (soort === 'omhoog' ? dl : 0));
-            // een klimmend stuk drijft de ster omhoog hoeveel je de band ook
-            // krimpt: dat deel van de drift zit in de vorm van het pad
-            if (soort === 'omhoog') vast += dl;
           }
-          segs.push({ soort: soort, kost: kost, l0: l, dl: dl, x0: x, y0: y, x1: nx, y1: ny });
-          l += dl; x = nx; y = ny;
+          sg.kost = kost;
         }
+        var l = o.lengte, y0 = o.start;
         // cumulatieve kost, beginnend op de y van het startpunt zodat s === yHead.
         // Onderweg bijhouden hoe ver de ster boven het anker uitkomt: dat bepaalt
         // of de band krap genoeg is om hem in beeld te houden.
         var s = y0, drift = 0, piek = 0;
         for (var j = 0; j < segs.length; j++) {
-          var sg = segs[j]; sg.s0 = s; s += sg.kost;
-          if (sg.soort === 'sprong') {
+          var sj = segs[j]; sj.s0 = s; s += sj.kost;
+          if (sj.soort === 'sprong') {
             // tijdens de sprong wacht de kop, dus loopt de drift op tot kost;
             // daarna hervat hij lager en zakt de drift terug
-            piek = Math.max(piek, drift + sg.kost);
-            drift += sg.kost - Math.abs(sg.y1 - sg.y0);
+            piek = Math.max(piek, drift + sj.kost);
+            drift += sj.kost - Math.abs(sj.y1 - sj.y0);
           } else {
-            drift += sg.kost - (sg.soort === 'omlaag' ? sg.dl : sg.soort === 'omhoog' ? -sg.dl : 0);
+            drift += sj.kost - (sj.soort === 'omlaag' ? sj.dl : sj.soort === 'omhoog' ? -sj.dl : 0);
             piek = Math.max(piek, drift);
           }
         }
-        return { segs: segs, lengte: l, sEind: s, sStart: y0, piek: piek, band: band, vast: vast };
+        return { segs: segs, lengte: l, sEind: s, sStart: y0, piek: piek, band: band };
       }
 
       // De band krimpen tot de ster binnen het plafond blijft. Hoofdstuk I steekt
@@ -3207,18 +3223,45 @@
       function tabel(d, plafond) {
         plafond = plafond || plafondNu();
         var band = BAND, tb = bouw(d, band);
-        // Zit de onvermijdelijke drift al boven het plafond, dan haalt krimpen
-        // niets uit: Expertise klimt 298px omhoog en komt daar sowieso niet
-        // onder. Dan liever een rustige oversteek dan een snelle die de ster
-        // toch niet lager zet.
-        if (tb.vast >= plafond) return tb;
-        // en ook anders niet verder krimpen dan BODEM
+        // niet verder krimpen dan BODEM
         for (var i = 0; i < 6 && tb.piek > plafond && band > BODEM; i++) {
           band = Math.max(BODEM, band * Math.max(.4, plafond / tb.piek));
           tb = bouw(d, band);
         }
         return tb;
       }
+
+      // Een hoofdstuk kan korter zijn dan zijn eigen lijn. Expertise steekt
+      // 2015px pad af binnen een sectie van 911px: de sectie staat al volledig
+      // in beeld terwijl het ankermodel pas een derde getekend heeft. Dan
+      // bepaalt niet de vorm van het pad de snelheid maar het venster.
+      //
+      // De reis eindigt op sEind — de ankerstand waarop de sectie volledig in
+      // beeld staat — en krijgt daarvoor precies zoveel scroll als erin past
+      // zonder dat de ster het scherm uit zakt. Met W0 de schermpositie van de
+      // bovenkant van de inhoud op dat eindmoment geldt
+      //
+      //   ster(a) = W0 + B − a·B/L + y(a)
+      //
+      // en dat is per knikpunt lineair in B, dus de grootste toegestane B volgt
+      // rechtstreeks uit de knikpunten. Gelijke kost per pixel booglengte is
+      // daarbij bewijsbaar de verdeling die de uitslag van de ster het kleinst
+      // houdt: horizontaal, omhoog en omlaag gaan dus even snel.
+      function venster(d, sEind, W0) {
+        var o = ontleed(d), segs = o.segs, L = o.lengte, H = window.innerHeight;
+        var laagst = H * .94, B = L / 2.2, i;
+        for (i = 0; i < segs.length; i++) {
+          var sg = segs[i];
+          B = Math.min(B, past(laagst - W0 - sg.y0, L - sg.l0, L),
+                          past(laagst - W0 - sg.y1, L - sg.l0 - sg.dl, L));
+        }
+        // ook als de meetkunde geen ruimte laat blijft er een reis over
+        B = Math.max(H * .18, B);
+        var f = L > 0 ? B / L : 0, s = sEind - B;
+        for (i = 0; i < segs.length; i++) { segs[i].kost = segs[i].dl * f; segs[i].s0 = s; s += segs[i].kost; }
+        return { segs: segs, lengte: L, sEind: s, sStart: sEind - B, piek: 0, band: 0 };
+      }
+      function past(over, rest, L) { return rest > L * .001 ? over * L / rest : Infinity; }
 
       // waar staat de kop als de ankerlijn op s staat?
       function zoek(tb, s) {
@@ -3289,8 +3332,8 @@
 
       // Voorsprong op de drempels: inhoud verschijnt al een stuk voordat de lijn
       // er is, zodat het deel van het scherm onder de ster niet leeg blijft.
-      return { tabel: tabel, zoek: zoek, anker: anker, sBij: sBij, volger: volger,
-               inBeeld: inBeeld, ANKER: ANKER, VOOR: 220 };
+      return { tabel: tabel, venster: venster, zoek: zoek, anker: anker, sBij: sBij,
+               volger: volger, inBeeld: inBeeld, ANKER: ANKER, VOOR: 220 };
     })();
 
     // ── Hoofdstuk I: lijn van de kernwoorden naar satelliet en doelgroepen ──
@@ -3534,7 +3577,8 @@
       var items = [].slice.call(wrap.querySelectorAll('.expertise__item'));
       if (!lamp || !grid || !slot || !items.length) return;
       var mq = matchMedia('(min-width: 768px)');
-      var live = false, total = 0, y0 = 0, hits = [], hitS = [], tb = null, mikS = 0;
+      var MARGE = 8, VOORBOOG = 90;
+      var live = false, total = 0, y0 = 0, hits = [], tb = null;
 
       // positie t.o.v. de lijn; de scroll-reveal van de kop (translateY) eruit
       function rel(el, ty) {
@@ -3596,17 +3640,20 @@
           });
           return best;
         });
-        tb = Reis.tabel(d);
-        // de booglengtes omzetten naar ankerstanden, zodat de voorsprong
-        // in scroll-pixels telt en niet in booglengte
-        hitS = hits.map(function (l) { return Reis.sBij(tb, l); });
+        // De reis moet rond zijn op het moment dat de hele sectie in beeld
+        // staat: haar onderrand raakt dan de onderrand van het venster. W0 is
+        // waar de bovenkant van de inhoud op dat moment staat; MARGE laat de
+        // lijn een tikje daarvoor al aankomen.
+        var H = window.innerHeight;
+        var W0 = H - (sec.getBoundingClientRect().bottom - wrap.getBoundingClientRect().top) + MARGE;
+        tb = Reis.venster(d, Reis.ANKER * H - W0, W0);
         volg.herstel();
       }
 
       function doel() {
         if (!live || !total || !tb) return null;
-        mikS = Reis.anker(wrap);
-        return Reis.zoek(tb, mikS).len;
+        // de ankerstand is hier alleen nog nodig om de plek op de lijn te vinden
+        return Reis.zoek(tb, Reis.anker(wrap)).len;
       }
 
       function teken(len, doelLen) {
@@ -3614,8 +3661,11 @@
         var pt = dots.getPointAtLength(Math.max(0, Math.min(total, len)));
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
-        items.forEach(function (it, i) { it.classList.toggle('is-reached', mikS + Reis.VOOR >= hitS[i] || Reis.inBeeld(it)); });
-        slot.classList.toggle('is-reached', doelLen >= total - 2 || Reis.inBeeld(slot));
+        // onthullen gebeurt hier uitsluitend op de lijn: de ster is de aanleiding.
+        // VOORBOOG is een kleine voorsprong in booglengte, zodat de tekst net
+        // vóór de ster opkomt in plaats van erachteraan te hobbelen.
+        items.forEach(function (it, i) { it.classList.toggle('is-reached', doelLen >= hits[i] - VOORBOOG); });
+        slot.classList.toggle('is-reached', doelLen >= total - VOORBOOG);
       }
 
       var volg = Reis.volger(doel, teken);
