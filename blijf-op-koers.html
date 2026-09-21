@@ -3,22 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Uw onderneming — begeleiding voor ondernemers | Polares</title>
-  <meta name="description" content="Financiële analyse en planning, fusies en overnames en bedrijfsoverdracht voor ondernemers — Polares, Aalst.">
-  <link rel="canonical" href="https://polares.be/uw-bedrijf.html">
+  <title>Blijf op koers — nieuws en evenementen | Polares</title>
+  <meta name="description" content="Nieuws, aankondigingen en evenementen van Polares, family office in Aalst.">
+  <link rel="canonical" href="https://polares.be/blijf-op-koers.html">
   <meta name="theme-color" content="#071826">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="nl_BE">
   <meta property="og:site_name" content="Polares">
-  <meta property="og:title" content="Uw onderneming — begeleiding voor ondernemers | Polares">
-  <meta property="og:description" content="Financiële analyse en planning, fusies en overnames en bedrijfsoverdracht voor ondernemers — Polares, Aalst.">
-  <meta property="og:url" content="https://polares.be/uw-bedrijf.html">
+  <meta property="og:title" content="Blijf op koers — nieuws en evenementen | Polares">
+  <meta property="og:description" content="Nieuws, aankondigingen en evenementen van Polares, family office in Aalst.">
+  <meta property="og:url" content="https://polares.be/blijf-op-koers.html">
   <meta property="og:image" content="https://polares.be/assets/og-image.png">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="assets/fonts/cantata-one-400.woff2" as="font" type="font/woff2" crossorigin>
-  <!-- Inhoud: de drie begeleidingen voor ondernemers, aangeleverd door Polares.
+  <!-- Nieuws en evenementen. De berichten staan als gewone HTML in deze
+       pagina, niet in een databestand dat pas in de browser geladen wordt:
+       zo staan ze in de bron en vinden zoekmachines en linkvoorbeelden ze
+       terug. Onderaan de lijst staat een sjabloon om er een toe te voegen.
        Opbouw, stijl en scrollmodel zijn gelijk aan uw-familie.html. -->
   <style>
     @font-face{font-family:'Cantata One';font-style:normal;font-weight:400;font-display:swap;
@@ -186,6 +189,23 @@
       .hero__art{animation-delay:.15s}
       @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
     }
+
+    /* ── Alleen op deze pagina ───────────────────────────────────────
+       Berichten staan onder elkaar in één kolom, niet om en om links en
+       rechts zoals op de dienstpagina's. De lijn loopt daardoor kaarsrecht
+       naar beneden en de ster zakt rustig mee — dat blijft kloppen hoeveel
+       berichten er ook bij komen. */
+    .hero__lead{margin-top:1.4rem;font-family:var(--serif);font-size:clamp(1.05rem,1.6vw,1.25rem);
+      line-height:1.6;color:var(--navy-400);max-width:38ch}
+    .hero__art--klein{max-width:260px}
+    .station--bericht{grid-column:1 / span 8}
+    .bericht__meta{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;
+      font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-soft)}
+    .bericht__meta time{color:var(--navy-600)}
+    .bericht__soort{position:relative;padding-left:.9rem}
+    .bericht__soort::before{content:"";position:absolute;left:0;top:50%;margin-top:-2px;
+      width:4px;height:4px;border-radius:50%;background:var(--navy-300)}
+    .station--bericht h2{margin-top:.5rem}
   </style>
 </head>
 <body>
@@ -206,11 +226,11 @@
         <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
         Uw familie
       </a>
-      <a href="uw-bedrijf.html" class="overlay__link" aria-current="page">
+      <a href="uw-bedrijf.html" class="overlay__link">
         <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
         Uw onderneming
       </a>
-      <a href="blijf-op-koers.html" class="overlay__link">
+      <a href="blijf-op-koers.html" class="overlay__link" aria-current="page">
         <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
         Blijf op koers
       </a>
@@ -242,47 +262,70 @@
       <div class="hero__grid">
         <div class="hero__copy">
           <div class="chapter-head" aria-hidden="true"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></div>
-          <h1 id="hero-h1">Uw onderneming</h1>
+          <h1 id="hero-h1">Blijf op koers</h1>
+          <p class="hero__lead">Nieuws, aankondigingen en evenementen van Polares.</p>
         </div>
-        <img class="hero__art" src="assets/uv/tandwielen-groot.webp" alt="Illustratie van in elkaar grijpende tandwielen" width="880" height="590" fetchpriority="high" decoding="async">
+        <img class="hero__art hero__art--klein" src="assets/uv/kompas.svg" alt="" width="46" height="46" loading="lazy" decoding="async">
       </div>
     </section>
 
     <div class="stations">
-      <section class="station station--l" id="financiele-analyse-en-planning" aria-labelledby="financiele-analyse-en-planning-h2">
+      <article class="station station--bericht">
         <span class="station__stop" aria-hidden="true"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></span>
         <div class="station__body">
-          <h2 id="financiele-analyse-en-planning-h2">Financiële analyse en planning</h2>
-          <p>Heldere financiële informatie is essentieel voor een gezonde bedrijfsvoering. Wij analyseren onder meer uw resultaten, marges, kosten, investeringen en geldstromen. Daarnaast ondersteunen we u bij managementrapportering, budgetten, businessplannen en de optimalisatie van bedrijfsprocessen.</p>
-          <p>Als financieel klankbord begeleiden we u ook bij strategische keuzes, risicobeheer, fiscaliteit, subsidies, personeelsbeleid en internationale groei. Zo vertalen we cijfers naar concrete acties voor een financieel sterke onderneming.</p>
+          <p class="bericht__meta">
+            <time datetime="2026-09-21">21 september 2026</time>
+            <span class="bericht__soort">Nieuws</span>
+          </p>
+          <h2>Voorbeeldbericht — vervang dit door uw eerste aankondiging</h2>
+          <p>Dit blok staat er alleen om te tonen hoe een bericht eruitziet. Vervang de datum, het soort, de titel en deze tekst, of verwijder het blok zodra er echt nieuws is.</p>
+          <p>Een bericht mag zo lang zijn als u wilt. Meerdere alinea's onder elkaar werken gewoon.</p>
         </div>
-      </section>
+      </article>
 
-      <section class="station station--r" id="fusies-en-overnames" aria-labelledby="fusies-en-overnames-h2">
+      <article class="station station--bericht">
         <span class="station__stop" aria-hidden="true"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></span>
         <div class="station__body">
-          <h2 id="fusies-en-overnames-h2">Fusies en overnames</h2>
-          <p>Een fusie of overname vraagt om een zorgvuldige financiële en strategische voorbereiding. Wij begeleiden kopers en verkopers bij de waardering van de onderneming, het businessplan, de financiering en de structurering van de transactie.</p>
-          <p>Daarbij houden we steeds rekening met zowel de toekomst van de onderneming als de persoonlijke vermogensdoelstellingen van de ondernemer.</p>
+          <p class="bericht__meta">
+            <time datetime="2026-09-14">14 september 2026</time>
+            <span class="bericht__soort">Evenement</span>
+          </p>
+          <h2>Voorbeeldevenement — zo ziet een aankondiging met een datum eruit</h2>
+          <p>Zet bij een evenement de datum van het evenement zelf bovenaan, dan staat het in de lijst op de plaats waar men het verwacht.</p>
         </div>
-      </section>
+      </article>
 
-      <section class="station station--l" id="bedrijfsoverdracht" aria-labelledby="bedrijfsoverdracht-h2">
-        <span class="station__stop" aria-hidden="true"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></span>
-        <div class="station__body">
-          <h2 id="bedrijfsoverdracht-h2">Bedrijfsoverdracht</h2>
-          <p>Een bedrijfsoverdracht is een belangrijk moment voor de ondernemer, de familie en de onderneming. Wij begeleiden het volledige traject: van waardering en voorbereiding tot de keuze van een geschikte overdrachtsvorm.</p>
-          <p>Ook bij een familiale overdracht zoeken we naar een evenwicht tussen continuïteit, financiële haalbaarheid en de belangen van alle betrokkenen. Zo creëren we een solide basis voor de volgende generatie of eigenaar.</p>
-        </div>
-      </section>
+      <!-- ═══════════════════════════════════════════════════════════════
+           EEN BERICHT TOEVOEGEN
 
-      <section class="station station--r" id="gesprek" aria-labelledby="gesprek-h2">
+           Kopieer het blok hieronder, plak het hierboven (nieuwste bovenaan)
+           en pas de vier gemarkeerde stukken aan. De stippellijn, het
+           sterretje en het opkomen bij het scrollen gaan vanzelf mee; daar
+           hoeft niets aan te veranderen.
+
+           <article class="station station--bericht">
+             <span class="station__stop" aria-hidden="true">[ster — laat staan]</span>
+             <div class="station__body">
+               <p class="bericht__meta">
+                 <time datetime="2026-01-31">31 januari 2026</time>   <-- 1. datum: eerst machineleesbaar (jjjj-mm-dd), dan zoals het op het scherm staat
+                 <span class="bericht__soort">Nieuws</span>            <-- 2. soort: Nieuws of Evenement
+               </p>
+               <h2>Titel van het bericht</h2>                          <-- 3. titel
+               <p>De tekst van het bericht.</p>                        <-- 4. tekst, zoveel alinea's als u wilt
+             </div>
+           </article>
+
+           Een link onderaan is optioneel:
+             <a class="more-link" href="...">Lees meer [pijl]</a>
+           ═══════════════════════════════════════════════════════════════ -->
+
+
+      <section class="station station--bericht" id="gesprek" aria-labelledby="gesprek-h2">
         <span class="station__stop" aria-hidden="true"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></span>
         <div class="station__body">
           <h2 id="gesprek-h2">Vertrouwen begint met een gesprek.</h2>
           <p>We nemen graag de tijd om uw wereld te begrijpen en te bekijken waar we kunnen begeleiden.</p>
           <a class="more-link" href="index.html#contact">Maak een afspraak <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
-          <a class="more-link" href="uw-familie.html">Ontdek ook: uw familie <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
         </div>
       </section>
     </div>
@@ -583,11 +626,13 @@
       var live = !matchMedia('(prefers-reduced-motion: reduce)').matches;
       var total = 0, tb = null, hits = [], hitS = [], mikS = 0;
 
-      // Deze pagina loopt wat verder vooruit dan de hoofdstukken op de
-      // homepage: de tekstblokken zijn lang en staan liever al klaar voor je
-      // erbij bent. Veel verder kan niet — de ster krijgt dezelfde voorsprong
-      // en zakt er dus evenveel door omlaag op het scherm.
-      function voorsprong() { return Math.min(280, window.innerHeight * .26); }
+      // Hier loopt de lijn kaarsrecht naar beneden: er zijn geen oversteken
+      // die de ster omhoog trekken, dus hij blijft staan waar de voorsprong
+      // hem zet. Op de dienstpagina's mag die voorsprong ruim zijn omdat de
+      // drift hem daar terughaalt; hier zou dezelfde waarde hem tegen de
+      // onderrand plakken. Klein gehouden dus: de ster hangt zo rond 80% van
+      // de schermhoogte en een bericht komt op zodra hij erlangs gaat.
+      function voorsprong() { return Math.min(120, window.innerHeight * .12); }
 
       // offsets i.p.v. getBoundingClientRect: de animaties verschuiven elementen
       // tijdelijk met een transform, dat mag de lijn niet volgen
@@ -598,13 +643,14 @@
       }
 
       function draw() {
-        var a = box(start), c = stops.map(box);
+        var c = stops.map(box);
         var copy = box(wrap.querySelector('.hero__copy'));
         var prevBottom = box(wrap.querySelector('.hero')).bottom;
-        // Naast elkaar (desktop): de lijn vertrekt onder de illustratie.
-        // Onder elkaar (mobiel): onder de titel, zodat ze niet door de tekst loopt.
-        var naast = a.top < copy.bottom && a.bottom > copy.top;
-        var prev = naast ? { x: a.x, y: a.bottom - 6 } : { x: c[0].x, y: copy.bottom + 16 };
+        // Anders dan op de dienstpagina's vertrekt de lijn hier onder de titel
+        // en niet onder de illustratie. Het kompas staat rechts; vandaar zou de
+        // lijn eerst het hele scherm moeten oversteken, en dat kost een half
+        // scherm scrollen voordat het eerste bericht opkomt.
+        var prev = { x: c[0].x, y: copy.bottom + 16 };
         var d = 'M' + prev.x + ',' + prev.y, l = 0;
         hits = [];
         c.forEach(function (p, i) {

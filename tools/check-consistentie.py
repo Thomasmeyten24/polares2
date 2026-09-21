@@ -55,6 +55,7 @@ privacy = lees("privacyverklaring.html")
 voorwaarden = lees("algemene-voorwaarden.html")
 familie = lees("uw-familie.html")
 bedrijf = lees("uw-bedrijf.html")
+koers = lees("blijf-op-koers.html")
 
 # ── De structured data is de referentie: daar staan de feiten gestructureerd ──
 ld_ruw = re.search(r'application/ld\+json">([\s\S]*?)</script>', index)
@@ -114,6 +115,7 @@ for bestand, inhoud in (
     ("algemene-voorwaarden.html", voorwaarden),
     ("uw-familie.html", familie),
     ("uw-bedrijf.html", bedrijf),
+    ("blijf-op-koers.html", koers),
 ):
     tekst = zichtbare_tekst(inhoud)
     controleer(f"juridische naam in {bestand}", naam in tekst, naam)
@@ -140,7 +142,11 @@ for href in set(re.findall(r'href="([a-z0-9-]+\.html)"', index)):
     controleer(f"pagina {href} bestaat", (ROOT / href).exists())
 
 # De dienstpagina's linken naar ankers op de homepage en naar elkaar
-for bestand, inhoud in (("uw-familie.html", familie), ("uw-bedrijf.html", bedrijf)):
+for bestand, inhoud in (
+    ("uw-familie.html", familie),
+    ("uw-bedrijf.html", bedrijf),
+    ("blijf-op-koers.html", koers),
+):
     for href in set(re.findall(r'href="index\.html#([^"]+)"', inhoud)):
         controleer(f"anker index.html#{href} (vanuit {bestand}) bestaat", href in ankers)
     for href in set(re.findall(r'href="([a-z0-9-]+\.html)', inhoud)):
@@ -151,6 +157,16 @@ for bestand, inhoud in (("uw-familie.html", familie), ("uw-bedrijf.html", bedrij
 # Footer-links naar diensten moeten op de dienstpagina's een anker hebben
 for pagina, anker in set(re.findall(r'href="(uw-[a-z]+\.html)#([^"]+)"', index)):
     controleer(f"anker {pagina}#{anker} bestaat", f'id="{anker}"' in lees(pagina))
+
+# ── 4b. Elke pagina uit het menu hoort in de sitemap ────────────────────────
+# De juridische pagina's staan er bewust met een lage prioriteit in; de rest
+# moet er hoe dan ook in staan, anders vindt een zoekmachine een nieuwe pagina
+# alleen via het menu.
+sitemap = lees("sitemap.xml")
+for href in sorted(set(re.findall(r'href="([a-z0-9-]+\.html)"', index))):
+    if href in ("privacyverklaring.html", "algemene-voorwaarden.html"):
+        continue
+    controleer(f"{href} staat in de sitemap", f"/{href}<" in sitemap)
 
 # ── 5. Verwezen bestanden moeten op schijf staan ─────────────────────────────
 verwijzingen = set(re.findall(r'(?:src|href)="(assets/[^"]+)"', index))
