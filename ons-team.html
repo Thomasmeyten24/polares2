@@ -182,10 +182,6 @@
     /* lichte cadans: het middelste portret van elke groep zakt een eindje */
     .team-grid .lid:nth-child(even){margin-top:clamp(1rem,2.5vw,2.5rem)}
 
-    /* Het management is niet groter dan de rest, maar gemarkeerd: een dun
-       kader om het portret en het sterretje van de site voor de naam. */
-    .lid--kern .lid__foto{outline:1px solid var(--navy-200);outline-offset:7px}
-    .lid--kern .lid__rol{color:var(--navy-500)}
 
     .lid__foto{position:relative;aspect-ratio:3/4;overflow:hidden;background:var(--navy-50)}
     .lid__foto img{width:100%;height:100%;object-fit:cover;display:block;
@@ -272,12 +268,12 @@
       <img src="assets/team/groep.webp"
            srcset="assets/team/groep.webp 1600w, assets/team/groep-2x.webp 2400w"
            sizes="(min-width: 1360px) 1200px, 92vw"
-           alt="Het team van Polares" width="1600" height="900" loading="lazy" decoding="async">
+           alt="Het team van Polares" width="1600" height="489" loading="lazy" decoding="async">
     </figure>
 
     <div class="team-blokken" aria-label="De medewerkers van Polares">
       <ul class="team-grid team-grid--kern">
-          <li class="lid lid--kern">
+          <li class="lid">
             <div class="lid__foto"><img src="assets/team/nathalie-barbieur.webp" alt="Nathalie Barbieur" width="560" height="747" loading="lazy" decoding="async"></div>
             <div>
               <p class="lid__naam">Nathalie Barbieur</p>
@@ -285,7 +281,7 @@
             <a class="lid__linkedin" href="https://www.linkedin.com/in/nathalie-barbieur-b437a487/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
             </div>
           </li>
-          <li class="lid lid--kern">
+          <li class="lid">
             <div class="lid__foto"><img src="assets/team/filip-meyten.webp" alt="Filip Meyten" width="560" height="747" loading="lazy" decoding="async"></div>
             <div>
               <p class="lid__naam">Filip Meyten</p>
@@ -293,7 +289,7 @@
             <a class="lid__linkedin" href="https://www.linkedin.com/in/filip-meyten-5082a67/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
             </div>
           </li>
-          <li class="lid lid--kern">
+          <li class="lid">
             <div class="lid__foto"><img src="assets/team/olivier-kiekens.webp" alt="Olivier Kiekens" width="560" height="747" loading="lazy" decoding="async"></div>
             <div>
               <p class="lid__naam">Olivier Kiekens</p>
