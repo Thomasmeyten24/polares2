@@ -203,8 +203,12 @@
     .lid__linkedin svg{flex-shrink:0;transition:transform var(--dur-2) var(--ease)}
     .lid__linkedin:hover svg{transform:translateX(6px)}
 
+    /* Het slot stond met zijn onderkant tegen de voet aan; de andere
+       pagina's hebben die ademruimte via .flow, die hier niet bestaat. */
+    #main{padding-bottom:clamp(5rem,10vw,8rem)}
     .team-slot{margin-top:clamp(4rem,8vw,6rem);padding-top:clamp(2.5rem,5vw,3.5rem);border-top:1px solid var(--line)}
-    .team-slot h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,2.6vw,2.1rem);line-height:1.25}
+    .team-slot h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,2.6vw,2.1rem);
+      line-height:1.25;max-width:22ch;text-wrap:balance}
     .team-slot p{margin-top:.9rem;font-size:15px;color:var(--text-soft);max-width:52ch}
 
     .js .onthul{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease-out),transform .7s var(--ease-out)}
