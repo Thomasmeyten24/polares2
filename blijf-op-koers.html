@@ -2,28 +2,28 @@
 <html lang="nl">
 <head>
   <meta charset="UTF-8">
+  <script>document.documentElement.classList.add('js');</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blijf op koers — nieuws en evenementen | Polares</title>
-  <meta name="description" content="Nieuws, aankondigingen en evenementen van Polares, family office in Aalst.">
+  <title>Blijf op koers — nieuws, evenementen en inzichten | Polares</title>
+  <meta name="description" content="Nieuws, evenementen en inzichten van Polares, family office in Aalst.">
   <link rel="canonical" href="https://polares.be/blijf-op-koers.html">
   <meta name="theme-color" content="#071826">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="nl_BE">
   <meta property="og:site_name" content="Polares">
-  <meta property="og:title" content="Blijf op koers — nieuws en evenementen | Polares">
-  <meta property="og:description" content="Nieuws, aankondigingen en evenementen van Polares, family office in Aalst.">
+  <meta property="og:title" content="Blijf op koers — nieuws, evenementen en inzichten | Polares">
+  <meta property="og:description" content="Nieuws, evenementen en inzichten van Polares, family office in Aalst.">
   <meta property="og:url" content="https://polares.be/blijf-op-koers.html">
   <meta property="og:image" content="https://polares.be/assets/og-image.png">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="assets/fonts/cantata-one-400.woff2" as="font" type="font/woff2" crossorigin>
-  <!-- Nieuws en evenementen. De berichten staan als gewone HTML in deze
-       pagina, niet in een databestand dat pas in de browser geladen wordt:
-       zo staan ze in de bron en vinden zoekmachines en linkvoorbeelden ze
-       terug. Onderaan de lijst staat een sjabloon om er een toe te voegen.
-       Opbouw, stijl en scrollmodel zijn gelijk aan uw-familie.html. -->
-  <style>
+  <!-- De berichten komen uit data/berichten.json. Het blok met de kaarten
+       hieronder wordt daaruit geschreven door tools/berichten.py — bewerk dus
+       de JSON en niet deze HTML. Ze staan wel als gewone tekst in de pagina,
+       zodat zoekmachines en linkvoorbeelden ze zien. -->
+  <style>  <style>
     @font-face{font-family:'Cantata One';font-style:normal;font-weight:400;font-display:swap;
       src:url(assets/fonts/cantata-one-400.woff2) format('woff2');}
     @font-face{font-family:'Source Sans Pro';font-style:normal;font-weight:400;font-display:swap;
@@ -102,14 +102,6 @@
     .back{display:inline-flex;align-items:center;gap:.5rem;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--navy-600);margin-bottom:2.5rem;border-bottom:1px solid transparent;padding-bottom:2px}
     .back:hover{border-bottom-color:var(--navy-600)}
 
-    /* Doorlopende compositie: één witte pagina, verbonden door een gestippelde
-       lijn zoals in de offertemap (laatste pagina). Geen gekleurde blokken. */
-    .flow{position:relative;padding-bottom:clamp(5rem,10vw,8rem)}
-    .flow__path{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
-    .flow__dots{fill:none;stroke:var(--navy-400);stroke-width:1.4;stroke-dasharray:0 6;stroke-linecap:round}
-    .flow__reveal{fill:none;stroke:#fff;stroke-width:10}
-    .flow__head{fill:var(--navy-600);transition:opacity .3s var(--ease)}
-
     /* Hero */
     .hero{position:relative;padding-top:clamp(3rem,7vw,5.5rem)}
     .hero__grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,6vw,6rem);align-items:center}
@@ -117,25 +109,6 @@
     .hero__art{position:relative;width:100%;height:auto;max-width:560px;justify-self:center;background:var(--white)}
     @media (max-width:860px){.hero__grid{grid-template-columns:1fr}.hero__art{max-width:420px;order:-1}}
 
-    /* Haltes langs de lijn */
-    .stations{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:clamp(1rem,2.5vw,2rem);row-gap:clamp(5rem,11vw,9rem);margin-top:clamp(5rem,10vw,8rem)}
-    .station{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr);column-gap:clamp(1.25rem,2.5vw,2.25rem);scroll-margin-top:110px}
-    .station--l{grid-column:1 / span 7}
-    .station--r{grid-column:6 / -1}
-    .station--wide{grid-column:1 / span 10}
-    .station__stop{position:relative;width:44px;height:44px;border-radius:50%;background:var(--white);display:flex;align-items:center;justify-content:center;color:var(--navy-600);margin-top:-12px}
-    .station__stop::after{content:"";position:absolute;inset:-6px;border:1px solid var(--navy-300);border-radius:50%;opacity:0;pointer-events:none}
-    .station h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,2.6vw,2.1rem);line-height:1.25;margin:.9rem 0 1.25rem;text-wrap:balance}
-    .station p{font-size:16px;color:var(--text-soft)}
-    .station p+p{margin-top:1.1em}
-    @media (max-width:860px){
-      .stations{grid-template-columns:1fr}
-      .station--l,.station--r,.station--wide{grid-column:1 / -1}
-    }
-
-    /* Typografisch raster (hele site): titels links, tekstblokken uitgevuld,
-       acties links als tekstlink met pijltje */
-    .station p{text-align:justify;-webkit-hyphens:auto;hyphens:auto}
 
     /* Tekstlink met pijltje */
     .more-link{display:inline-flex;align-items:center;gap:.6rem;margin-top:2rem;font-size:13px;letter-spacing:.08em;
@@ -146,17 +119,6 @@
     .more-link:hover svg{transform:translateX(8px)}
     .more-link+.more-link{margin-left:2rem}
     @media (max-width:520px){.more-link+.more-link{margin-left:0;margin-top:1rem}}
-    /* in de smalle mobiele kolom geeft uitvullen gaten en veel afbrekingen */
-    @media (max-width:767px){.station p{text-align:left;-webkit-hyphens:manual;hyphens:manual}}
-
-    /* Haltes komen tot leven zodra de lijn ze bereikt (alleen met JS en
-       zonder "beperkte beweging"; anders staat alles gewoon zichtbaar) */
-    .flow--live .station__stop{opacity:0;transform:scale(.4);transition:opacity .5s var(--ease-out),transform .8s cubic-bezier(.34,1.56,.64,1)}
-    .flow--live .station__body{opacity:0;transform:translateY(18px);transition:opacity .7s var(--ease-out) .1s,transform .7s var(--ease-out) .1s}
-    .flow--live .station.is-reached .station__stop,
-    .flow--live .station.is-reached .station__body{opacity:1;transform:none}
-    .flow--live .station.is-reached .station__stop::after{animation:ping 1.4s var(--ease-out) .15s 1 both}
-    @keyframes ping{0%{opacity:.9;transform:scale(.85)}100%{opacity:0;transform:scale(1.4)}}
 
     /* Footer — gelijk aan de homepage */
     .footer{background:var(--navy-900);border-top:1px solid rgba(255,255,255,.08);padding-block:clamp(3rem,6vw,5rem)}
@@ -190,22 +152,115 @@
       @keyframes rise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
     }
 
-    /* ── Alleen op deze pagina ───────────────────────────────────────
-       Berichten staan onder elkaar in één kolom, niet om en om links en
-       rechts zoals op de dienstpagina's. De lijn loopt daardoor kaarsrecht
-       naar beneden en de ster zakt rustig mee — dat blijft kloppen hoeveel
-       berichten er ook bij komen. */
-    .hero__lead{margin-top:1.4rem;font-family:var(--serif);font-size:clamp(1.05rem,1.6vw,1.25rem);
-      line-height:1.6;color:var(--navy-400);max-width:38ch}
-    .hero__art--klein{max-width:260px}
-    .station--bericht{grid-column:1 / span 8}
-    .bericht__meta{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;
-      font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-soft)}
-    .bericht__meta time{color:var(--navy-600)}
-    .bericht__soort{position:relative;padding-left:.9rem}
-    .bericht__soort::before{content:"";position:absolute;left:0;top:50%;margin-top:-2px;
-      width:4px;height:4px;border-radius:50%;background:var(--navy-300)}
-    .station--bericht h2{margin-top:.5rem}
+    /* ── Blijf op koers ─────────────────────────────────────────────
+       Een index, geen verhaal: daarom hier geen meereizende lijn maar
+       kaarten. De rest — tokens, kop, menu, voet, typografie — is die van
+       de andere pagina's. */
+    .koers-hero{padding-top:clamp(3rem,7vw,5.5rem)}
+    .koers-hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.1rem,4.2vw,3.6rem);line-height:1.15;letter-spacing:-.01em}
+    .koers-hero__lead{margin-top:1.3rem;font-family:var(--serif);font-size:clamp(1.05rem,1.6vw,1.25rem);
+      line-height:1.6;color:var(--navy-400);max-width:48ch}
+
+    /* Filterbalk: tekstknoppen in labelstijl, de actieve met een lijn eronder */
+    .filters{display:flex;flex-wrap:wrap;gap:.35rem 1.75rem;margin-top:clamp(2.5rem,5vw,3.5rem);
+      padding-bottom:.9rem;border-bottom:1px solid var(--line)}
+    .filter{background:none;border:none;cursor:pointer;padding:.4rem 0;font-family:var(--sans);font-size:12px;
+      letter-spacing:.16em;text-transform:uppercase;color:var(--text-soft);border-bottom:1px solid transparent;
+      transition:color var(--dur-1) var(--ease),border-color var(--dur-1) var(--ease)}
+    .filter:hover{color:var(--navy-600)}
+    .filter.is-actief{color:var(--navy-600);border-bottom-color:var(--navy-600)}
+    .filter__aantal{font-size:11px;color:var(--navy-300);margin-left:.2rem}
+
+    .badge{display:inline-block;font-family:var(--sans);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+      padding:.3rem .65rem;border:1px solid var(--navy-200);color:var(--navy-600);background:var(--white)}
+    .badge--evenement{background:var(--navy-800);border-color:var(--navy-800);color:var(--white)}
+
+    /* Uitgelicht bericht */
+    .uitgelicht{display:grid;grid-template-columns:1.4fr .6fr;margin-top:clamp(2.5rem,5vw,3.5rem);
+      border:1px solid var(--line);background:var(--white);box-shadow:var(--shadow-lg)}
+    .uitgelicht__tekst{padding:clamp(1.75rem,3.5vw,3rem);display:flex;flex-direction:column;gap:1.15rem;align-items:flex-start}
+    .uitgelicht__titel{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,2.8vw,2.2rem);line-height:1.2}
+    .uitgelicht__inleiding{font-size:15px;color:var(--text-soft);line-height:1.7;max-width:52ch}
+    .uitgelicht__meta{position:relative;overflow:hidden;background:var(--navy-900);
+      padding:clamp(1.75rem,3.5vw,3rem);display:flex;flex-direction:column;justify-content:space-between;gap:2rem}
+    .uitgelicht__ster{position:absolute;right:-30px;bottom:-30px;color:rgba(255,255,255,.055);pointer-events:none}
+    .uitgelicht__ster svg{width:180px;height:180px}
+    .uitgelicht__rij+.uitgelicht__rij{margin-top:1.35rem}
+    .uitgelicht__rij dt{font-family:var(--sans);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5)}
+    .uitgelicht__rij dd{font-family:var(--sans);font-size:14px;color:var(--white);margin-top:.3rem;line-height:1.55}
+    .uitgelicht__deadline{position:relative;font-family:var(--sans);font-size:11px;letter-spacing:.16em;
+      text-transform:uppercase;color:rgba(255,255,255,.55)}
+
+    /* Kaartenraster */
+    .berichten{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));
+      gap:clamp(1.25rem,2.5vw,2rem);margin-top:clamp(2.5rem,5vw,3.5rem)}
+    .bericht{position:relative;display:flex;flex-direction:column;gap:.85rem;padding:clamp(1.4rem,2.5vw,1.9rem);
+      border:1px solid var(--line);background:var(--white);
+      transition:border-color var(--dur-2) var(--ease),box-shadow var(--dur-2) var(--ease),transform var(--dur-2) var(--ease)}
+    .bericht:hover{border-color:var(--navy-200);box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+    .bericht:has(.bericht__opener:focus-visible){border-color:var(--navy-400)}
+    .bericht__kop{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
+    .bericht__datum{font-family:var(--sans);font-size:12px;color:var(--text-soft)}
+    .bericht__titel{font-family:var(--serif);font-weight:400;font-size:clamp(1.15rem,1.7vw,1.35rem);line-height:1.3}
+    .bericht__opener{background:none;border:none;padding:0;margin:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
+    /* de hele kaart is klikbaar, met de titelknop als echte bediening */
+    .bericht .bericht__titel .bericht__opener::after{content:"";position:absolute;inset:0}
+    .bericht__inleiding{font-size:14px;color:var(--text-soft);line-height:1.65}
+    .bericht__voet{margin-top:auto;padding-top:1rem;border-top:1px solid var(--line);
+      display:flex;align-items:center;justify-content:space-between;gap:1rem}
+    .bericht__extra{font-family:var(--sans);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy-300)}
+    .bericht__lees{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--sans);font-size:11px;
+      letter-spacing:.14em;text-transform:uppercase;color:var(--navy-600);white-space:nowrap}
+    .bericht__lees svg{transition:transform var(--dur-2) var(--ease)}
+    .bericht:hover .bericht__lees svg{transform:translateX(6px)}
+
+    /* Zonder JavaScript staat de volledige tekst gewoon onder de kaart */
+    .bericht__volledig{font-size:14px;color:var(--text-soft);line-height:1.75}
+    .bericht__volledig p+p,.bericht__volledig ul{margin-top:1em}
+    .bericht__volledig ul{padding-left:1.1rem}
+    .js .bericht__volledig{display:none}
+
+    /* Leesvenster */
+    .lezer{border:none;padding:0;background:transparent;margin:auto;
+      width:min(760px,calc(100vw - 2rem));max-width:none}
+    .lezer::backdrop{background:rgba(7,24,38,.55)}
+    .lezer__doos{position:relative;background:var(--white);border-radius:14px;
+      padding:clamp(1.75rem,4vw,3rem);max-height:min(86vh,900px);overflow:auto}
+    .lezer__sluit{position:absolute;top:.7rem;right:.9rem;width:44px;height:44px;background:none;border:none;
+      font-size:26px;line-height:1;color:var(--text-soft);cursor:pointer}
+    .lezer__sluit:hover{color:var(--navy-600)}
+    .lezer__kop{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;padding-right:2.5rem}
+    .lezer__datum{font-family:var(--sans);font-size:12px;color:var(--text-soft)}
+    .lezer__titel{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,3vw,2.1rem);line-height:1.22;margin-top:1rem}
+    .lezer__gegevens{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1.25rem;
+      margin:1.5rem 0;padding:1.25rem;background:var(--paper);border:1px solid var(--line)}
+    .lezer__gegevens dt{font-family:var(--sans);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-soft)}
+    .lezer__gegevens dd{font-family:var(--sans);font-size:14px;color:var(--navy-600);margin-top:.3rem;line-height:1.5}
+    .lezer__tekst{margin-top:1.5rem;font-size:15px;line-height:1.8;color:var(--text)}
+    .lezer__tekst p+p,.lezer__tekst ul{margin-top:1.1em}
+    .lezer__tekst ul{padding-left:1.2rem}
+    .lezer__tekst li+li{margin-top:.4em}
+    .lezer__tekst a{color:var(--navy-600);text-decoration:underline;text-underline-offset:3px}
+    .lezer__voet{display:flex;flex-wrap:wrap;gap:1rem;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--line)}
+
+    .btn{display:inline-flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:12px;
+      letter-spacing:.14em;text-transform:uppercase;padding:.85rem 1.6rem;border:1px solid var(--navy-600);
+      background:var(--navy-600);color:var(--white);cursor:pointer;
+      transition:background var(--dur-2) var(--ease),color var(--dur-2) var(--ease),border-color var(--dur-2) var(--ease)}
+    .btn:hover{background:var(--navy-800);border-color:var(--navy-800)}
+    .btn--rand{background:none;color:var(--navy-600)}
+    .btn--rand:hover{background:var(--navy-600);color:var(--white)}
+
+    .koers-slot{margin-top:clamp(4rem,8vw,6rem);padding-top:clamp(2.5rem,5vw,3.5rem);border-top:1px solid var(--line)}
+    .koers-slot h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,2.6vw,2.1rem);line-height:1.25}
+    .koers-slot p{margin-top:.9rem;font-size:15px;color:var(--text-soft);max-width:52ch}
+
+    /* Kaarten komen rustig op bij het scrollen */
+    .js .onthul{opacity:0;transform:translateY(16px);transition:opacity .7s var(--ease-out),transform .7s var(--ease-out)}
+    .js .onthul.is-in{opacity:1;transform:none}
+
+    @media (max-width:860px){ .uitgelicht{grid-template-columns:1fr} }
+    @media (prefers-reduced-motion:reduce){ .js .onthul{opacity:1;transform:none} }
   </style>
 </head>
 <body>
@@ -246,90 +301,156 @@
     </div>
   </div>
 
-  <main class="container flow" id="flow">
-    <svg class="flow__path" id="flowPath" aria-hidden="true" focusable="false">
-      <defs>
-        <mask id="flowMask" maskUnits="userSpaceOnUse" x="-100" y="-100" width="6000" height="30000">
-          <path class="flow__reveal" d=""/>
-        </mask>
-      </defs>
-      <path class="flow__dots" d="" mask="url(#flowMask)"/>
-      <g class="flow__head"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></g>
-    </svg>
+  <main class="container" id="main">
 
-    <section class="hero" aria-labelledby="hero-h1">
-      <a class="back" href="index.html#advies">&#8592; Terug naar polares.be</a>
-      <div class="hero__grid">
-        <div class="hero__copy">
-          <div class="chapter-head" aria-hidden="true"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></div>
-          <h1 id="hero-h1">Blijf op koers</h1>
-          <p class="hero__lead">Nieuws, aankondigingen en evenementen van Polares.</p>
-        </div>
-        <img class="hero__art hero__art--klein" src="assets/uv/kompas.svg" alt="" width="46" height="46" loading="lazy" decoding="async">
-      </div>
+    <section class="koers-hero" aria-labelledby="hero-h1">
+      <a class="back" href="index.html">&#8592; Terug naar polares.be</a>
+      <div class="chapter-head" aria-hidden="true"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></div>
+      <h1 id="hero-h1">Blijf op koers</h1>
+      <p class="koers-hero__lead">Nieuws, evenementen en inzichten van Polares.</p>
     </section>
 
-    <div class="stations">
-      <article class="station station--bericht">
-        <span class="station__stop" aria-hidden="true"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></span>
-        <div class="station__body">
-          <p class="bericht__meta">
-            <time datetime="2026-09-21">21 september 2026</time>
-            <span class="bericht__soort">Nieuws</span>
-          </p>
-          <h2>Voorbeeldbericht — vervang dit door uw eerste aankondiging</h2>
-          <p>Dit blok staat er alleen om te tonen hoe een bericht eruitziet. Vervang de datum, het soort, de titel en deze tekst, of verwijder het blok zodra er echt nieuws is.</p>
-          <p>Een bericht mag zo lang zijn als u wilt. Meerdere alinea's onder elkaar werken gewoon.</p>
-        </div>
-      </article>
-
-      <article class="station station--bericht">
-        <span class="station__stop" aria-hidden="true"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></span>
-        <div class="station__body">
-          <p class="bericht__meta">
-            <time datetime="2026-09-14">14 september 2026</time>
-            <span class="bericht__soort">Evenement</span>
-          </p>
-          <h2>Voorbeeldevenement — zo ziet een aankondiging met een datum eruit</h2>
-          <p>Zet bij een evenement de datum van het evenement zelf bovenaan, dan staat het in de lijst op de plaats waar men het verwacht.</p>
-        </div>
-      </article>
-
-      <!-- ═══════════════════════════════════════════════════════════════
-           EEN BERICHT TOEVOEGEN
-
-           Kopieer het blok hieronder, plak het hierboven (nieuwste bovenaan)
-           en pas de vier gemarkeerde stukken aan. De stippellijn, het
-           sterretje en het opkomen bij het scrollen gaan vanzelf mee; daar
-           hoeft niets aan te veranderen.
-
-           <article class="station station--bericht">
-             <span class="station__stop" aria-hidden="true">[ster — laat staan]</span>
-             <div class="station__body">
-               <p class="bericht__meta">
-                 <time datetime="2026-01-31">31 januari 2026</time>   <-- 1. datum: eerst machineleesbaar (jjjj-mm-dd), dan zoals het op het scherm staat
-                 <span class="bericht__soort">Nieuws</span>            <-- 2. soort: Nieuws of Evenement
-               </p>
-               <h2>Titel van het bericht</h2>                          <-- 3. titel
-               <p>De tekst van het bericht.</p>                        <-- 4. tekst, zoveel alinea's als u wilt
-             </div>
-           </article>
-
-           Een link onderaan is optioneel:
-             <a class="more-link" href="...">Lees meer [pijl]</a>
-           ═══════════════════════════════════════════════════════════════ -->
-
-
-      <section class="station station--bericht" id="gesprek" aria-labelledby="gesprek-h2">
-        <span class="station__stop" aria-hidden="true"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></span>
-        <div class="station__body">
-          <h2 id="gesprek-h2">Vertrouwen begint met een gesprek.</h2>
-          <p>We nemen graag de tijd om uw wereld te begrijpen en te bekijken waar we kunnen begeleiden.</p>
-          <a class="more-link" href="index.html#contact">Maak een afspraak <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
-        </div>
-      </section>
+    <div class="filters" role="tablist" aria-label="Filter op soort">
+      <!-- BEGIN_FILTERS (geschreven door tools/berichten.py) -->
+          <button type="button" role="tab" data-soort="alles" aria-selected="true" class="filter is-actief">Alles <span class="filter__aantal">6</span></button>
+          <button type="button" role="tab" data-soort="evenement" aria-selected="false" class="filter">Evenementen <span class="filter__aantal">2</span></button>
+          <button type="button" role="tab" data-soort="nieuws" aria-selected="false" class="filter">Nieuws <span class="filter__aantal">2</span></button>
+          <button type="button" role="tab" data-soort="inzicht" aria-selected="false" class="filter">Inzichten <span class="filter__aantal">2</span></button>
+      <!-- EIND_FILTERS -->
     </div>
+
+    <!-- BEGIN_UITGELICHT (geschreven door tools/berichten.py) -->
+      <article class="uitgelicht" data-soort="evenement" data-id="rondetafel-bedrijfsoverdracht-2026">
+        <div class="uitgelicht__tekst">
+          <p class="bericht__kop"><span class="badge badge--evenement">Aankomend evenement</span></p>
+          <h2 class="uitgelicht__titel"><button class="bericht__opener" type="button" data-opent="rondetafel-bedrijfsoverdracht-2026">Exclusieve Rondetafel: De overdracht van familiebedrijf naar de volgende generatie</button></h2>
+          <p class="uitgelicht__inleiding">Een vertrouwelijke sessie voor ondernemersfamilies over de juridische, fiscale en vooral menselijke dynamiek van bedrijfsoverdracht.</p>
+          <p><button class="btn bericht__opener" type="button" data-opent="rondetafel-bedrijfsoverdracht-2026">Programma en aanmelden</button></p>
+        </div>
+        <div class="uitgelicht__meta">
+          <span class="uitgelicht__ster" aria-hidden="true"><svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></span>
+          <dl>
+            <div class="uitgelicht__rij"><dt>Datum en tijd</dt><dd>Donderdag 22 oktober 2026 · 18:30 — 21:30</dd></div>
+            <div class="uitgelicht__rij"><dt>Locatie</dt><dd>Kantoor Polares, Dirk Martensstraat 41, Aalst</dd></div>
+            <div class="uitgelicht__rij"><dt>Deelname</dt><dd>Exclusief voor ondernemers · Max. 10 families</dd></div>
+          </dl>
+          <p class="uitgelicht__deadline">Aanmelden voor 15 oktober</p>
+        </div>
+        <div class="bericht__volledig" id="tekst-rondetafel-bedrijfsoverdracht-2026">
+          <dl class="lezer__gegevens"><div><dt>Wanneer</dt><dd>Donderdag 22 oktober 2026 · 18:30 — 21:30</dd></div><div><dt>Waar</dt><dd>Kantoor Polares, Dirk Martensstraat 41, Aalst</dd></div><div><dt>Deelname</dt><dd>Exclusief voor ondernemers · Max. 10 families</dd></div></dl>
+          <p>De overdracht van een familiebedrijf is zelden louter een financiële of juridische transactie. Het is een scharniermoment waarop generaties, emoties, eigendom en leiding elkaar ontmoeten.</p><p>Tijdens deze exclusieve rondetafelbijeenkomst, voorbehouden aan een select gezelschap van ondernemers en familiale aandeelhouders, diepen we de cruciale stappen uit die nodig zijn voor een geruisloze transitie:</p><ul><li><strong>Familiale governance:</strong> Hoe stemt u actieve en niet-actieve familieleden op elkaar af vóór de overdracht plaatsvindt?</li><li><strong>Fiscaal-juridische architectuur:</strong> Schenking van familiale aandelen, maatschapconstructies en het behoud van controle en inkomsten.</li><li><strong>Waardering en financiering:</strong> Reële waardebepaling en financieringsoplossingen bij overname door één van de kinderen of extern management.</li><li><strong>Menselijk kapitaal:</strong> Loslaten als stichter en het klaarmaken van de volgende generatie als rentmeester.</li></ul><p>De plaatsen zijn beperkt tot maximaal 10 families om open en discrete dialoog te waarborgen. Na afloop is er gelegenheid tot informeel napraten bij een hapje en drankje.</p><p><strong>Aanmelden:</strong> Stuur een e-mail naar <a href="mailto:info@polares.be?subject=Aanmelding%20Rondetafel%20Bedrijfsoverdracht">info@polares.be</a> of bel ons op <a href="tel:+3254235050">+32 54 23 50 50</a>.</p>
+        </div>
+      </article>
+    <!-- EIND_UITGELICHT -->
+
+    <div class="berichten" id="berichten">
+      <!-- BEGIN_BERICHTEN (geschreven door tools/berichten.py) -->
+      <article class="bericht" data-soort="evenement" data-id="koffiesessie-vermogensarchitectuur">
+        <p class="bericht__kop">
+          <span class="badge badge--evenement">Evenement</span>
+          <time class="bericht__datum" datetime="2026-11-19">Donderdag 19 november 2026</time>
+        </p>
+        <h3 class="bericht__titel"><button class="bericht__opener" type="button" data-opent="koffiesessie-vermogensarchitectuur">Inspiratiesessie: Van versnipperd vermogen naar één helder overzicht</button></h3>
+        <p class="bericht__inleiding">Een nuchtere ontbijtsessie over vermogensarchitectuur: hoe brengt u bankrelaties, vennootschappen, vastgoed en privébezit samen in één transparant kompas?</p>
+        <p class="bericht__voet">
+          <span class="bericht__extra">Aanmelden voor 12 november</span>
+          <span class="bericht__lees" aria-hidden="true">Lees meer <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></span>
+        </p>
+        <div class="bericht__volledig" id="tekst-koffiesessie-vermogensarchitectuur">
+          <dl class="lezer__gegevens"><div><dt>Wanneer</dt><dd>Donderdag 19 november 2026 · 08:30 — 10:30</dd></div><div><dt>Waar</dt><dd>Kantoor Polares, Dirk Martensstraat 41, Aalst</dd></div></dl>
+          <p>Veel vermogende families werken door de jaren heen samen met verschillende private banks, boekhouders, notarissen en vastgoedbeheerders. Elk van die partijen levert degelijk werk binnen zijn eigen domein, maar niemand bewaart het helikopteroverzicht.</p><p>Tijdens deze ontbijtsessie demonstreren we hoe u via systematische vermogensmonitoring:</p><ul><li>Inzicht krijgt in de werkelijke globale kosten en rendementen over alle banken heen.</li><li>Dubbele risico's en verborgen correlaties tijdig detecteert.</li><li>De brug slaat tussen het vermogen in uw vennootschap en uw doelstellingen op lange termijn.</li></ul><p>Deelname is kosteloos maar registratie is verplicht wegens de kleinschalige opzet. Koffie en ontbijt worden verzorgd vanaf 08:15.</p><p><strong>Interesse?</strong> Mail naar <a href="mailto:info@polares.be?subject=Inschrijving%20Inspiratiesessie%20Vermogensarchitectuur">info@polares.be</a>.</p>
+        </div>
+      </article>
+
+      <article class="bericht" data-soort="inzicht" data-id="zorgvolmacht-het-startpunt">
+        <p class="bericht__kop">
+          <span class="badge badge--inzicht">Inzicht</span>
+          <time class="bericht__datum" datetime="2026-09-08">8 september 2026</time>
+        </p>
+        <h3 class="bericht__titel"><button class="bericht__opener" type="button" data-opent="zorgvolmacht-het-startpunt">Waarom een zorgvolmacht het onmisbare vertrekpunt is van elk vermogenskompas</button></h3>
+        <p class="bericht__inleiding">Veel ondernemers focussen op successierechten bij overlijden, maar staan zelden stil bij onverwachte wilsonbekwaamheid. Hoe beschermt u uw onderneming en familie tijdig?</p>
+        <p class="bericht__voet">
+          <span class="bericht__extra">4 min leestijd</span>
+          <span class="bericht__lees" aria-hidden="true">Lees meer <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></span>
+        </p>
+        <div class="bericht__volledig" id="tekst-zorgvolmacht-het-startpunt">
+          <p>Wanneer we met families spreken over vermogensplanning, gaat de aandacht traditioneel naar wat er gebeurt 'als iemand er niet meer is'. Fiscale optimalisatie van erfenissen is bekend terrein. Maar het grootste risico voor familiale ondernemingen ontstaat dikwijls wanneer een sleutelfiguur nog wél leeft, doch plots wilsonbekwaam wordt door ziekte of ongeval.</p><p>Zonder voorzorgsmaatregelen treedt in België de wetgeving rond buitengerechtelijke bescherming in werking. Bankrekeningen kunnen worden geblokkeerd, beslissingen in de vennootschap vallen stil, en voor elke noemenswaardige transactie moet toestemming worden gevraagd aan de vrederechter. Dit kan de continuïteit van uw bedrijf en het comfort van uw gezin maandenlang verlammen.</p><p>Met een <strong>zorgvolmacht</strong> legt u vooraf vast wie uw stem vertegenwoordigt in de vennootschap, wie betalingen mag verrichten en onder welke voorwaarden vermogensoverdrachten mogen worden voortgezet. Het is geen document dat u in een la bewaart, maar een levend onderdeel van uw vermogensarchitectuur.</p><p>Polares adviseert om uw zorgvolmacht minstens om de drie jaar te evalueren tegen het licht van gewijzigde familiale situaties en wetgeving.</p>
+        </div>
+      </article>
+
+      <article class="bericht" data-soort="nieuws" data-id="versterking-vermogensmonitoring">
+        <p class="bericht__kop">
+          <span class="badge badge--nieuws">Nieuws</span>
+          <time class="bericht__datum" datetime="2026-08-15">15 augustus 2026</time>
+        </p>
+        <h3 class="bericht__titel"><button class="bericht__opener" type="button" data-opent="versterking-vermogensmonitoring">Polares breidt expertise uit met versterking in vermogensmonitoring en familierecht</button></h3>
+        <p class="bericht__inleiding">Om families met complexe vermogensstructuren en vastgoedportefeuilles nog gerichter te begeleiden, versterken wij onze adviespraktijk in Aalst.</p>
+        <p class="bericht__voet">
+          <span class="bericht__extra">3 min leestijd</span>
+          <span class="bericht__lees" aria-hidden="true">Lees meer <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></span>
+        </p>
+        <div class="bericht__volledig" id="tekst-versterking-vermogensmonitoring">
+          <p>Als onafhankelijke vertrouwenspersoon is onze belofte eenvoudig: wij staan aan dezelfde kant van de tafel als u. We verkopen geen bancaire producten en ontvangen geen commissies van derden. Onze enige leidraad is het belang van uw familie en onderneming.</p><p>Om aan de groeiende vraag naar onafhankelijke vermogensmonitoring en fiscale screening te voldoen, hebben we ons team recent versterkt met een senior specialist in vermogensarchitectuur en familierecht. Hierdoor kunnen we families met versnipperde vermogens (meerdere banken, buitenlands vastgoed en participaties) een nog completer en actueler sturend dashboard bieden.</p><p>Wilt u uw huidige vermogensstructuur of bankrapportages eens onafhankelijk laten toetsen? Neem gerust contact op voor een vertrouwelijk kennismakingsgesprek.</p>
+        </div>
+      </article>
+
+      <article class="bericht" data-soort="inzicht" data-id="vastgoed-vennootschap-of-prive">
+        <p class="bericht__kop">
+          <span class="badge badge--inzicht">Inzicht</span>
+          <time class="bericht__datum" datetime="2026-07-28">28 juli 2026</time>
+        </p>
+        <h3 class="bericht__titel"><button class="bericht__opener" type="button" data-opent="vastgoed-vennootschap-of-prive">Vastgoed in de vennootschap of privé: de bakens heruitzetten voor 2027</button></h3>
+        <p class="bericht__inleiding">Door verschuivingen in rentevoeten, meerwaardebelastingen en fiscale hervormingen herbekijken veel ondernemers hun vastgoedstrategie. Een heldere analyse.</p>
+        <p class="bericht__voet">
+          <span class="bericht__extra">5 min leestijd</span>
+          <span class="bericht__lees" aria-hidden="true">Lees meer <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></span>
+        </p>
+        <div class="bericht__volledig" id="tekst-vastgoed-vennootschap-of-prive">
+          <p>De klassieke reflex om elk nieuw vastgoedpand onder te brengen in een patrimoniumvennootschap staat al geruime tijd onder druk. Verscherpte controles op vruchtgebruik, de evolutie van de liquidatiereserve en de fiscaliteit bij verkoop maken dat er geen 'standaardoplossing' meer bestaat.</p><p>In dit inzicht zetten we de belangrijkste afwegingscriteria op een rij:</p><ul><li><strong>Woonvastgoed vs. professioneel vastgoed:</strong> Waarom privébezit van residentieel vastgoed vaak flexibeler en fiscaal vriendelijker uitdraait op lange termijn.</li><li><strong>De exit-strategie:</strong> Vastgoed in een vennootschap stoppen is eenvoudig; het er later zonder fiscale averij uithalen is dat allerminst.</li><li><strong>Successie van stenen:</strong> De schenkingsrechten op onroerend goed versus de vlakke schenkingstarieven voor roerende goederen en familiale aandelen.</li></ul><p>Een doordacht advies vertrekt altijd vanuit uw persoonlijke levensfase en de gewenste cashflow voor de toekomst.</p>
+        </div>
+      </article>
+
+      <article class="bericht" data-soort="nieuws" data-id="terugblik-partnermeeting-2026">
+        <p class="bericht__kop">
+          <span class="badge badge--nieuws">Nieuws</span>
+          <time class="bericht__datum" datetime="2026-06-20">20 juni 2026</time>
+        </p>
+        <h3 class="bericht__titel"><button class="bericht__opener" type="button" data-opent="terugblik-partnermeeting-2026">Terugblik: Jaarlijkse partnermeeting over geopolitieke stabiliteit en vermogensbescherming</button></h3>
+        <p class="bericht__inleiding">Samen met onze juridische en fiscale netwerkpartners stonden we stil bij de economische vooruitzichten en de betekenis daarvan voor onze cliënten.</p>
+        <p class="bericht__voet">
+          <span class="bericht__extra">2 min leestijd</span>
+          <span class="bericht__lees" aria-hidden="true">Lees meer <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></span>
+        </p>
+        <div class="bericht__volledig" id="tekst-terugblik-partnermeeting-2026">
+          <p>In een wereld die beweegt, is een vast navigatiepunt essentieel. Tijdens onze jaarlijkse zomersessie met externe experts (notarissen, fiscalisten en vermogensanalisten) bespraken we de implicaties van de Europese begrotingskaders, inflatiedruk en de veranderende regels rond familiebedrijven.</p><p>De voornaamste conclusie: proactiviteit loont. Families die periodiek hun vermogensstructuur toetsen aan onvoorziene scenario's, ervaren meer rust en wendbaarheid, ongeacht de economische conjunctuur.</p><p>We bedanken alle aanwezigen voor de inspirerende gedachtewisselingen.</p>
+        </div>
+      </article>
+      <!-- EIND_BERICHTEN -->
+    </div>
+
+    <p class="berichten__niets" id="berichtenNiets" hidden>Geen berichten in deze categorie.</p>
+
+    <section class="koers-slot" aria-labelledby="slot-h2">
+      <h2 id="slot-h2">Vertrouwen begint met een gesprek.</h2>
+      <p>We nemen graag de tijd om uw wereld te begrijpen en te bekijken waar we kunnen begeleiden.</p>
+      <a class="more-link" href="index.html#contact">Maak een afspraak <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+    </section>
   </main>
+
+  <!-- Leesvenster: de volledige tekst staat al in de kaart, dit venster toont
+       hem alleen groter. Zonder JavaScript blijft die tekst onder de kaart staan. -->
+  <dialog class="lezer" id="lezer" aria-labelledby="lezerTitel">
+    <div class="lezer__doos">
+      <button class="lezer__sluit" id="lezerSluit" type="button" aria-label="Venster sluiten">&#x00D7;</button>
+      <p class="lezer__kop"><span class="badge" id="lezerBadge"></span><span class="lezer__datum" id="lezerDatum"></span></p>
+      <h2 class="lezer__titel" id="lezerTitel"></h2>
+      <div class="lezer__tekst" id="lezerTekst"></div>
+      <p class="lezer__voet">
+        <a class="btn" id="lezerActie" href="mailto:info@polares.be">Contact opnemen</a>
+        <button class="btn btn--rand" type="button" id="lezerSluitKnop">Sluiten</button>
+      </p>
+    </div>
+  </dialog>
 
   <footer class="footer">
     <div class="container">
@@ -406,317 +527,94 @@
       });
     })();
 
-    // ── Reis: één ankermodel voor alle trajecten ─────────────────
-    // De ster staat op het snijpunt van het traject met een ankerlijn op 70%
-    // schermhoogte. Bij een vlak segment bestaat dat snijpunt niet — daar zijn er
-    // oneindig veel. Daar schuift de ster opzij met scroll/k, met k zo gekozen dat
-    // hij nooit verder dan BAND pixels boven het anker uitkomt.
-    //
-    // De kost per segment wordt één keer bij het meten uitgerekend, niet per frame.
-    // Daardoor is s → booglengte een vaste, monotone functie: terugscrollen geeft
-    // exact dezelfde stand, en de is-reached-drempels kunnen niet terugklappen.
-    // Een regelaar die de ster per frame naar het anker toe trekt zou dat breken.
-    var Reis = (function () {
-      var ANKER = .7, BAND = 250, BODEM = 95, K_MIN = 2.5, TAU = 150, MAX_SCHULD = 300;
-
-      // 'd' bestaat uitsluitend uit M/V/H, dus exact te ontleden. Sampelen zou de
-      // korte segmenten missen die tussen twee samples in vallen.
-      function ontleed(d) {
-        var t = (d || '').match(/[MVH]-?[\d.]+(?:,-?[\d.]+)?/g) || [];
-        var x = 0, y = 0, l = 0, segs = [], eerste = true, y0 = 0;
-        for (var i = 0; i < t.length; i++) {
-          var k = t[i][0], v = t[i].slice(1), nx = x, ny = y, soort, dl = 0;
-          if (k === 'M') {
-            var p = v.split(','); nx = +p[0]; ny = +p[1];
-            if (eerste) { x = nx; y = ny; y0 = ny; eerste = false; continue; }
-            soort = 'sprong';
-          } else if (k === 'H') { nx = +v; soort = 'horiz'; dl = Math.abs(nx - x); }
-          else { ny = +v; soort = ny >= y ? 'omlaag' : 'omhoog'; dl = Math.abs(ny - y); }
-          segs.push({ soort: soort, kost: 0, l0: l, dl: dl, x0: x, y0: y, x1: nx, y1: ny });
-          l += dl; x = nx; y = ny;
-        }
-        return { segs: segs, lengte: l, start: y0 };
-      }
-
-      // Kost per segment volgens het ankermodel: dalen kost 1:1 (de ster blijft
-      // op de ankerlijn staan), oversteken en klimmen kosten minder en bouwen
-      // schuld op die op de eerstvolgende daling wordt afgelost.
-      function bouw(d, band) {
-        var o = ontleed(d), segs = o.segs, schuld = 0;
-        for (var i = 0; i < segs.length; i++) {
-          var sg = segs[i], soort = sg.soort, dl = sg.dl, kost;
-          if (soort === 'omlaag') {
-            // schuld aflossen: het anker schuift minder op dan de ster daalt,
-            // waardoor de ster terugzakt naar zijn ankerhoogte
-            // hoogstens de helft aflossen: anders zakt de ster sneller terug dan
-            // twee keer de scrollsnelheid en oogt dat als een sprong
-            var af = Math.min(schuld * (1 - Math.exp(-dl / TAU)), dl * .5);
-            kost = dl - af; schuld -= af;
-          } else if (soort === 'sprong') {
-            // De lijn slaat een illustratie over en de kop wacht aan de rand.
-            // Die wachttijd is dode tijd: laat ze schuld aflossen door de kop
-            // eerder te laten hervatten. Hoofdstuk I heeft vier van die sprongen
-            // en nauwelijks daling ertussen — zonder dit blijft de ster hangen.
-            var gat = Math.abs(sg.y1 - sg.y0);
-            var afs = Math.min(schuld * (1 - Math.exp(-gat / TAU)), gat * .7);
-            kost = gat - afs; schuld -= afs;
-          } else {
-            // een klimmend stuk drijft de ster omhoog hoeveel je de band ook
-            // krimpt: dat deel van de drift zit in de vorm van het pad zelf
-            kost = Math.min(dl / K_MIN, band);
-            schuld = Math.min(MAX_SCHULD, schuld + kost + (soort === 'omhoog' ? dl : 0));
-          }
-          sg.kost = kost;
-        }
-        var l = o.lengte, y0 = o.start;
-        // cumulatieve kost, beginnend op de y van het startpunt zodat s === yHead.
-        // Onderweg bijhouden hoe ver de ster boven het anker uitkomt: dat bepaalt
-        // of de band krap genoeg is om hem in beeld te houden.
-        var s = y0, drift = 0, piek = 0;
-        for (var j = 0; j < segs.length; j++) {
-          var sj = segs[j]; sj.s0 = s; s += sj.kost;
-          if (sj.soort === 'sprong') {
-            // tijdens de sprong wacht de kop, dus loopt de drift op tot kost;
-            // daarna hervat hij lager en zakt de drift terug
-            piek = Math.max(piek, drift + sj.kost);
-            drift += sj.kost - Math.abs(sj.y1 - sj.y0);
-          } else {
-            drift += sj.kost - (sj.soort === 'omlaag' ? sj.dl : sj.soort === 'omhoog' ? -sj.dl : 0);
-            piek = Math.max(piek, drift);
-          }
-        }
-        return { segs: segs, lengte: l, sEind: s, sStart: y0, piek: piek, band: band };
-      }
-
-      // De band krimpen tot de ster binnen het plafond blijft. Hoofdstuk I steekt
-      // 1998px over terwijl het maar 582px daalt — daar is simpelweg te weinig
-      // daling om de opgelopen schuld op af te lossen, dus moet de oversteek daar
-      // krapper. Dat gebeurt automatisch in plaats van met een getal per hoofdstuk.
-      // Hoe ver de ster boven zijn anker mag uitkomen. Als aandeel van de
-      // vensterhoogte, niet als vaste marge: op een hoog scherm zou een vaste
-      // marge zoveel speling geven dat de ster halverwege blijft hangen en het
-      // onderste deel van de pagina leeg oogt.
-      function plafondNu() { return Math.max(180, window.innerHeight * .27); }
-
-      function tabel(d, plafond) {
-        plafond = plafond || plafondNu();
-        var band = BAND, tb = bouw(d, band);
-        // niet verder krimpen dan BODEM
-        for (var i = 0; i < 6 && tb.piek > plafond && band > BODEM; i++) {
-          band = Math.max(BODEM, band * Math.max(.4, plafond / tb.piek));
-          tb = bouw(d, band);
-        }
-        return tb;
-      }
-
-      // Een hoofdstuk kan korter zijn dan zijn eigen lijn. Expertise steekt
-      // 2015px pad af binnen een sectie van 911px: de sectie staat al volledig
-      // in beeld terwijl het ankermodel pas een derde getekend heeft. Dan
-      // bepaalt niet de vorm van het pad de snelheid maar het venster.
-      //
-      // De reis eindigt op sEind — de ankerstand waarop de sectie volledig in
-      // beeld staat — en krijgt daarvoor precies zoveel scroll als erin past
-      // zonder dat de ster het scherm uit zakt. Met W0 de schermpositie van de
-      // bovenkant van de inhoud op dat eindmoment geldt
-      //
-      //   ster(a) = W0 + B − a·B/L + y(a)
-      //
-      // en dat is per knikpunt lineair in B, dus de grootste toegestane B volgt
-      // rechtstreeks uit de knikpunten. Gelijke kost per pixel booglengte is
-      // daarbij bewijsbaar de verdeling die de uitslag van de ster het kleinst
-      // houdt: horizontaal, omhoog en omlaag gaan dus even snel.
-      function venster(d, sEind, W0) {
-        var o = ontleed(d), segs = o.segs, L = o.lengte, H = window.innerHeight;
-        var laagst = H * .94, B = L / 2.2, i;
-        for (i = 0; i < segs.length; i++) {
-          var sg = segs[i];
-          B = Math.min(B, past(laagst - W0 - sg.y0, L - sg.l0, L),
-                          past(laagst - W0 - sg.y1, L - sg.l0 - sg.dl, L));
-        }
-        // ook als de meetkunde geen ruimte laat blijft er een reis over
-        B = Math.max(H * .18, B);
-        var f = L > 0 ? B / L : 0, s = sEind - B;
-        for (i = 0; i < segs.length; i++) { segs[i].kost = segs[i].dl * f; segs[i].s0 = s; s += segs[i].kost; }
-        return { segs: segs, lengte: L, sEind: s, sStart: sEind - B, piek: 0, band: 0 };
-      }
-      function past(over, rest, L) { return rest > L * .001 ? over * L / rest : Infinity; }
-
-      // waar staat de kop als de ankerlijn op s staat?
-      function zoek(tb, s) {
-        var g = tb.segs;
-        if (!g.length) return { len: 0, x: 0, y: 0 };
-        if (s <= g[0].s0) return { len: 0, x: g[0].x0, y: g[0].y0 };
-        for (var i = 0; i < g.length; i++) {
-          var sg = g[i], eind = sg.s0 + sg.kost;
-          if (s >= eind && i < g.length - 1) continue;
-          var f = sg.kost > 0 ? Math.max(0, Math.min(1, (s - sg.s0) / sg.kost)) : 1;
-          if (s >= eind) f = 1;
-          return {
-            len: sg.l0 + sg.dl * f,
-            x: sg.x0 + (sg.x1 - sg.x0) * f,
-            y: sg.soort === 'sprong' ? sg.y0 : sg.y0 + (sg.y1 - sg.y0) * f
-          };
-        }
-        return { len: tb.lengte, x: g[g.length - 1].x1, y: g[g.length - 1].y1 };
-      }
-
-      function anker(wrap) { return window.innerHeight * ANKER - wrap.getBoundingClientRect().top; }
-
-      // Bij welke ankerstand bereikt de lijn deze booglengte? Drempels vergelijken
-      // daarop en niet op booglengte zelf: tijdens een snelle oversteek is 200px
-      // booglengte maar een fractie van een scroll, en dan komt de voorsprong
-      // nergens op neer.
-      function sBij(tb, len) {
-        var g = tb.segs;
-        for (var i = 0; i < g.length; i++) {
-          var sg = g[i];
-          if (len <= sg.l0 + sg.dl || i === g.length - 1) {
-            var f = sg.dl > 0 ? Math.max(0, Math.min(1, (len - sg.l0) / sg.dl)) : 1;
-            return sg.s0 + sg.kost * f;
-          }
-        }
-        return tb.sEind;
-      }
-
-      // Gedempte volger: de kop loopt soepel naar zijn doel toe in plaats van te
-      // springen bij een ruwe scroll of een trackpad-flick. De drempels gebruiken
-      // het doel, niet de gedempte waarde, zodat is-reached niet kan terugklappen.
-      function volger(doelFn, tekenFn) {
-        var waarde = null, gepland = false;
-        function plan() { if (!gepland) { gepland = true; requestAnimationFrame(stap); } }
-        function stap() {
-          gepland = false;
-          var doel = doelFn();
-          if (doel === null) return;
-          if (waarde === null) waarde = doel;
-          else {
-            waarde += (doel - waarde) * .18;
-            if (Math.abs(doel - waarde) < .5) waarde = doel; else plan();
-          }
-          tekenFn(waarde, doel);
-        }
-        return { duw: plan, herstel: function () { waarde = null; plan(); } };
-      }
-
-      // Voorsprong op de drempels: inhoud verschijnt al een stuk voordat de
-      // ankerlijn er is, zodat het deel van het scherm onder de ster niet leeg
-      // blijft. De ster krijgt diezelfde voorsprong, anders komt de tekst op
-      // terwijl hij nog onderweg is. Als aandeel van de vensterhoogte: een vaste
-      // marge zou de ster op een laag scherm tegen de onderrand duwen.
-      function voor() { return Math.min(220, window.innerHeight * .2); }
-
-      return { tabel: tabel, venster: venster, zoek: zoek, anker: anker, sBij: sBij,
-               volger: volger, ANKER: ANKER, voor: voor };
-    })();
-
-    // De gestippelde lijn: van de illustratie in de hero haaks langs elke halte.
-    // De dynamiek is die van de homepage: de ster staat op het snijpunt van het
-    // traject met een ankerlijn op 70% schermhoogte, oversteken kosten scroll
-    // volgens hetzelfde kostmodel, en de kop loopt gedempt naar zijn doel toe.
+    // Filters, leesvenster en het rustig opkomen van de kaarten.
     (function () {
-      var wrap = document.getElementById('flow');
-      var svg = document.getElementById('flowPath');
-      if (!wrap || !svg) return;
-      var dots = svg.querySelector('.flow__dots');
-      var reveal = svg.querySelector('.flow__reveal');
-      var head = svg.querySelector('.flow__head');
-      var start = wrap.querySelector('.hero__art');
-      var stations = [].slice.call(wrap.querySelectorAll('.station'));
-      var stops = stations.map(function (s) { return s.querySelector('.station__stop'); });
-      var live = !matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var total = 0, tb = null, hits = [], hitS = [], mikS = 0;
+      var raster   = document.getElementById('berichten');
+      var niets    = document.getElementById('berichtenNiets');
+      var uitgel   = document.querySelector('.uitgelicht');
+      var lezer    = document.getElementById('lezer');
+      if (!raster) return;
+      var kaarten  = [].slice.call(document.querySelectorAll('.bericht'));
 
-      // Hier loopt de lijn kaarsrecht naar beneden: er zijn geen oversteken
-      // die de ster omhoog trekken, dus hij blijft staan waar de voorsprong
-      // hem zet. Op de dienstpagina's mag die voorsprong ruim zijn omdat de
-      // drift hem daar terughaalt; hier zou dezelfde waarde hem tegen de
-      // onderrand plakken. Klein gehouden dus: de ster hangt zo rond 80% van
-      // de schermhoogte en een bericht komt op zodra hij erlangs gaat.
-      function voorsprong() { return Math.min(120, window.innerHeight * .12); }
-
-      // offsets i.p.v. getBoundingClientRect: de animaties verschuiven elementen
-      // tijdelijk met een transform, dat mag de lijn niet volgen
-      function box(el) {
-        var x = 0, y = 0, n = el;
-        while (n && n !== wrap) { x += n.offsetLeft; y += n.offsetTop; n = n.offsetParent; }
-        return { x: x + el.offsetWidth / 2, y: y + el.offsetHeight / 2, top: y, bottom: y + el.offsetHeight };
-      }
-
-      function draw() {
-        var c = stops.map(box);
-        var copy = box(wrap.querySelector('.hero__copy'));
-        var prevBottom = box(wrap.querySelector('.hero')).bottom;
-        // Anders dan op de dienstpagina's vertrekt de lijn hier onder de titel
-        // en niet onder de illustratie. Het kompas staat rechts; vandaar zou de
-        // lijn eerst het hele scherm moeten oversteken, en dat kost een half
-        // scherm scrollen voordat het eerste bericht opkomt.
-        var prev = { x: c[0].x, y: copy.bottom + 16 };
-        var d = 'M' + prev.x + ',' + prev.y, l = 0;
-        hits = [];
-        c.forEach(function (p, i) {
-          // haaks, en altijd door de witruimte tússen de onderdelen:
-          // omlaag tot in de tussenruimte, opzij, dan omlaag naar de halte
-          var sb = box(stations[i]);
-          var gap = (prevBottom + sb.top) / 2;
-          if (Math.abs(p.x - prev.x) > 2) {
-            d += ' V' + gap + ' H' + p.x;
-            l += Math.abs(gap - prev.y) + Math.abs(p.x - prev.x);
-            prev = { x: p.x, y: gap };
-          }
-          d += ' V' + p.y;
-          l += Math.abs(p.y - prev.y);
-          // de booglengte van elke halte volgt uit de opbouw zelf: nauwkeuriger
-          // dan een punt op de lijn zoeken door te bemonsteren
-          hits.push(l);
-          prev = p;
-          prevBottom = sb.bottom;
+      // ── filteren ───────────────────────────────────────────────
+      var knoppen = [].slice.call(document.querySelectorAll('.filter'));
+      function filter(soort) {
+        knoppen.forEach(function (k) {
+          var aan = k.getAttribute('data-soort') === soort;
+          k.classList.toggle('is-actief', aan);
+          k.setAttribute('aria-selected', aan ? 'true' : 'false');
         });
-        d += ' V' + (prev.y + 120);
-        dots.setAttribute('d', d);
-        reveal.setAttribute('d', d);
-        total = dots.getTotalLength();
-        reveal.style.strokeDasharray = total + ' ' + total;
-        tb = Reis.tabel(d);
-        // de booglengtes omzetten naar ankerstanden, zodat de voorsprong
-        // in scroll-pixels telt en niet in booglengte
-        hitS = hits.map(function (len) { return Reis.sBij(tb, len); });
-        volg.herstel();
-      }
-
-      function doel() {
-        if (!live || !total || !tb) return null;
-        mikS = Reis.anker(wrap);
-        // de kop loopt de voorsprong vooruit, zodat hij aankomt op het moment
-        // dat de tekst verschijnt in plaats van erna
-        return Reis.zoek(tb, mikS + voorsprong()).len;
-      }
-
-      function teken(len) {
-        reveal.style.strokeDashoffset = (total - len).toFixed(1);
-        var pt = dots.getPointAtLength(Math.max(0, Math.min(total, len)));
-        head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
-        head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
-        stations.forEach(function (s, i) {
-          s.classList.toggle('is-reached', mikS + voorsprong() >= hitS[i]);
+        var zichtbaar = 0;
+        kaarten.forEach(function (kaart) {
+          var toon = soort === 'alles' || kaart.getAttribute('data-soort') === soort;
+          kaart.hidden = !toon;
+          if (toon) zichtbaar++;
         });
+        if (uitgel) {
+          var toonU = soort === 'alles' || uitgel.getAttribute('data-soort') === soort;
+          uitgel.hidden = !toonU;
+          if (toonU) zichtbaar++;
+        }
+        if (niets) niets.hidden = zichtbaar > 0;
+      }
+      knoppen.forEach(function (k) {
+        k.addEventListener('click', function () { filter(k.getAttribute('data-soort')); });
+      });
+
+      // ── leesvenster ────────────────────────────────────────────
+      var badge = document.getElementById('lezerBadge');
+      var datum = document.getElementById('lezerDatum');
+      var titel = document.getElementById('lezerTitel');
+      var tekst = document.getElementById('lezerTekst');
+      var actie = document.getElementById('lezerActie');
+      var laatsteKnop = null;
+
+      function open(bron, knop) {
+        var b = bron.querySelector('.badge');
+        var t = bron.querySelector('time');
+        var k = bron.querySelector('.bericht__opener');
+        var v = bron.querySelector('.bericht__volledig');
+        badge.textContent = b ? b.textContent.trim() : '';
+        badge.className = 'badge' + (b ? ' ' + b.className.replace('badge', '').trim() : '');
+        datum.textContent = t ? t.textContent.trim() : '';
+        titel.textContent = k ? k.textContent.trim() : '';
+        tekst.innerHTML = v ? v.innerHTML : '';
+        var evenement = bron.getAttribute('data-soort') === 'evenement';
+        actie.textContent = evenement ? 'Aanmelden' : 'Contact opnemen';
+        actie.href = 'mailto:info@polares.be?subject=' +
+          encodeURIComponent((evenement ? 'Aanmelding: ' : 'Vraag over: ') + titel.textContent);
+        laatsteKnop = knop;
+        if (typeof lezer.showModal === 'function') lezer.showModal(); else lezer.setAttribute('open', '');
+      }
+      function sluit() {
+        if (typeof lezer.close === 'function') lezer.close(); else lezer.removeAttribute('open');
+        if (laatsteKnop) laatsteKnop.focus();
       }
 
-      var volg = Reis.volger(doel, teken);
-      function onScroll() { volg.duw(); }
-      var t;
-      function later() { clearTimeout(t); t = setTimeout(draw, 80); }
+      document.addEventListener('click', function (ev) {
+        var knop = ev.target.closest && ev.target.closest('.bericht__opener');
+        if (!knop) return;
+        var bron = knop.closest('.bericht, .uitgelicht');
+        if (bron) { ev.preventDefault(); open(bron, knop); }
+      });
+      document.getElementById('lezerSluit').addEventListener('click', sluit);
+      document.getElementById('lezerSluitKnop').addEventListener('click', sluit);
+      lezer.addEventListener('click', function (ev) { if (ev.target === lezer) sluit(); });
+      lezer.addEventListener('close', function () { if (laatsteKnop) laatsteKnop.focus(); });
 
-      if (live) {
-        wrap.classList.add('flow--live');
-        window.addEventListener('scroll', onScroll, { passive: true });
+      // ── opkomen bij het scrollen ───────────────────────────────
+      var opkomers = [].slice.call(document.querySelectorAll('.uitgelicht, .bericht, .koers-slot'));
+      opkomers.forEach(function (el) { el.classList.add('onthul'); });
+      if (!window.IntersectionObserver) {
+        opkomers.forEach(function (el) { el.classList.add('is-in'); });
       } else {
-        dots.removeAttribute('mask');
-        head.style.display = 'none';
+        var kijker = new IntersectionObserver(function (rijen) {
+          rijen.forEach(function (r) {
+            if (r.isIntersecting) { r.target.classList.add('is-in'); kijker.unobserve(r.target); }
+          });
+        }, { rootMargin: '0px 0px -12% 0px' });
+        opkomers.forEach(function (el) { kijker.observe(el); });
       }
-      window.addEventListener('resize', later);
-      window.addEventListener('load', draw);
-      if (window.ResizeObserver) new ResizeObserver(later).observe(wrap);
-      if (start.complete) draw(); else start.addEventListener('load', draw);
     })();
   </script>
 </body>
