@@ -56,6 +56,7 @@ voorwaarden = lees("algemene-voorwaarden.html")
 familie = lees("uw-familie.html")
 bedrijf = lees("uw-bedrijf.html")
 koers = lees("blijf-op-koers.html")
+team = lees("ons-team.html")
 
 # ── De structured data is de referentie: daar staan de feiten gestructureerd ──
 ld_ruw = re.search(r'application/ld\+json">([\s\S]*?)</script>', index)
@@ -116,6 +117,7 @@ for bestand, inhoud in (
     ("uw-familie.html", familie),
     ("uw-bedrijf.html", bedrijf),
     ("blijf-op-koers.html", koers),
+    ("ons-team.html", team),
 ):
     tekst = zichtbare_tekst(inhoud)
     controleer(f"juridische naam in {bestand}", naam in tekst, naam)
@@ -146,6 +148,7 @@ for bestand, inhoud in (
     ("uw-familie.html", familie),
     ("uw-bedrijf.html", bedrijf),
     ("blijf-op-koers.html", koers),
+    ("ons-team.html", team),
 ):
     for href in set(re.findall(r'href="index\.html#([^"]+)"', inhoud)):
         controleer(f"anker index.html#{href} (vanuit {bestand}) bestaat", href in ankers)
