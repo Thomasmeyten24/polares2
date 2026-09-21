@@ -585,6 +585,12 @@
       var live = !matchMedia('(prefers-reduced-motion: reduce)').matches;
       var total = 0, tb = null, hits = [], hitS = [], mikS = 0;
 
+      // Deze pagina loopt wat verder vooruit dan de hoofdstukken op de
+      // homepage: de tekstblokken zijn lang en staan liever al klaar voor je
+      // erbij bent. Veel verder kan niet — de ster krijgt dezelfde voorsprong
+      // en zakt er dus evenveel door omlaag op het scherm.
+      function voorsprong() { return Math.min(280, window.innerHeight * .26); }
+
       // offsets i.p.v. getBoundingClientRect: de animaties verschuiven elementen
       // tijdelijk met een transform, dat mag de lijn niet volgen
       function box(el) {
@@ -638,7 +644,7 @@
         mikS = Reis.anker(wrap);
         // de kop loopt de voorsprong vooruit, zodat hij aankomt op het moment
         // dat de tekst verschijnt in plaats van erna
-        return Reis.zoek(tb, mikS + Reis.voor()).len;
+        return Reis.zoek(tb, mikS + voorsprong()).len;
       }
 
       function teken(len) {
@@ -647,7 +653,7 @@
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
         stations.forEach(function (s, i) {
-          s.classList.toggle('is-reached', mikS + Reis.voor() >= hitS[i]);
+          s.classList.toggle('is-reached', mikS + voorsprong() >= hitS[i]);
         });
       }
 
