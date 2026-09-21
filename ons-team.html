@@ -163,12 +163,18 @@
     /* in een smalle kolom geeft uitvullen gaten en veel afbrekingen */
     @media (max-width:767px){.team-hero__body{text-align:left;-webkit-hyphens:manual;hyphens:manual}}
 
+    .team-groep{margin-top:clamp(2.5rem,5vw,4rem)}
+    .team-groep img{width:100%;height:auto;display:block}
+
     .team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
       gap:clamp(1.75rem,3.5vw,2.75rem) clamp(1.25rem,2.5vw,2rem);margin-top:clamp(3rem,6vw,4.5rem)}
     /* op een telefoon twee naast elkaar: tien portretten onder elkaar maakt
        de pagina onnodig lang */
     @media (max-width:600px){.team-grid{grid-template-columns:1fr 1fr;gap:1.5rem 1rem}}
     .lid{display:flex;flex-direction:column;gap:1rem}
+    /* lichte cadans: de even portretten zakken een eindje, zodat de reeks
+       niet als een strak blok leest */
+    .team-grid .lid:nth-child(even){margin-top:clamp(1rem,2.5vw,2.5rem)}
     .lid__foto{position:relative;aspect-ratio:3/4;overflow:hidden;background:var(--navy-50)}
     .lid__foto img{width:100%;height:100%;object-fit:cover;display:block;
       transition:transform 1.2s var(--ease-out)}
@@ -249,6 +255,10 @@
       <p class="team-hero__lead">Maak kennis met ons multidisciplinair team.</p>
       <p class="team-hero__body">Samen combineren we diepgaande expertise met een scherp inzicht in u en uw ambities. Zo brengen we het volledige universum van uw onderneming, familievermogen, fiscale situatie en persoonlijke doelstellingen samen.</p>
     </section>
+
+    <figure class="team-groep">
+      <img src="assets/team/groep.webp" alt="Het team van Polares" width="1600" height="900" loading="lazy" decoding="async">
+    </figure>
 
     <ul class="team-grid" aria-label="De medewerkers van Polares">
         <li class="lid">
@@ -416,7 +426,7 @@
 
     // De portretten komen rustig op zodra ze in beeld schuiven.
     (function () {
-      var opkomers = [].slice.call(document.querySelectorAll('.lid, .team-slot'));
+      var opkomers = [].slice.call(document.querySelectorAll('.team-groep, .lid, .team-slot'));
       if (!opkomers.length) return;
       opkomers.forEach(function (el) { el.classList.add('onthul'); });
       if (!window.IntersectionObserver) {
