@@ -65,26 +65,34 @@
       -webkit-mask:url(assets/POLARES_LOGO_WIT_woordmerk.png) no-repeat center/contain;mask:url(assets/POLARES_LOGO_WIT_woordmerk.png) no-repeat center/contain}
     .nav__burger{display:flex;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;
       background:none;border:none;cursor:pointer;padding:8px}
-    .nav__burger span{display:block;width:22px;height:1px;background:var(--navy-600)}
+    .nav__burger span{display:block;width:22px;height:1px;background:var(--navy-600);
+      transition:transform var(--dur-2) var(--ease),opacity var(--dur-2) var(--ease)}
+    /* open: de drie streepjes worden een kruisje */
+    .nav__burger[aria-expanded="true"] span:nth-child(1){transform:translateY(6px) rotate(45deg)}
+    .nav__burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+    .nav__burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
 
-    /* Overlaymenu */
-    .overlay{position:fixed;inset:0;z-index:300;background:var(--navy-800);transform:translateX(100%);visibility:hidden;
-      transition:transform var(--dur-3) var(--ease),visibility 0s var(--dur-3);
-      display:flex;flex-direction:column;padding:76px var(--pad) clamp(2rem,6vw,4rem)}
-    .overlay.is-open{transform:translateX(0);visibility:visible;transition-delay:0s}
-    .overlay__close{position:absolute;top:1.2rem;right:var(--pad);width:44px;height:44px;display:flex;align-items:center;
-      justify-content:center;background:none;border:none;color:var(--white);font-size:28px;cursor:pointer;line-height:1}
-    .overlay__close:focus-visible{outline:2px solid rgba(255,255,255,.7);outline-offset:2px}
-    .overlay__nav{display:flex;flex-direction:column;gap:.5rem;margin-top:1.5rem}
-    .overlay__link{display:flex;align-items:center;gap:.75rem;font-family:var(--serif);font-size:clamp(1.8rem,4vw,2.6rem);
-      color:var(--white);padding-block:.35rem;transition:color var(--dur-1) var(--ease)}
-    .overlay__link:hover{color:var(--navy-200)}
-    .overlay__link:focus-visible{outline:2px solid rgba(255,255,255,.7);outline-offset:2px}
-    .overlay__link svg{flex-shrink:0}
-    .overlay__contact{margin-top:auto;padding-top:2rem;border-top:1px solid rgba(255,255,255,.12)}
-    .overlay__contact p{font-family:var(--sans);font-size:14px;color:var(--on-navy-soft);line-height:1.8}
-    .overlay__contact a{color:var(--on-navy-soft);transition:color var(--dur-1)}
-    .overlay__contact a:hover{color:var(--white)}
+    /* Menu: een klein paneel onder de knop, geen schermvullend vlak. Het menu
+       is een zijstap, geen bestemming — dezelfde kaartvorm als de rest van de
+       site: wit, haarlijn, zachte schaduw. */
+    .overlay{position:fixed;top:84px;right:var(--pad);z-index:300;
+      width:min(300px,calc(100vw - 2 * var(--pad)));
+      background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);
+      padding-block:.75rem .25rem;opacity:0;visibility:hidden;transform:translateY(-8px) scale(.98);
+      transform-origin:top right;
+      transition:opacity var(--dur-2) var(--ease),transform var(--dur-2) var(--ease),visibility 0s var(--dur-2)}
+    .overlay.is-open{opacity:1;visibility:visible;transform:none;transition-delay:0s}
+    .overlay__nav{display:flex;flex-direction:column}
+    .overlay__link{display:flex;align-items:center;gap:.7rem;font-family:var(--serif);font-size:17px;
+      color:var(--navy-600);padding:.6rem 1.25rem;transition:background var(--dur-1) var(--ease)}
+    .overlay__link svg{flex-shrink:0;color:var(--navy-300);transition:color var(--dur-1) var(--ease)}
+    .overlay__link:hover{background:var(--navy-50)}
+    .overlay__link:hover svg,.overlay__link[aria-current="page"] svg{color:var(--navy-600)}
+    .overlay__link:focus-visible{outline-offset:-2px}
+    .overlay__contact{margin-top:.5rem;padding:.85rem 1.25rem .55rem;border-top:1px solid var(--line)}
+    .overlay__contact p{font-family:var(--sans);font-size:12.5px;color:var(--text-soft);line-height:1.8}
+    .overlay__contact a{color:var(--text-soft);transition:color var(--dur-1) var(--ease)}
+    .overlay__contact a:hover{color:var(--navy-600)}
 
     /* Hoofdstukkop */
     .chapter-head{display:flex;align-items:center;gap:.75rem;margin-bottom:.9rem;color:var(--navy-600)}
@@ -192,8 +200,7 @@
     </button>
   </header>
 
-  <div class="overlay" id="overlay" role="dialog" aria-modal="true" aria-label="Navigatiemenu">
-    <button class="overlay__close" id="overlayClose" aria-label="Menu sluiten">&#x00D7;</button>
+  <div class="overlay" id="overlay">
     <nav class="overlay__nav" aria-label="Hoofdnavigatie">
       <a href="uw-familie.html" class="overlay__link" id="overlayFirstLink" aria-current="page">
         <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
@@ -322,46 +329,37 @@
   </footer>
 
   <script>
-    // Overlay open / dicht — gelijk aan index.html
+    // Menu open en dicht. Een uitklappaneel, geen modaal venster: het legt de
+    // pagina niet stil, heeft geen eigen sluitknop nodig en verdwijnt zodra je
+    // ernaast klikt, Escape gebruikt of eruit weg tabt.
     (function () {
-      var burger    = document.getElementById('burgerBtn');
-      var overlay   = document.getElementById('overlay');
-      var closeBtn  = document.getElementById('overlayClose');
-      var firstLink = document.getElementById('overlayFirstLink');
-      if (!burger || !overlay || !closeBtn) return;
+      var knop   = document.getElementById('burgerBtn');
+      var paneel = document.getElementById('overlay');
+      var eerste = document.getElementById('overlayFirstLink');
+      if (!knop || !paneel) return;
+      var open = false;
 
-      function openOverlay() {
-        overlay.classList.add('is-open');
-        burger.setAttribute('aria-expanded', 'true');
-        document.body.style.overflow = 'hidden';
-        if (firstLink) firstLink.focus();
+      function zet(aan) {
+        open = aan;
+        paneel.classList.toggle('is-open', aan);
+        knop.setAttribute('aria-expanded', aan ? 'true' : 'false');
+        knop.setAttribute('aria-label', aan ? 'Menu sluiten' : 'Menu openen');
+        if (aan && eerste) eerste.focus();
       }
 
-      function closeOverlay() {
-        overlay.classList.remove('is-open');
-        burger.setAttribute('aria-expanded', 'false');
-        document.body.style.overflow = '';
-        burger.focus();
-      }
-
-      burger.addEventListener('click', openOverlay);
-      closeBtn.addEventListener('click', closeOverlay);
+      knop.addEventListener('click', function () { zet(!open); });
 
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeOverlay();
+        if (e.key === 'Escape' && open) { zet(false); knop.focus(); }
       });
 
-      // Focus trap: Tab blijft binnen de open overlay (aria-modal)
-      overlay.addEventListener('keydown', function (e) {
-        if (e.key !== 'Tab' || !overlay.classList.contains('is-open')) return;
-        var f = overlay.querySelectorAll('a[href], button');
-        var eerste = f[0], laatste = f[f.length - 1];
-        if (e.shiftKey && document.activeElement === eerste) { e.preventDefault(); laatste.focus(); }
-        else if (!e.shiftKey && document.activeElement === laatste) { e.preventDefault(); eerste.focus(); }
-      });
+      // ernaast klikken of de focus eruit halen sluit het paneel
+      function buiten(el) { return !paneel.contains(el) && !knop.contains(el); }
+      document.addEventListener('pointerdown', function (e) { if (open && buiten(e.target)) zet(false); });
+      document.addEventListener('focusin', function (e) { if (open && buiten(e.target)) zet(false); });
 
-      overlay.querySelectorAll('a[href]').forEach(function (link) {
-        link.addEventListener('click', closeOverlay);
+      paneel.querySelectorAll('a[href]').forEach(function (link) {
+        link.addEventListener('click', function () { zet(false); });
       });
     })();
 
