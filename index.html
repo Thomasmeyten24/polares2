@@ -3320,20 +3320,15 @@
         return { duw: plan, herstel: function () { waarde = null; plan(); } };
       }
 
-      // Staat een blok goed en wel in beeld, dan is het hoe dan ook onthuld.
-      // De lijn bepaalt de volgorde bij rustig scrollen, maar ze mag nooit de
-      // reden zijn dat zichtbare inhoud leeg blijft — bij een snelle scroll of
-      // een sprong naar een anker is de lijn er nog lang niet.
-      function inBeeld(el) {
-        if (!el) return false;
-        var r = el.getBoundingClientRect();
-        return r.top < window.innerHeight * .88 && r.bottom > 0;
-      }
+      // Voorsprong op de drempels: inhoud verschijnt al een stuk voordat de
+      // ankerlijn er is, zodat het deel van het scherm onder de ster niet leeg
+      // blijft. De ster krijgt diezelfde voorsprong, anders komt de tekst op
+      // terwijl hij nog onderweg is. Als aandeel van de vensterhoogte: een vaste
+      // marge zou de ster op een laag scherm tegen de onderrand duwen.
+      function voor() { return Math.min(220, window.innerHeight * .2); }
 
-      // Voorsprong op de drempels: inhoud verschijnt al een stuk voordat de lijn
-      // er is, zodat het deel van het scherm onder de ster niet leeg blijft.
       return { tabel: tabel, venster: venster, zoek: zoek, anker: anker, sBij: sBij,
-               volger: volger, inBeeld: inBeeld, ANKER: ANKER, VOOR: 220 };
+               volger: volger, ANKER: ANKER, voor: voor };
     })();
 
     // ── Hoofdstuk I: lijn van de kernwoorden naar satelliet en doelgroepen ──
@@ -3440,7 +3435,9 @@
       function doel() {
         if (!live || !geo || !tb) return null;
         mik = Reis.zoek(tb, Reis.anker(wrap));
-        return mik.len;
+        // de kop loopt de voorsprong vooruit, zodat hij aankomt op het moment
+        // dat de tekst verschijnt in plaats van erna
+        return Reis.zoek(tb, Reis.anker(wrap) + Reis.voor()).len;
       }
 
       function teken(len, doelLen) {
@@ -3451,11 +3448,11 @@
         // boven het donkerblauw is het sterretje wit
         line.head.style.fill = pt.y > geo.band[0] && pt.y < geo.band[1] ? '#fff' : '';
         // drempels op de doelstand: de gedempte waarde mag ze niet laten terugklappen
-        var dy = mik.y + Reis.VOOR;
-        grid.classList.toggle('is-reached', dy >= geo.satTop - 20 || Reis.inBeeld(grid));
-        cols[0].classList.toggle('is-reached', dy >= geo.fTop - 2 || Reis.inBeeld(cols[0]));
-        cols[1].classList.toggle('is-reached', dy >= geo.bTop - 2 || Reis.inBeeld(cols[1]));
-        slot.classList.toggle('is-reached', dy >= geo.eTop - 2 || Reis.inBeeld(slot));
+        var dy = mik.y + Reis.voor();
+        grid.classList.toggle('is-reached', dy >= geo.satTop - 20);
+        cols[0].classList.toggle('is-reached', dy >= geo.fTop - 2);
+        cols[1].classList.toggle('is-reached', dy >= geo.bTop - 2);
+        slot.classList.toggle('is-reached', dy >= geo.eTop - 2);
         // pas als de ster op de Poolster valt, verschijnt de titel van hoofdstuk II
         var landed = !geo.pool || doelLen >= line.total - 2;
         if (vTitle) vTitle.classList.toggle('is-waiting', !landed);
@@ -3533,7 +3530,9 @@
       function doel() {
         if (!live || !total || !tb) return null;
         mik = Reis.zoek(tb, Reis.anker(wrap));
-        return mik.len;
+        // de kop loopt de voorsprong vooruit, zodat hij aankomt op het moment
+        // dat de tekst verschijnt in plaats van erna
+        return Reis.zoek(tb, Reis.anker(wrap) + Reis.voor()).len;
       }
 
       function teken(len, doelLen) {
@@ -3542,7 +3541,7 @@
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
         head.style.fill = pt.y > geo.bottom ? '#fff' : '';
-        grid.classList.toggle('is-reached', mik.y + Reis.VOOR >= geo.yT - 2 || doelLen >= total - 2 || Reis.inBeeld(grid));
+        grid.classList.toggle('is-reached', mik.y + Reis.voor() >= geo.yT - 2 || doelLen >= total - 2);
       }
 
       var volg = Reis.volger(doel, teken);
@@ -3756,7 +3755,7 @@
       function doel() {
         if (!live || !total || !tb) return null;
         mikS = Reis.anker(wrap);
-        return Reis.zoek(tb, mikS).len;
+        return Reis.zoek(tb, mikS + Reis.voor()).len;
       }
 
       function teken(len, doelLen) {
@@ -3764,7 +3763,7 @@
         var pt = dots.getPointAtLength(Math.max(0, Math.min(total, len)));
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
-        items.forEach(function (it, i) { it.classList.toggle('is-reached', mikS + Reis.VOOR >= hitS[i] || Reis.inBeeld(it)); });
+        items.forEach(function (it, i) { it.classList.toggle('is-reached', mikS + Reis.voor() >= hitS[i]); });
       }
 
       var volg = Reis.volger(doel, teken);
@@ -3902,7 +3901,9 @@
       function doel() {
         if (!live || !total || !tb) return null;
         mik = Reis.zoek(tb, Reis.anker(wrap));
-        return mik.len;
+        // de kop loopt de voorsprong vooruit, zodat hij aankomt op het moment
+        // dat de tekst verschijnt in plaats van erna
+        return Reis.zoek(tb, Reis.anker(wrap) + Reis.voor()).len;
       }
 
       function teken(len, doelLen) {
@@ -3910,10 +3911,10 @@
         reveal.style.strokeDashoffset = (total - len).toFixed(1);
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
-        var dy = mik.y + Reis.VOOR;
+        var dy = mik.y + Reis.voor();
         steps.forEach(function (st, i) {
           // stap 1 verschijnt al terwijl de wereldbol erin landt
-          st.classList.toggle('is-reached', dy >= iconY[i] - (i === 0 ? 90 : 12) || doelLen >= total - 2 || Reis.inBeeld(st));
+          st.classList.toggle('is-reached', dy >= iconY[i] - (i === 0 ? 90 : 12) || doelLen >= total - 2);
         });
       }
 

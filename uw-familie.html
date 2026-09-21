@@ -557,20 +557,15 @@
         return { duw: plan, herstel: function () { waarde = null; plan(); } };
       }
 
-      // Staat een blok goed en wel in beeld, dan is het hoe dan ook onthuld.
-      // De lijn bepaalt de volgorde bij rustig scrollen, maar ze mag nooit de
-      // reden zijn dat zichtbare inhoud leeg blijft — bij een snelle scroll of
-      // een sprong naar een anker is de lijn er nog lang niet.
-      function inBeeld(el) {
-        if (!el) return false;
-        var r = el.getBoundingClientRect();
-        return r.top < window.innerHeight * .88 && r.bottom > 0;
-      }
+      // Voorsprong op de drempels: inhoud verschijnt al een stuk voordat de
+      // ankerlijn er is, zodat het deel van het scherm onder de ster niet leeg
+      // blijft. De ster krijgt diezelfde voorsprong, anders komt de tekst op
+      // terwijl hij nog onderweg is. Als aandeel van de vensterhoogte: een vaste
+      // marge zou de ster op een laag scherm tegen de onderrand duwen.
+      function voor() { return Math.min(220, window.innerHeight * .2); }
 
-      // Voorsprong op de drempels: inhoud verschijnt al een stuk voordat de lijn
-      // er is, zodat het deel van het scherm onder de ster niet leeg blijft.
       return { tabel: tabel, venster: venster, zoek: zoek, anker: anker, sBij: sBij,
-               volger: volger, inBeeld: inBeeld, ANKER: ANKER, VOOR: 220 };
+               volger: volger, ANKER: ANKER, voor: voor };
     })();
 
     // De gestippelde lijn: van de illustratie in de hero haaks langs elke halte.
@@ -641,7 +636,9 @@
       function doel() {
         if (!live || !total || !tb) return null;
         mikS = Reis.anker(wrap);
-        return Reis.zoek(tb, mikS).len;
+        // de kop loopt de voorsprong vooruit, zodat hij aankomt op het moment
+        // dat de tekst verschijnt in plaats van erna
+        return Reis.zoek(tb, mikS + Reis.voor()).len;
       }
 
       function teken(len) {
@@ -650,7 +647,7 @@
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
         stations.forEach(function (s, i) {
-          s.classList.toggle('is-reached', mikS + Reis.VOOR >= hitS[i] || Reis.inBeeld(s));
+          s.classList.toggle('is-reached', mikS + Reis.voor() >= hitS[i]);
         });
       }
 
