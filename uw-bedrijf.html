@@ -111,6 +111,9 @@
     .hero{position:relative;padding-top:clamp(3rem,7vw,5.5rem)}
     .hero__grid{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(2rem,6vw,6rem);align-items:center}
     .hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.1rem,4.2vw,3.6rem);line-height:1.15;letter-spacing:-.01em;text-wrap:balance;text-align:left}
+    /* de ondertitel onder de kop, zoals voor de inhoudswissel */
+    .hero__lead{margin-top:1.5rem;font-family:var(--serif);font-size:clamp(1.1rem,1.7vw,1.3rem);
+      line-height:1.6;color:var(--navy-400);max-width:34ch}
     .hero__art{position:relative;width:100%;height:auto;max-width:560px;justify-self:center;background:var(--white)}
     @media (max-width:860px){.hero__grid{grid-template-columns:1fr}.hero__art{max-width:420px;order:-1}}
 
@@ -245,8 +248,9 @@
       <a class="back" href="index.html#advies">&#8592; Terug naar polares.be</a>
       <div class="hero__grid">
         <div class="hero__copy">
-          <div class="chapter-head" aria-hidden="true"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></div>
-          <h1 id="hero-h1">Uw onderneming</h1>
+          <div class="chapter-head"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg><span class="label">Uw bedrijf</span></div>
+          <h1 id="hero-h1">Uw onderneming is meer dan een activiteit of balans.</h1>
+          <p class="hero__lead">Ze weerspiegelt visie, engagement en jaren van opgebouwd vertrouwen.</p>
         </div>
         <img class="hero__art" src="assets/uv/tandwielen-groot.webp" alt="Illustratie van in elkaar grijpende tandwielen" width="880" height="590" fetchpriority="high" decoding="async">
       </div>
