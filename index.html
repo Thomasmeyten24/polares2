@@ -782,17 +782,18 @@
         scrollbar-width: thin;
         padding: 0 4px .5rem;
       }
-      /* De hele kaart in beeld, zonder te moeten swipen. Ze is 741 op 359, dus
-         breder dan hoog: bij elke maat waarop de hemellichamen groot blijven,
-         valt de helft ervan buiten het scherm. Het is het een of het ander, en
-         alles kunnen zien weegt zwaarder. De tekening wordt daardoor klein,
-         maar het raakvlak van elk hemellichaam is ruimer dan het tekeningetje
-         zelf en blijft zo boven de 44px. Op een heel smal toestel houdt de
-         min-width dat raakvlak op peil; dan is er weer een beetje swipe. */
+      /* De hoogte stuurt, de breedte volgt uit de verhouding van de viewBox
+         (741 op 359). De kaart wordt daardoor breder dan het scherm en is
+         horizontaal swipebaar: zo blijven de hemellichamen groot genoeg om
+         comfortabel aan te tikken en te bekijken. */
       .visie__scroll .uv-scene {
-        width: 100%;
-        height: auto;
-        min-width: 330px;
+        width: auto;
+        /* Naar de breedte van het venster en niet naar de hoogte: op iOS
+           verandert de hoogte tijdens het scrollen mee met de adresbalk, en dan
+           zou de kaart onder je vingers groter en kleiner worden. De breedte
+           ligt vast zolang het toestel niet draait. */
+        height: clamp(220px, 95vw, 380px);
+        min-width: 0;
         max-width: none;
       }
       .visie-tip--panel { min-height: 0; }
@@ -3008,7 +3009,16 @@
         else if (!on) { running = false; }
       }
 
-      window.addEventListener('resize', debounce(resize, 150), { passive: true });
+      // Alleen op een echte breedtewijziging opnieuw opbouwen. Op iOS vuurt een
+      // resize ook als de adresbalk in- of uitschuift tijdens het scrollen; de
+      // hemel zou dan telkens opnieuw worden uitgestrooid en zichtbaar
+      // verspringen. De canvas rekt bij zo'n hoogteverschil gewoon mee.
+      var laatsteBreedte = window.innerWidth;
+      window.addEventListener('resize', debounce(function () {
+        if (window.innerWidth === laatsteBreedte) return;
+        laatsteBreedte = window.innerWidth;
+        resize();
+      }, 150), { passive: true });
       resize();
 
       if (reduce) return; // statische render volstaat
@@ -3326,7 +3336,7 @@
       var STAR = '<svg width="13" height="13" viewBox="0 0 100 100" fill="var(--navy-600)" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"></path></svg>';
       var DEFAULT_PANEL = { title: 'Het universum', body: 'Tik op een hemellichaam om zijn betekenis te lezen.' };
       var CAP_HOVER = 'Klik op een hemellichaam en ontdek zijn betekenis';
-      var CAP_TAP = 'Tik op een hemellichaam en ontdek zijn betekenis';
+      var CAP_TAP = 'Swipe en tik op een hemellichaam om zijn betekenis te ontdekken';
 
       var nodes = [].slice.call(scene.querySelectorAll('.uv-node'));
       var caption = document.querySelector('.visie__caption');
@@ -3387,6 +3397,25 @@
         }
       }
       window.addEventListener('load', centerScene);
+
+      // Verandert de maat van de kaart (de adresbalk van iOS schuift in of uit,
+      // of het toestel draait), dan houden we vast waar de bezoeker aan het
+      // kijken was. Opnieuw centreren zou hem midden in zijn verkenning
+      // terugtrekken.
+      if (scroller) {
+        var deel = .5, tm;
+        scroller.addEventListener('scroll', function () {
+          var speling = scroller.scrollWidth - scroller.clientWidth;
+          if (speling > 0) deel = scroller.scrollLeft / speling;
+        }, { passive: true });
+        window.addEventListener('resize', function () {
+          clearTimeout(tm);
+          tm = setTimeout(function () {
+            var speling = scroller.scrollWidth - scroller.clientWidth;
+            if (speling > 0) scroller.scrollLeft = deel * speling;
+          }, 160);
+        }, { passive: true });
+      }
 
       nodes.forEach(function (node) {
         var k = node.getAttribute('data-key');
@@ -3551,7 +3580,14 @@
         dpr = Math.min(window.devicePixelRatio || 1, 1.5);
         W = canvas.clientWidth; H = canvas.clientHeight;
         if (!W || !H) return;
-        canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
+        var pw = Math.round(W * dpr), ph = Math.round(H * dpr);
+        // Ongewijzigde afmetingen: de hemel niet opnieuw opbouwen. Op iOS vuurt
+        // een resize telkens als de adresbalk in- of uitschuift, dus tijdens het
+        // scrollen; zonder deze regel kregen alle sterren dan nieuwe willekeurige
+        // plaatsen en leek het of de hemel versprong. De hero heeft dezelfde
+        // bescherming.
+        if (canvas.width === pw && canvas.height === ph && stars.length) return;
+        canvas.width = pw; canvas.height = ph;
         var count = Math.round((W * H) / 9000);
         stars = [];
         for (var i = 0; i < count; i++) {
@@ -3592,8 +3628,14 @@
           if (visible) start();
         }).observe(sec);
       }
-      var t;
-      window.addEventListener('resize', function () { clearTimeout(t); t = setTimeout(build, 150); });
+      // Zie de hero: alleen een echte breedtewijziging telt. De in- en
+      // uitschuivende adresbalk van iOS mag de hemel niet opnieuw uitstrooien.
+      var t, laatsteBreedte = window.innerWidth;
+      window.addEventListener('resize', function () {
+        if (window.innerWidth === laatsteBreedte) return;
+        laatsteBreedte = window.innerWidth;
+        clearTimeout(t); t = setTimeout(build, 150);
+      }, { passive: true });
       build();
     });
 
