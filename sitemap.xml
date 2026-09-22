@@ -30,6 +30,44 @@
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
+  <!-- BEGIN_BERICHTEN (geschreven door tools/berichten.py uit data/berichten.json) -->
+  <url>
+    <loc>https://polares.be/blijf-op-koers/koffiesessie-vermogensarchitectuur.html</loc>
+    <lastmod>2026-11-19</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://polares.be/blijf-op-koers/rondetafel-bedrijfsoverdracht-2026.html</loc>
+    <lastmod>2026-10-22</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://polares.be/blijf-op-koers/zorgvolmacht-het-startpunt.html</loc>
+    <lastmod>2026-09-08</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://polares.be/blijf-op-koers/versterking-vermogensmonitoring.html</loc>
+    <lastmod>2026-08-15</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://polares.be/blijf-op-koers/vastgoed-vennootschap-of-prive.html</loc>
+    <lastmod>2026-07-28</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <url>
+    <loc>https://polares.be/blijf-op-koers/terugblik-partnermeeting-2026.html</loc>
+    <lastmod>2026-06-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.5</priority>
+  </url>
+  <!-- EIND_BERICHTEN -->
   <url>
     <loc>https://polares.be/privacyverklaring.html</loc>
     <lastmod>2026-08-24</lastmod>

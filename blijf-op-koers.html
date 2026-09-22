@@ -19,11 +19,60 @@
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="preload" href="assets/fonts/cantata-one-400.woff2" as="font" type="font/woff2" crossorigin>
-  <!-- De berichten komen uit data/berichten.json. Het blok met de kaarten
-       hieronder wordt daaruit geschreven door tools/berichten.py; bewerk dus
-       de JSON en niet deze HTML. Ze staan wel als gewone tekst in de pagina,
-       zodat zoekmachines en linkvoorbeelden ze zien. -->
-  <style>  <style>
+  <!-- BEGIN_LIJSTDATA (geschreven door tools/berichten.py) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Blijf op koers",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "url": "https://polares.be/blijf-op-koers/koffiesessie-vermogensarchitectuur.html",
+        "name": "Inspiratiesessie: Van versnipperd vermogen naar één helder overzicht"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "url": "https://polares.be/blijf-op-koers/rondetafel-bedrijfsoverdracht-2026.html",
+        "name": "Exclusieve Rondetafel: De overdracht van familiebedrijf naar de volgende generatie"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "url": "https://polares.be/blijf-op-koers/zorgvolmacht-het-startpunt.html",
+        "name": "Waarom een zorgvolmacht het onmisbare vertrekpunt is van elk vermogenskompas"
+      },
+      {
+        "@type": "ListItem",
+        "position": 4,
+        "url": "https://polares.be/blijf-op-koers/versterking-vermogensmonitoring.html",
+        "name": "Polares breidt expertise uit met versterking in vermogensmonitoring en familierecht"
+      },
+      {
+        "@type": "ListItem",
+        "position": 5,
+        "url": "https://polares.be/blijf-op-koers/vastgoed-vennootschap-of-prive.html",
+        "name": "Vastgoed in de vennootschap of privé: de bakens heruitzetten voor 2027"
+      },
+      {
+        "@type": "ListItem",
+        "position": 6,
+        "url": "https://polares.be/blijf-op-koers/terugblik-partnermeeting-2026.html",
+        "name": "Terugblik: Jaarlijkse partnermeeting over geopolitieke stabiliteit en vermogensbescherming"
+      }
+    ]
+  }
+  </script>
+  <!-- EIND_LIJSTDATA -->
+  <!-- De berichten komen uit data/berichten.json. De blokken tussen de
+       BEGIN/EIND-merktekens worden daaruit geschreven door tools/berichten.py,
+       samen met een eigen pagina per bericht in blijf-op-koers/; bewerk dus de
+       JSON en niet deze HTML. Dit overzicht toont alleen de aanhef: de volle
+       tekst staat op de pagina van het bericht, zodat elke tekst op één adres
+       staat en niet op twee. -->
+  <style>
     @font-face{font-family:'Cantata One';font-style:normal;font-weight:400;font-display:swap;
       src:url(assets/fonts/cantata-one-400.woff2) format('woff2');}
     @font-face{font-family:'Source Sans Pro';font-style:normal;font-weight:400;font-display:swap;
@@ -202,8 +251,7 @@
     .bericht__kop{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
     .bericht__datum{font-family:var(--sans);font-size:12px;color:var(--text-soft)}
     .bericht__titel{font-family:var(--serif);font-weight:400;font-size:clamp(1.15rem,1.7vw,1.35rem);line-height:1.3}
-    .bericht__opener{background:none;border:none;padding:0;margin:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
-    /* de hele kaart is klikbaar, met de titelknop als echte bediening */
+    /* de hele kaart is klikbaar, met de titellink als echte bediening */
     .bericht .bericht__titel .bericht__opener::after{content:"";position:absolute;inset:0}
     .bericht__inleiding{font-size:14px;color:var(--text-soft);line-height:1.65}
     .bericht__voet{margin-top:auto;padding-top:1rem;border-top:1px solid var(--line);
@@ -214,42 +262,13 @@
     .bericht__lees svg{transition:transform var(--dur-2) var(--ease)}
     .bericht:hover .bericht__lees svg{transform:translateX(6px)}
 
-    /* Zonder JavaScript staat de volledige tekst gewoon onder de kaart */
-    .bericht__volledig{font-size:14px;color:var(--text-soft);line-height:1.75}
-    .bericht__volledig p+p,.bericht__volledig ul{margin-top:1em}
-    .bericht__volledig ul{padding-left:1.1rem}
-    .js .bericht__volledig{display:none}
 
-    /* Leesvenster */
-    .lezer{border:none;padding:0;background:transparent;margin:auto;
-      width:min(760px,calc(100vw - 2rem));max-width:none}
-    .lezer::backdrop{background:rgba(7,24,38,.55)}
-    .lezer__doos{position:relative;background:var(--white);border-radius:14px;
-      padding:clamp(1.75rem,4vw,3rem);max-height:min(86vh,900px);overflow:auto}
-    .lezer__sluit{position:absolute;top:.7rem;right:.9rem;width:44px;height:44px;background:none;border:none;
-      font-size:26px;line-height:1;color:var(--text-soft);cursor:pointer}
-    .lezer__sluit:hover{color:var(--navy-600)}
-    .lezer__kop{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;padding-right:2.5rem}
-    .lezer__datum{font-family:var(--sans);font-size:12px;color:var(--text-soft)}
-    .lezer__titel{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,3vw,2.1rem);line-height:1.22;margin-top:1rem}
-    .lezer__gegevens{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1.25rem;
-      margin:1.5rem 0;padding:1.25rem;background:var(--paper);border:1px solid var(--line)}
-    .lezer__gegevens dt{font-family:var(--sans);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-soft)}
-    .lezer__gegevens dd{font-family:var(--sans);font-size:14px;color:var(--navy-600);margin-top:.3rem;line-height:1.5}
-    .lezer__tekst{margin-top:1.5rem;font-size:15px;line-height:1.8;color:var(--text)}
-    .lezer__tekst p+p,.lezer__tekst ul{margin-top:1.1em}
-    .lezer__tekst ul{padding-left:1.2rem}
-    .lezer__tekst li+li{margin-top:.4em}
-    .lezer__tekst a{color:var(--navy-600);text-decoration:underline;text-underline-offset:3px}
-    .lezer__voet{display:flex;flex-wrap:wrap;gap:1rem;margin-top:2rem;padding-top:1.5rem;border-top:1px solid var(--line)}
 
     .btn{display:inline-flex;align-items:center;justify-content:center;font-family:var(--sans);font-size:12px;
       letter-spacing:.14em;text-transform:uppercase;padding:.85rem 1.6rem;border:1px solid var(--navy-600);
       background:var(--navy-600);color:var(--white);cursor:pointer;
       transition:background var(--dur-2) var(--ease),color var(--dur-2) var(--ease),border-color var(--dur-2) var(--ease)}
     .btn:hover{background:var(--navy-800);border-color:var(--navy-800)}
-    .btn--rand{background:none;color:var(--navy-600)}
-    .btn--rand:hover{background:var(--navy-600);color:var(--white)}
 
     /* Het slot stond met zijn onderkant tegen de voet aan; de andere
        pagina's hebben die ademruimte via .flow, die hier niet bestaat. */
@@ -328,110 +347,90 @@
     </div>
 
     <!-- BEGIN_UITGELICHT (geschreven door tools/berichten.py) -->
-      <article class="uitgelicht" data-soort="evenement" data-id="rondetafel-bedrijfsoverdracht-2026">
+      <article class="uitgelicht" data-soort="evenement">
         <div class="uitgelicht__tekst">
           <p class="bericht__kop"><span class="badge badge--evenement">Aankomend evenement</span></p>
-          <h2 class="uitgelicht__titel"><button class="bericht__opener" type="button" data-opent="rondetafel-bedrijfsoverdracht-2026">Exclusieve Rondetafel: De overdracht van familiebedrijf naar de volgende generatie</button></h2>
+          <h2 class="uitgelicht__titel"><a class="bericht__opener" href="blijf-op-koers/rondetafel-bedrijfsoverdracht-2026.html">Exclusieve Rondetafel: De overdracht van familiebedrijf naar de volgende generatie</a></h2>
           <p class="uitgelicht__inleiding">Een vertrouwelijke sessie voor ondernemersfamilies over de juridische, fiscale en vooral menselijke dynamiek van bedrijfsoverdracht.</p>
-          <p><button class="btn bericht__opener" type="button" data-opent="rondetafel-bedrijfsoverdracht-2026">Programma en aanmelden</button></p>
+          <p><a class="btn" href="blijf-op-koers/rondetafel-bedrijfsoverdracht-2026.html">Programma en aanmelden</a></p>
         </div>
         <div class="uitgelicht__meta">
           <span class="uitgelicht__ster" aria-hidden="true"><svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></span>
           <dl>
-            <div class="uitgelicht__rij"><dt>Datum en tijd</dt><dd>Donderdag 22 oktober 2026 · 18:30 tot 21:30</dd></div>
-            <div class="uitgelicht__rij"><dt>Locatie</dt><dd>Kantoor Polares, Dirk Martensstraat 41, Aalst</dd></div>
+            <div class="uitgelicht__rij"><dt>Wanneer</dt><dd>Donderdag 22 oktober 2026 · 18:30 tot 21:30</dd></div>
+            <div class="uitgelicht__rij"><dt>Waar</dt><dd>Kantoor Polares, Dirk Martensstraat 41, Aalst</dd></div>
             <div class="uitgelicht__rij"><dt>Deelname</dt><dd>Exclusief voor ondernemers · Max. 10 families</dd></div>
           </dl>
           <p class="uitgelicht__deadline">Aanmelden voor 15 oktober</p>
-        </div>
-        <div class="bericht__volledig" id="tekst-rondetafel-bedrijfsoverdracht-2026">
-          <dl class="lezer__gegevens"><div><dt>Wanneer</dt><dd>Donderdag 22 oktober 2026 · 18:30 tot 21:30</dd></div><div><dt>Waar</dt><dd>Kantoor Polares, Dirk Martensstraat 41, Aalst</dd></div><div><dt>Deelname</dt><dd>Exclusief voor ondernemers · Max. 10 families</dd></div></dl>
-          <p>De overdracht van een familiebedrijf is zelden louter een financiële of juridische transactie. Het is een scharniermoment waarop generaties, emoties, eigendom en leiding elkaar ontmoeten.</p><p>Tijdens deze exclusieve rondetafelbijeenkomst, voorbehouden aan een select gezelschap van ondernemers en familiale aandeelhouders, diepen we de cruciale stappen uit die nodig zijn voor een geruisloze transitie:</p><ul><li><strong>Familiale governance:</strong> Hoe stemt u actieve en niet-actieve familieleden op elkaar af vóór de overdracht plaatsvindt?</li><li><strong>Fiscaal-juridische architectuur:</strong> Schenking van familiale aandelen, maatschapconstructies en het behoud van controle en inkomsten.</li><li><strong>Waardering en financiering:</strong> Reële waardebepaling en financieringsoplossingen bij overname door één van de kinderen of extern management.</li><li><strong>Menselijk kapitaal:</strong> Loslaten als stichter en het klaarmaken van de volgende generatie als rentmeester.</li></ul><p>De plaatsen zijn beperkt tot maximaal 10 families om open en discrete dialoog te waarborgen. Na afloop is er gelegenheid tot informeel napraten bij een hapje en drankje.</p><p><strong>Aanmelden:</strong> Stuur een e-mail naar <a href="mailto:info@polares.be?subject=Aanmelding%20Rondetafel%20Bedrijfsoverdracht">info@polares.be</a> of bel ons op <a href="tel:+3254235050">+32 54 23 50 50</a>.</p>
         </div>
       </article>
     <!-- EIND_UITGELICHT -->
 
     <div class="berichten" id="berichten">
       <!-- BEGIN_BERICHTEN (geschreven door tools/berichten.py) -->
-      <article class="bericht" data-soort="evenement" data-id="koffiesessie-vermogensarchitectuur">
+      <article class="bericht" data-soort="evenement">
         <p class="bericht__kop">
           <span class="badge badge--evenement">Evenement</span>
           <time class="bericht__datum" datetime="2026-11-19">Donderdag 19 november 2026</time>
         </p>
-        <h3 class="bericht__titel"><button class="bericht__opener" type="button" data-opent="koffiesessie-vermogensarchitectuur">Inspiratiesessie: Van versnipperd vermogen naar één helder overzicht</button></h3>
+        <h3 class="bericht__titel"><a class="bericht__opener" href="blijf-op-koers/koffiesessie-vermogensarchitectuur.html">Inspiratiesessie: Van versnipperd vermogen naar één helder overzicht</a></h3>
         <p class="bericht__inleiding">Een nuchtere ontbijtsessie over vermogensarchitectuur: hoe brengt u bankrelaties, vennootschappen, vastgoed en privébezit samen in één transparant kompas?</p>
         <p class="bericht__voet">
           <span class="bericht__extra">Aanmelden voor 12 november</span>
           <span class="bericht__lees" aria-hidden="true">Lees meer <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></span>
         </p>
-        <div class="bericht__volledig" id="tekst-koffiesessie-vermogensarchitectuur">
-          <dl class="lezer__gegevens"><div><dt>Wanneer</dt><dd>Donderdag 19 november 2026 · 08:30 tot 10:30</dd></div><div><dt>Waar</dt><dd>Kantoor Polares, Dirk Martensstraat 41, Aalst</dd></div></dl>
-          <p>Veel vermogende families werken door de jaren heen samen met verschillende private banks, boekhouders, notarissen en vastgoedbeheerders. Elk van die partijen levert degelijk werk binnen zijn eigen domein, maar niemand bewaart het helikopteroverzicht.</p><p>Tijdens deze ontbijtsessie demonstreren we hoe u via systematische vermogensmonitoring:</p><ul><li>Inzicht krijgt in de werkelijke globale kosten en rendementen over alle banken heen.</li><li>Dubbele risico's en verborgen correlaties tijdig detecteert.</li><li>De brug slaat tussen het vermogen in uw vennootschap en uw doelstellingen op lange termijn.</li></ul><p>Deelname is kosteloos maar registratie is verplicht wegens de kleinschalige opzet. Koffie en ontbijt worden verzorgd vanaf 08:15.</p><p><strong>Interesse?</strong> Mail naar <a href="mailto:info@polares.be?subject=Inschrijving%20Inspiratiesessie%20Vermogensarchitectuur">info@polares.be</a>.</p>
-        </div>
       </article>
 
-      <article class="bericht" data-soort="inzicht" data-id="zorgvolmacht-het-startpunt">
+      <article class="bericht" data-soort="inzicht">
         <p class="bericht__kop">
           <span class="badge badge--inzicht">Inzicht</span>
           <time class="bericht__datum" datetime="2026-09-08">8 september 2026</time>
         </p>
-        <h3 class="bericht__titel"><button class="bericht__opener" type="button" data-opent="zorgvolmacht-het-startpunt">Waarom een zorgvolmacht het onmisbare vertrekpunt is van elk vermogenskompas</button></h3>
+        <h3 class="bericht__titel"><a class="bericht__opener" href="blijf-op-koers/zorgvolmacht-het-startpunt.html">Waarom een zorgvolmacht het onmisbare vertrekpunt is van elk vermogenskompas</a></h3>
         <p class="bericht__inleiding">Veel ondernemers focussen op successierechten bij overlijden, maar staan zelden stil bij onverwachte wilsonbekwaamheid. Hoe beschermt u uw onderneming en familie tijdig?</p>
         <p class="bericht__voet">
           <span class="bericht__extra">4 min leestijd</span>
           <span class="bericht__lees" aria-hidden="true">Lees meer <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></span>
         </p>
-        <div class="bericht__volledig" id="tekst-zorgvolmacht-het-startpunt">
-          <p>Wanneer we met families spreken over vermogensplanning, gaat de aandacht traditioneel naar wat er gebeurt 'als iemand er niet meer is'. Fiscale optimalisatie van erfenissen is bekend terrein. Maar het grootste risico voor familiale ondernemingen ontstaat dikwijls wanneer een sleutelfiguur nog wél leeft, doch plots wilsonbekwaam wordt door ziekte of ongeval.</p><p>Zonder voorzorgsmaatregelen treedt in België de wetgeving rond buitengerechtelijke bescherming in werking. Bankrekeningen kunnen worden geblokkeerd, beslissingen in de vennootschap vallen stil, en voor elke noemenswaardige transactie moet toestemming worden gevraagd aan de vrederechter. Dit kan de continuïteit van uw bedrijf en het comfort van uw gezin maandenlang verlammen.</p><p>Met een <strong>zorgvolmacht</strong> legt u vooraf vast wie uw stem vertegenwoordigt in de vennootschap, wie betalingen mag verrichten en onder welke voorwaarden vermogensoverdrachten mogen worden voortgezet. Het is geen document dat u in een la bewaart, maar een levend onderdeel van uw vermogensarchitectuur.</p><p>Polares adviseert om uw zorgvolmacht minstens om de drie jaar te evalueren tegen het licht van gewijzigde familiale situaties en wetgeving.</p>
-        </div>
       </article>
 
-      <article class="bericht" data-soort="nieuws" data-id="versterking-vermogensmonitoring">
+      <article class="bericht" data-soort="nieuws">
         <p class="bericht__kop">
           <span class="badge badge--nieuws">Nieuws</span>
           <time class="bericht__datum" datetime="2026-08-15">15 augustus 2026</time>
         </p>
-        <h3 class="bericht__titel"><button class="bericht__opener" type="button" data-opent="versterking-vermogensmonitoring">Polares breidt expertise uit met versterking in vermogensmonitoring en familierecht</button></h3>
+        <h3 class="bericht__titel"><a class="bericht__opener" href="blijf-op-koers/versterking-vermogensmonitoring.html">Polares breidt expertise uit met versterking in vermogensmonitoring en familierecht</a></h3>
         <p class="bericht__inleiding">Om families met complexe vermogensstructuren en vastgoedportefeuilles nog gerichter te begeleiden, versterken wij onze adviespraktijk in Aalst.</p>
         <p class="bericht__voet">
           <span class="bericht__extra">3 min leestijd</span>
           <span class="bericht__lees" aria-hidden="true">Lees meer <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></span>
         </p>
-        <div class="bericht__volledig" id="tekst-versterking-vermogensmonitoring">
-          <p>Als onafhankelijke vertrouwenspersoon is onze belofte eenvoudig: wij staan aan dezelfde kant van de tafel als u. We verkopen geen bancaire producten en ontvangen geen commissies van derden. Onze enige leidraad is het belang van uw familie en onderneming.</p><p>Om aan de groeiende vraag naar onafhankelijke vermogensmonitoring en fiscale screening te voldoen, hebben we ons team recent versterkt met een senior specialist in vermogensarchitectuur en familierecht. Hierdoor kunnen we families met versnipperde vermogens (meerdere banken, buitenlands vastgoed en participaties) een nog completer en actueler sturend dashboard bieden.</p><p>Wilt u uw huidige vermogensstructuur of bankrapportages eens onafhankelijk laten toetsen? Neem gerust contact op voor een vertrouwelijk kennismakingsgesprek.</p>
-        </div>
       </article>
 
-      <article class="bericht" data-soort="inzicht" data-id="vastgoed-vennootschap-of-prive">
+      <article class="bericht" data-soort="inzicht">
         <p class="bericht__kop">
           <span class="badge badge--inzicht">Inzicht</span>
           <time class="bericht__datum" datetime="2026-07-28">28 juli 2026</time>
         </p>
-        <h3 class="bericht__titel"><button class="bericht__opener" type="button" data-opent="vastgoed-vennootschap-of-prive">Vastgoed in de vennootschap of privé: de bakens heruitzetten voor 2027</button></h3>
+        <h3 class="bericht__titel"><a class="bericht__opener" href="blijf-op-koers/vastgoed-vennootschap-of-prive.html">Vastgoed in de vennootschap of privé: de bakens heruitzetten voor 2027</a></h3>
         <p class="bericht__inleiding">Door verschuivingen in rentevoeten, meerwaardebelastingen en fiscale hervormingen herbekijken veel ondernemers hun vastgoedstrategie. Een heldere analyse.</p>
         <p class="bericht__voet">
           <span class="bericht__extra">5 min leestijd</span>
           <span class="bericht__lees" aria-hidden="true">Lees meer <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></span>
         </p>
-        <div class="bericht__volledig" id="tekst-vastgoed-vennootschap-of-prive">
-          <p>De klassieke reflex om elk nieuw vastgoedpand onder te brengen in een patrimoniumvennootschap staat al geruime tijd onder druk. Verscherpte controles op vruchtgebruik, de evolutie van de liquidatiereserve en de fiscaliteit bij verkoop maken dat er geen 'standaardoplossing' meer bestaat.</p><p>In dit inzicht zetten we de belangrijkste afwegingscriteria op een rij:</p><ul><li><strong>Woonvastgoed vs. professioneel vastgoed:</strong> Waarom privébezit van residentieel vastgoed vaak flexibeler en fiscaal vriendelijker uitdraait op lange termijn.</li><li><strong>De exit-strategie:</strong> Vastgoed in een vennootschap stoppen is eenvoudig; het er later zonder fiscale averij uithalen is dat allerminst.</li><li><strong>Successie van stenen:</strong> De schenkingsrechten op onroerend goed versus de vlakke schenkingstarieven voor roerende goederen en familiale aandelen.</li></ul><p>Een doordacht advies vertrekt altijd vanuit uw persoonlijke levensfase en de gewenste cashflow voor de toekomst.</p>
-        </div>
       </article>
 
-      <article class="bericht" data-soort="nieuws" data-id="terugblik-partnermeeting-2026">
+      <article class="bericht" data-soort="nieuws">
         <p class="bericht__kop">
           <span class="badge badge--nieuws">Nieuws</span>
           <time class="bericht__datum" datetime="2026-06-20">20 juni 2026</time>
         </p>
-        <h3 class="bericht__titel"><button class="bericht__opener" type="button" data-opent="terugblik-partnermeeting-2026">Terugblik: Jaarlijkse partnermeeting over geopolitieke stabiliteit en vermogensbescherming</button></h3>
+        <h3 class="bericht__titel"><a class="bericht__opener" href="blijf-op-koers/terugblik-partnermeeting-2026.html">Terugblik: Jaarlijkse partnermeeting over geopolitieke stabiliteit en vermogensbescherming</a></h3>
         <p class="bericht__inleiding">Samen met onze juridische en fiscale netwerkpartners stonden we stil bij de economische vooruitzichten en de betekenis daarvan voor onze cliënten.</p>
         <p class="bericht__voet">
           <span class="bericht__extra">2 min leestijd</span>
           <span class="bericht__lees" aria-hidden="true">Lees meer <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></span>
         </p>
-        <div class="bericht__volledig" id="tekst-terugblik-partnermeeting-2026">
-          <p>In een wereld die beweegt, is een vast navigatiepunt essentieel. Tijdens onze jaarlijkse zomersessie met externe experts (notarissen, fiscalisten en vermogensanalisten) bespraken we de implicaties van de Europese begrotingskaders, inflatiedruk en de veranderende regels rond familiebedrijven.</p><p>De voornaamste conclusie: proactiviteit loont. Families die periodiek hun vermogensstructuur toetsen aan onvoorziene scenario's, ervaren meer rust en wendbaarheid, ongeacht de economische conjunctuur.</p><p>We bedanken alle aanwezigen voor de inspirerende gedachtewisselingen.</p>
-        </div>
       </article>
       <!-- EIND_BERICHTEN -->
     </div>
@@ -445,20 +444,6 @@
     </section>
   </main>
 
-  <!-- Leesvenster: de volledige tekst staat al in de kaart, dit venster toont
-       hem alleen groter. Zonder JavaScript blijft die tekst onder de kaart staan. -->
-  <dialog class="lezer" id="lezer" aria-labelledby="lezerTitel">
-    <div class="lezer__doos">
-      <button class="lezer__sluit" id="lezerSluit" type="button" aria-label="Venster sluiten">&#x00D7;</button>
-      <p class="lezer__kop"><span class="badge" id="lezerBadge"></span><span class="lezer__datum" id="lezerDatum"></span></p>
-      <h2 class="lezer__titel" id="lezerTitel"></h2>
-      <div class="lezer__tekst" id="lezerTekst"></div>
-      <p class="lezer__voet">
-        <a class="btn" id="lezerActie" href="mailto:info@polares.be">Contact opnemen</a>
-        <button class="btn btn--rand" type="button" id="lezerSluitKnop">Sluiten</button>
-      </p>
-    </div>
-  </dialog>
 
   <footer class="footer">
     <div class="container">
@@ -536,12 +521,11 @@
       });
     })();
 
-    // Filters, leesvenster en het rustig opkomen van de kaarten.
+    // Filters en het rustig opkomen van de kaarten.
     (function () {
       var raster   = document.getElementById('berichten');
       var niets    = document.getElementById('berichtenNiets');
       var uitgel   = document.querySelector('.uitgelicht');
-      var lezer    = document.getElementById('lezer');
       if (!raster) return;
       var kaarten  = [].slice.call(document.querySelectorAll('.bericht'));
 
@@ -570,46 +554,6 @@
         k.addEventListener('click', function () { filter(k.getAttribute('data-soort')); });
       });
 
-      // ── leesvenster ────────────────────────────────────────────
-      var badge = document.getElementById('lezerBadge');
-      var datum = document.getElementById('lezerDatum');
-      var titel = document.getElementById('lezerTitel');
-      var tekst = document.getElementById('lezerTekst');
-      var actie = document.getElementById('lezerActie');
-      var laatsteKnop = null;
-
-      function open(bron, knop) {
-        var b = bron.querySelector('.badge');
-        var t = bron.querySelector('time');
-        var k = bron.querySelector('.bericht__opener');
-        var v = bron.querySelector('.bericht__volledig');
-        badge.textContent = b ? b.textContent.trim() : '';
-        badge.className = 'badge' + (b ? ' ' + b.className.replace('badge', '').trim() : '');
-        datum.textContent = t ? t.textContent.trim() : '';
-        titel.textContent = k ? k.textContent.trim() : '';
-        tekst.innerHTML = v ? v.innerHTML : '';
-        var evenement = bron.getAttribute('data-soort') === 'evenement';
-        actie.textContent = evenement ? 'Aanmelden' : 'Contact opnemen';
-        actie.href = 'mailto:info@polares.be?subject=' +
-          encodeURIComponent((evenement ? 'Aanmelding: ' : 'Vraag over: ') + titel.textContent);
-        laatsteKnop = knop;
-        if (typeof lezer.showModal === 'function') lezer.showModal(); else lezer.setAttribute('open', '');
-      }
-      function sluit() {
-        if (typeof lezer.close === 'function') lezer.close(); else lezer.removeAttribute('open');
-        if (laatsteKnop) laatsteKnop.focus();
-      }
-
-      document.addEventListener('click', function (ev) {
-        var knop = ev.target.closest && ev.target.closest('.bericht__opener');
-        if (!knop) return;
-        var bron = knop.closest('.bericht, .uitgelicht');
-        if (bron) { ev.preventDefault(); open(bron, knop); }
-      });
-      document.getElementById('lezerSluit').addEventListener('click', sluit);
-      document.getElementById('lezerSluitKnop').addEventListener('click', sluit);
-      lezer.addEventListener('click', function (ev) { if (ev.target === lezer) sluit(); });
-      lezer.addEventListener('close', function () { if (laatsteKnop) laatsteKnop.focus(); });
 
       // ── opkomen bij het scrollen ───────────────────────────────
       var opkomers = [].slice.call(document.querySelectorAll('.uitgelicht, .bericht, .koers-slot'));

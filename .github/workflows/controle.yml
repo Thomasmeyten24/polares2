@@ -1,8 +1,8 @@
 name: Consistentiecontrole
 
 # Draait bij elke push en pull request. Controleert of feiten die op meerdere
-# plaatsen in de HTML staan — contactgegevens, ondernemingsnummer, FAQ-teksten —
-# nog overal gelijk zijn, en of de kaarten op Blijf op koers nog overeenkomen
+# plaatsen in de HTML staan (contactgegevens, ondernemingsnummer, FAQ-teksten)
+# nog overal gelijk zijn, en of de pagina's van Blijf op koers nog overeenkomen
 # met data/berichten.json. Gebruikt alleen de Python-standaardbibliotheek.
 
 on: [push, pull_request]
@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: "3.12"
       - run: python tools/check-consistentie.py
-      # De berichten staan in data/berichten.json; de kaarten in de pagina
-      # worden daaruit geschreven. Loopt dat uiteen, dan faalt de build hier —
-      # niet stilletjes op de site.
+      # De berichten staan in data/berichten.json; het overzicht, de pagina
+      # per bericht en de sitemap worden daaruit geschreven. Loopt dat uiteen,
+      # dan faalt de build hier en niet stilletjes op de site.
       - run: python tools/berichten.py --check

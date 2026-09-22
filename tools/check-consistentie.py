@@ -197,6 +197,61 @@ controleer("meridiaan heeft onderwerpen", len(secties) >= 2, f"gevonden {secties
 for sectie in secties:
     controleer(f"meridiaan verwijst naar bestaande sectie #{sectie}", sectie in ankers)
 
+# ── 7. De pagina's per bericht ───────────────────────────────────────────────
+# Elk bericht heeft een eigen adres, zodat het vanuit Google of vanaf sociale
+# media rechtstreeks te bereiken is. Die pagina's worden geschreven door
+# tools/berichten.py; hier controleren we of ze er zijn, of het overzicht ernaar
+# verwijst en of ze in de sitemap staan.
+berichten = json.loads(lees("data/berichten.json"))
+controleer("berichten.json bevat berichten", len(berichten) > 0)
+
+for b in berichten:
+    pad = f"blijf-op-koers/{b['id']}.html"
+    bestaat = (ROOT / pad).exists()
+    controleer(f"{pad} bestaat", bestaat)
+    if not bestaat:
+        continue
+
+    blad = lees(pad)
+    tekst = zichtbare_tekst(blad)
+    adres = f"https://polares.be/{pad}"
+
+    controleer(f"overzicht linkt naar {b['id']}", f'href="{pad}"' in koers)
+    controleer(f"{b['id']} staat in de sitemap", f"<loc>{adres}</loc>" in sitemap)
+    controleer(f"canoniek adres van {b['id']} klopt", f'rel="canonical" href="{adres}"' in blad)
+    controleer(f"titel van {b['id']} staat in de pagina", b["titel"] in tekst)
+    controleer(f"juridische naam in {pad}", naam in tekst)
+    controleer(f"ondernemingsnummer in {pad}", kbo in cijfers(tekst))
+
+    ld_blad = re.search(r'application/ld\+json">([\s\S]*?)</script>', blad)
+    geldig = False
+    if ld_blad:
+        try:
+            json.loads(ld_blad.group(1))
+            geldig = True
+        except json.JSONDecodeError as fout:
+            geldig = str(fout)
+    controleer(f"structured data van {b['id']} is geldige JSON", geldig is True,
+               "" if geldig is True else str(geldig))
+
+    beeld = re.search(r'property="og:image" content="https://polares\.be/([^"]+)"', blad)
+    controleer(f"voorbeeldafbeelding van {b['id']} aanwezig",
+               bool(beeld) and (ROOT / beeld.group(1)).exists(),
+               beeld.group(1) if beeld else "geen og:image")
+
+    # relatieve links vanuit blijf-op-koers/ wijzen een map omhoog
+    for href in sorted(set(re.findall(r'(?:src|href)="\.\./([^"#?]+)"', blad))):
+        controleer(f"{href} (vanuit {pad}) bestaat", (ROOT / href).exists())
+    for href in sorted(set(re.findall(r'href="\.\./index\.html#([^"]+)"', blad))):
+        controleer(f"anker index.html#{href} (vanuit {pad}) bestaat", href in ankers)
+    for href in sorted(set(re.findall(r'href="([a-z0-9-]+\.html)"', blad))):
+        controleer(f"{href} (vanuit {pad}) bestaat", (ROOT / "blijf-op-koers" / href).exists())
+
+# Andersom: geen weespagina's van berichten die uit de JSON verdwenen zijn
+hoort = {f"{b['id']}.html" for b in berichten}
+for p in sorted((ROOT / "blijf-op-koers").glob("*.html")) if (ROOT / "blijf-op-koers").is_dir() else []:
+    controleer(f"blijf-op-koers/{p.name} hoort bij een bericht", p.name in hoort)
+
 # ── Uitslag ──────────────────────────────────────────────────────────────────
 print(f"\n{len(gedaan)} controles geslaagd")
 if fouten:
