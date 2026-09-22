@@ -236,6 +236,8 @@
       --dur-1:150ms; --dur-2:300ms; --dur-3:600ms;
       /* layout */
       --container:1280px; --pad:clamp(1.5rem,5vw,5rem); --section-y:clamp(5rem,10vw,8rem);
+      /* het sterretje als masker, voor waar het geen eigen <svg> kan zijn */
+      --ster: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z'/%3E%3C/svg%3E");
     }
 
     /* ── Reset & base ────────────────────────────────────────── */
@@ -711,6 +713,9 @@
     }
     /* De constellatie in het wit op de donkerblauwe sectie: de tekeningen
        worden via een filter wit, banen en trajecten krijgen een lichte lijn. */
+    /* stond vroeger als inline stijl op het element zelf; zo kan een
+       mediaregel de maat wel aanpassen */
+    .uv-scene { display: block; width: 100%; height: auto; overflow: visible; }
     .uv-scene image.uv-art { filter: brightness(0) invert(1); }
     .uv-scene .uv-orbits { stroke: rgba(255,255,255,.6); stroke-width: .3; }
     .uv-scene .uv-paths { stroke: rgba(255,255,255,.55); stroke-width: .3; }
@@ -773,7 +778,18 @@
         scrollbar-width: thin;
         padding-bottom: .5rem;
       }
-      .visie__scroll .uv-scene { min-width: 960px; }
+      /* De hoogte stuurt, de breedte volgt uit de verhouding van de viewBox
+         (741 op 359). Een vaste breedte van 960px maakte de kaart hoger dan het
+         scherm: dan zag je alleen de bovenkant en bleef de onderste helft een
+         donker vlak. Zo past het hele hoofdstuk op één scherm en blijven de
+         hemellichamen met 70px ruim groot genoeg om aan te tikken. */
+      .visie__scroll .uv-scene {
+        width: auto;
+        height: clamp(200px, 38svh, 330px);
+        min-width: 0;
+        max-width: none;
+      }
+      .visie-tip--panel { min-height: 0; }
     }
 
     /* Scrollgestuurde zoom: alleen actief als JS .visie--zoom zet (niet bij
@@ -1741,11 +1757,30 @@
 
     /* ── Telefoon ────────────────────────────────────────────── */
     @media (max-width: 600px) {
-      /* De kernwoorden stonden op één rij met sterretjes ertussen. Bij het
-         afbreken bleef er telkens een sterretje alleen achter aan het eind of
-         het begin van een regel. Onder elkaar houdt de rij haar ritme. */
-      .missie__triade { flex-direction: column; gap: .85rem; }
+      /* De kernwoorden stonden op één rij met losse sterretjes ertussen; bij
+         het afbreken bleef er telkens één alleen achter aan het begin of het
+         eind van een regel. Onder elkaar zetten loste dat op maar kostte vier
+         extra regels, en korte rijen als "Opbouw · Behoud · Overdracht" werden
+         er net langer van. Het sterretje hangt nu aan het woord ervoor: het kan
+         niet meer alleen komen te staan, en de rij blijft zo kort als de tekst
+         zelf. */
+      .missie__triade { gap: .3rem 1rem; }
+      .missie__triade-sep { display: none; }
       .missie__triade-item { text-align: center; }
+      .missie__triade-item::after {
+        content: "";
+        display: inline-block;
+        width: .55em;
+        height: .55em;
+        margin-left: .8rem;
+        vertical-align: .04em;
+        color: var(--navy-400);
+        background: currentColor;
+        -webkit-mask: var(--ster) no-repeat center/contain;
+        mask: var(--ster) no-repeat center/contain;
+      }
+      .missie__triade-item:last-child::after { content: none; }
+      .missie__triade--light .missie__triade-item::after { color: var(--navy-200); }
 
       /* De hero stond bijna een half scherm laag; op een telefoon is dat net
          het scherm waarop alles moet gebeuren. */
@@ -2003,7 +2038,7 @@
            apart bestand in assets/uv/ zodat de HTML licht blijft en het in de cache gaat. -->
       <div class="visie__scene" id="visieScene" data-reveal>
         <div class="visie__scroll" id="visieScroll">
-        <svg class="uv-scene" viewBox="337 248 741 359" width="100%" style="display:block;height:auto;overflow:visible;" role="group" aria-label="Universum Polares: interactief overzicht">
+        <svg class="uv-scene" viewBox="337 248 741 359" role="group" aria-label="Universum Polares: interactief overzicht">
 
           <!-- Concentrische banen (onderbroken waar ze achter een hemellichaam lopen) -->
           <g class="uv-orbits" fill="none" stroke="#11314d" stroke-width=".25" stroke-miterlimit="10">
