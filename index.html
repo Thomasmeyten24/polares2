@@ -594,14 +594,24 @@
       background: var(--white);
       border-radius: 0 0 28px 28px;
     }
-    /* Twee kolommen: links de satelliet (in plaats van een titel), rechts de missie. */
-    .missie__grid {
+    /* De drie rijen van dit hoofdstuk (de satelliet met de missie, Uw familie en
+       Uw bedrijf) delen één raster: de illustratie links in een kolom van vaste
+       breedte, de tekst rechts. Zo staan de drie illustraties op één as en
+       beginnen de drie tekstblokken op dezelfde lijn. Het blok is smaller dan de
+       container en staat als geheel gecentreerd in de sectie. */
+    .missie__grid,
+    .portal-col {
       display: grid;
-      grid-template-columns: .9fr 1.1fr;
+      grid-template-columns: clamp(180px, 24vw, 340px) minmax(0, 1fr);
       gap: clamp(2.5rem, 6vw, 6rem);
       align-items: center;
-      margin-bottom: clamp(3rem, 6vw, 4.5rem);
     }
+    /* De band staat op de blokken zelf, niet op .portal-col: die is een
+       rasteritem van .advies__grid en zou met een automarge krimpen tot de
+       breedte van zijn inhoud, waardoor de rijen niet meer zouden uitlijnen. */
+    .missie__grid,
+    .advies__grid { max-width: 970px; margin-inline: auto; }
+    .missie__grid { margin-bottom: clamp(3rem, 6vw, 4.5rem); }
     .missie__kompas {
       width: clamp(110px, 12vw, 160px);
       height: auto;
@@ -618,7 +628,7 @@
       line-height: 1.75;
       letter-spacing: .005em;
       color: var(--navy-500);
-      max-width: 40ch;
+      max-width: 34rem;
       text-wrap: pretty;
       /* Cantata One heeft maar één gewicht: een contour in de achtergrondkleur
          maakt de letters subtiel fijner */
@@ -986,22 +996,13 @@
     #missie .missie--live .missie__grid,
     #missie .missie--live .missie__slot,
     #missie .missie--live .portal-col { transition: opacity .8s var(--ease-out), transform .8s var(--ease-out); }
-    /* Uw familie en Uw bedrijf onder elkaar: tekst links, illustratie rechts,
-       zodat de stippellijn van de ene illustratie in de volgende vloeit. */
+    /* Uw familie en Uw bedrijf onder elkaar, allebei op dezelfde manier
+       uitgelijnd; het raster zelf staat hierboven bij .missie__grid. */
     .advies__grid {
       display: grid;
       row-gap: clamp(3.5rem, 7vw, 5.5rem);
     }
-    .portal-col {
-      display: grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap: clamp(2.5rem, 6vw, 6rem);
-      align-items: center;
-    }
-    .portal__copy { max-width: 44ch; }
-    /* gespiegelde rij: zelfde kolommen als de satelliet erboven */
-    .portal-col--rev { grid-template-columns: .9fr 1.1fr; }
-    .portal-col--rev .portal__art { order: -1; }
+    .portal__copy { max-width: 34rem; }
     .portal__art {
       display: block;
       width: auto;
@@ -1020,7 +1021,7 @@
     .portal-col__body { font-size: 15px; color: var(--text-soft); margin-bottom: 1.5rem; }
     @media (max-width: 767px) {
       .portal-col { grid-template-columns: 1fr; gap: 1.5rem; }
-      .portal-col .portal__art { order: -1; justify-self: start; }
+      .portal-col .portal__art { justify-self: start; }
     }
     .more-link {
       display: inline-flex;
@@ -1825,8 +1826,8 @@
     <!-- ── I · Missie ─────────────────────────────────────────── -->
     <section id="missie" aria-labelledby="missie-h2">
       <div class="container missie__flow" id="missieFlow">
-        <!-- Gestippelde lijn (desktop): ontstaat onder de kernwoorden en loopt langs de
-             satelliet naar Uw familie en daarna Uw bedrijf. Getekend door JS. -->
+        <!-- Gestippelde lijn (desktop): ontstaat onder de kernwoorden en loopt langs
+             de satelliet, Uw familie en Uw bedrijf omlaag. Getekend door JS. -->
         <svg class="missie__path" id="missiePath" aria-hidden="true" focusable="false">
           <defs>
             <mask id="missieMask" maskUnits="userSpaceOnUse" x="-100" y="-100" width="6000" height="12000">
@@ -1877,6 +1878,7 @@
           <div class="advies__grid">
             <!-- Uw familie -->
             <div class="portal-col" data-reveal>
+              <img class="portal__art" src="assets/uv/familie.webp" alt="" width="600" height="283" loading="lazy" decoding="async">
               <div class="portal__copy">
                 <h3 class="portal__label">Uw familie</h3>
                 <p class="portal-col__body">Wat u opbouwt, draagt meer dan waarde alleen. Het vertelt een verhaal van ondernemerschap, verantwoordelijkheid en toekomstvisie.</p>
@@ -1887,11 +1889,11 @@
                 </svg>
                 </a>
               </div>
-              <img class="portal__art" src="assets/uv/familie.webp" alt="" width="600" height="283" loading="lazy" decoding="async">
             </div>
 
-            <!-- Uw bedrijf (gespiegeld: illustratie links, tekst rechts) -->
-            <div class="portal-col portal-col--rev" data-reveal>
+            <!-- Uw bedrijf -->
+            <div class="portal-col" data-reveal>
+              <img class="portal__art" src="assets/uv/tandwielen.webp" alt="" width="520" height="348" loading="lazy" decoding="async">
               <div class="portal__copy">
                 <h3 class="portal__label">Uw bedrijf</h3>
                 <p class="portal-col__body">Uw onderneming is meer dan een activiteit of balans. Ze weerspiegelt visie, engagement en jaren van opgebouwd vertrouwen.</p>
@@ -1902,7 +1904,6 @@
                 </svg>
                 </a>
               </div>
-              <img class="portal__art" src="assets/uv/tandwielen.webp" alt="" width="520" height="348" loading="lazy" decoding="async">
             </div>
           </div>
         </div>
@@ -3723,10 +3724,11 @@
     // ── Hoofdstuk I: lijn van de kernwoorden naar satelliet en doelgroepen ──
     // Zelfde principe als het traject: de lijn tekent zich mee bij het scrollen,
     // met een sterretje aan de kop. Ze loopt van de kernwoorden naar de satelliet
-    // (links), dan naar de illustratie van Uw familie (rechts), terug naar links
-    // naar de tandwielen van Uw bedrijf, langs de slotregel en tot slot naar de
-    // Poolster van de constellatie in hoofdstuk II, waarna de titel verschijnt. Alleen als de kolommen naast elkaar staan; op
-    // mobiel zou de lijn door de tekst lopen.
+    // (links), recht omlaag langs de illustraties van Uw familie en Uw bedrijf,
+    // die op dezelfde as staan, dan terug naar het midden langs de slotregel en
+    // tot slot naar de Poolster van de constellatie in hoofdstuk II, waarna de
+    // titel verschijnt. Alleen als de kolommen naast elkaar staan; op mobiel zou
+    // de lijn door de tekst lopen.
     (function () {
       var wrap = document.getElementById('missieFlow');
       var svg = document.getElementById('missiePath');
