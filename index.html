@@ -1754,6 +1754,15 @@
 
       /* de kaart met de uitleg stond met haar rand tegen het scherm */
       .visie-tip--panel { margin-inline: var(--pad); width: auto; }
+
+      /* Een vervaagde achtergrond achter een vaste balk laat de telefoon bij
+         elke frame opnieuw door de hele pagina kijken; dat kost merkbaar
+         soepelheid. De balk is toch al 96% dekkend, dus je ziet er niets van. */
+      .nav.scrolled {
+        background: var(--paper);
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
