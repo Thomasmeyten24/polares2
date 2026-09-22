@@ -805,7 +805,11 @@
       scroll-margin-top: 76px;
     }
     .visie--zoom .koers-sheet {
-      margin-top: -85svh;              /* schuift over de tweede helft van de overgang */
+      /* Het witte blad schuift alvast op terwijl de constellatie stilstaat. Bij
+         -85svh stond het aan het eind van dat wachtvenster al tot over de
+         onderste hemellichamen, precies waar de bezoeker nog moet kunnen
+         tikken. Nu blijven die vrij tot de bol wegvliegt. */
+      margin-top: -70svh;
       padding-top: 6svh;
     }
 
@@ -3338,7 +3342,13 @@
 
       sec.classList.add('visie--zoom');
 
-      var NAV = 76, HOLD = .08;
+      // HOLD is het deel van de reis waarin de constellatie stil blijft staan en
+      // aanklikbaar is; daarna vliegt de wereldbol weg. De reis duurt precies
+      // één schermhoogte, dus met de vroegere .08 was het klikvenster nog geen
+      // tachtig pixels scrollen: één tik op het muiswiel en de hemellichamen
+      // waren al dood. Op de helft heeft de bezoeker een half scherm de tijd om
+      // rond te kijken, en gaat de bol daarna in één vlotte beweging weg.
+      var NAV = 76, HOLD = .5;
       var stickTop = NAV, zooming = false, ticking = false;
 
       function clamp(v) { return v < 0 ? 0 : v > 1 ? 1 : v; }
