@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Uw onderneming — begeleiding voor ondernemers | Polares</title>
-  <meta name="description" content="Financiële analyse en planning, fusies en overnames en bedrijfsoverdracht voor ondernemers — Polares, Aalst.">
+  <title>Uw onderneming: begeleiding voor ondernemers | Polares</title>
+  <meta name="description" content="Financiële analyse en planning, fusies en overnames en bedrijfsoverdracht voor ondernemers. Polares, Aalst.">
   <link rel="canonical" href="https://polares.be/uw-bedrijf.html">
   <meta name="theme-color" content="#071826">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="nl_BE">
   <meta property="og:site_name" content="Polares">
-  <meta property="og:title" content="Uw onderneming — begeleiding voor ondernemers | Polares">
-  <meta property="og:description" content="Financiële analyse en planning, fusies en overnames en bedrijfsoverdracht voor ondernemers — Polares, Aalst.">
+  <meta property="og:title" content="Uw onderneming: begeleiding voor ondernemers | Polares">
+  <meta property="og:description" content="Financiële analyse en planning, fusies en overnames en bedrijfsoverdracht voor ondernemers. Polares, Aalst.">
   <meta property="og:url" content="https://polares.be/uw-bedrijf.html">
   <meta property="og:image" content="https://polares.be/assets/og-image.png">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -53,7 +53,7 @@
     .container{max-width:var(--container);margin-inline:auto;padding-inline:var(--pad)}
     .label{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-soft)}
 
-    /* Navigatie — gelijk aan de homepage: alleen het logo en drie streepjes.
+    /* Navigatie, gelijk aan de homepage: alleen het logo en drie streepjes.
        Op de homepage is de balk doorzichtig zolang het grote herologo in beeld
        staat; deze pagina begint wit, dus staat ze hier meteen in haar lichte
        vorm. */
@@ -73,7 +73,7 @@
     .nav__burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-6px) rotate(-45deg)}
 
     /* Menu: een klein paneel onder de knop, geen schermvullend vlak. Het menu
-       is een zijstap, geen bestemming — dezelfde kaartvorm als de rest van de
+       is een zijstap, geen bestemming: dezelfde kaartvorm als de rest van de
        site: wit, haarlijn, zachte schaduw. */
     .overlay{position:fixed;top:84px;right:var(--pad);z-index:300;
       width:min(300px,calc(100vw - 2 * var(--pad)));
@@ -158,7 +158,7 @@
     .flow--live .station.is-reached .station__stop::after{animation:ping 1.4s var(--ease-out) .15s 1 both}
     @keyframes ping{0%{opacity:.9;transform:scale(.85)}100%{opacity:0;transform:scale(1.4)}}
 
-    /* Footer — gelijk aan de homepage */
+    /* Footer, gelijk aan de homepage */
     .footer{background:var(--navy-900);border-top:1px solid rgba(255,255,255,.08);padding-block:clamp(3rem,6vw,5rem)}
     .footer__grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:2.5rem}
     .footer__logo{width:150px;height:auto;margin-bottom:1.25rem}
@@ -193,7 +193,7 @@
 </head>
 <body>
   <header class="nav">
-    <a class="brand" href="index.html" aria-label="Polares — naar de homepage">
+    <a class="brand" href="index.html" aria-label="Polares, naar de homepage">
       <span class="brand__logo" role="img" aria-label="Polares"></span>
     </a>
 
@@ -299,12 +299,12 @@
   <footer class="footer">
     <div class="container">
       <div class="footer__grid">
-        <!-- Kolom 1 — Logo + slagzin -->
+        <!-- Kolom 1: logo en slagzin -->
         <div>
           <img class="footer__logo" src="assets/POLARES_LOGO_WIT_woordmerk.png" alt="Polares" width="1463" height="250" loading="lazy" decoding="async">
           <p class="footer__tagline">Zoals de noordpoolster, helder en richtinggevend voor uw vermogen.</p>
         </div>
-        <!-- Kolom 2 — Pagina's -->
+        <!-- Kolom 2: pagina's -->
         <div>
           <p class="footer__col-title">Pagina's</p>
           <ul class="footer__links">
@@ -315,7 +315,7 @@
             <li><a href="index.html#contact">Contact</a></li>
           </ul>
         </div>
-        <!-- Kolom 3 — Contact -->
+        <!-- Kolom 3: contact -->
         <div>
           <p class="footer__col-title">Contact</p>
           <p class="footer__contact-item">Dirk Martensstraat 41<br>9300 Aalst</p>
@@ -332,7 +332,7 @@
           <a href="algemene-voorwaarden.html">Algemene voorwaarden</a> &middot;
           <a href="privacyverklaring.html">Privacyverklaring</a>
         </p>
-        <p class="footer__coords">50.94° N — 4.04° O</p>
+        <p class="footer__coords">50.94° N, 4.04° O</p>
       </div>
     </div>
   </footer>
@@ -374,7 +374,7 @@
 
     // ── Reis: één ankermodel voor alle trajecten ─────────────────
     // De ster staat op het snijpunt van het traject met een ankerlijn op 70%
-    // schermhoogte. Bij een vlak segment bestaat dat snijpunt niet — daar zijn er
+    // schermhoogte. Bij een vlak segment bestaat dat snijpunt niet; daar zijn er
     // oneindig veel. Daar schuift de ster opzij met scroll/k, met k zo gekozen dat
     // hij nooit verder dan BAND pixels boven het anker uitkomt.
     //
@@ -422,7 +422,7 @@
             // De lijn slaat een illustratie over en de kop wacht aan de rand.
             // Die wachttijd is dode tijd: laat ze schuld aflossen door de kop
             // eerder te laten hervatten. Hoofdstuk I heeft vier van die sprongen
-            // en nauwelijks daling ertussen — zonder dit blijft de ster hangen.
+            // en nauwelijks daling ertussen; zonder dit blijft de ster hangen.
             var gat = Math.abs(sg.y1 - sg.y0);
             var afs = Math.min(schuld * (1 - Math.exp(-gat / TAU)), gat * .7);
             kost = gat - afs; schuld -= afs;
@@ -455,7 +455,7 @@
       }
 
       // De band krimpen tot de ster binnen het plafond blijft. Hoofdstuk I steekt
-      // 1998px over terwijl het maar 582px daalt — daar is simpelweg te weinig
+      // 1998px over terwijl het maar 582px daalt; daar is simpelweg te weinig
       // daling om de opgelopen schuld op af te lossen, dus moet de oversteek daar
       // krapper. Dat gebeurt automatisch in plaats van met een getal per hoofdstuk.
       // Hoe ver de ster boven zijn anker mag uitkomen. Als aandeel van de
@@ -480,8 +480,8 @@
       // in beeld terwijl het ankermodel pas een derde getekend heeft. Dan
       // bepaalt niet de vorm van het pad de snelheid maar het venster.
       //
-      // De reis eindigt op sEind — de ankerstand waarop de sectie volledig in
-      // beeld staat — en krijgt daarvoor precies zoveel scroll als erin past
+      // De reis eindigt op sEind, de ankerstand waarop de sectie volledig in
+      // beeld staat, en krijgt daarvoor precies zoveel scroll als erin past
       // zonder dat de ster het scherm uit zakt. Met W0 de schermpositie van de
       // bovenkant van de inhoud op dat eindmoment geldt
       //
@@ -594,7 +594,7 @@
 
       // Deze pagina loopt wat verder vooruit dan de hoofdstukken op de
       // homepage: de tekstblokken zijn lang en staan liever al klaar voor je
-      // erbij bent. Veel verder kan niet — de ster krijgt dezelfde voorsprong
+      // erbij bent. Veel verder kan niet: de ster krijgt dezelfde voorsprong
       // en zakt er dus evenveel door omlaag op het scherm.
       function voorsprong() { return Math.min(280, window.innerHeight * .26); }
 

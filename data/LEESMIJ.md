@@ -19,13 +19,13 @@ hem erop.
 
 | veld | verplicht | wat |
 |---|---|---|
-| `id` | ja | korte naam zonder spaties, uniek — bijvoorbeeld `ontbijtsessie-mei-2027` |
-| `type` | ja | `evenement`, `nieuws` of `inzicht` — bepaalt het label en het filter |
+| `id` | ja | korte naam zonder spaties, uniek, bijvoorbeeld `ontbijtsessie-mei-2027` |
+| `type` | ja | `evenement`, `nieuws` of `inzicht`; bepaalt het label en het filter |
 | `categorie` | ja | hoe het in de lijst heet, bijvoorbeeld `Inzichten & Advies` |
 | `titel` | ja | de kop |
 | `datum` | ja | `jjjj-mm-dd`; hierop wordt gesorteerd, nieuwste bovenaan |
 | `datumWeergave` | ja | dezelfde datum zoals hij op het scherm hoort, bijvoorbeeld `19 november 2026` |
-| `tijd` | bij een evenement | bijvoorbeeld `08:30 — 10:30` |
+| `tijd` | bij een evenement | bijvoorbeeld `08:30 tot 10:30` |
 | `locatie` | bij een evenement | adres |
 | `deelname` | nee | bijvoorbeeld `Max. 10 families` |
 | `leestijd` | nee | `4 min leestijd`, of bij een evenement `Aanmelden voor 12 november` |

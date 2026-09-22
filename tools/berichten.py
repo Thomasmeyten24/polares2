@@ -4,8 +4,8 @@ Zet data/berichten.json om in de kaarten op blijf-op-koers.html.
 
 Een bericht bestaat op één plaats: data/berichten.json. Dit script schrijft
 daaruit de tellers, het uitgelichte bericht en het kaartenraster in de pagina,
-tussen de BEGIN/EIND-merktekens. Zo staat de tekst gewoon in de HTML — een
-zoekmachine en een linkvoorbeeld zien hem dus — zonder dat iemand hem twee keer
+tussen de BEGIN/EIND-merktekens. Zo staat de tekst gewoon in de HTML, waar een
+zoekmachine en een linkvoorbeeld hem zien, zonder dat iemand hem twee keer
 moet bijhouden.
 
     python tools/berichten.py            # schrijft de pagina bij

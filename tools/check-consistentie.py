@@ -47,7 +47,7 @@ def cijfers(s: str) -> str:
 
 
 def controleer(naam: str, ok: bool, detail: str = "") -> None:
-    (gedaan if ok else fouten).append(f"{naam}{' — ' + detail if detail else ''}")
+    (gedaan if ok else fouten).append(f"{naam}{': ' + detail if detail else ''}")
 
 
 index = lees("index.html")
@@ -68,7 +68,7 @@ try:
     ld = json.loads(ld_ruw.group(1))
     controleer("structured data is geldige JSON", True)
 except json.JSONDecodeError as e:
-    print(f"FOUT: structured data is geen geldige JSON — {e}")
+    print(f"FOUT: structured data is geen geldige JSON: {e}")
     sys.exit(1)
 
 knopen = {n["@type"]: n for n in ld["@graph"]}
@@ -182,7 +182,7 @@ for pad in sorted(verwijzingen):
 # ── 6. Hoofdstuknummering moet doorlopen ─────────────────────────────────────
 # Toen de FAQ erbij kwam moest Contact met de hand van VII naar VIII; zoiets
 # wil je niet nog eens over het hoofd zien.
-romeins = re.findall(r'class="label[^"]*"[^>]*>([IVX]+) —', index)
+romeins = re.findall(r'class="label[^"]*"[^>]*>([IVX]+) ·', index)
 verwacht = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX", "X"][: len(romeins)]
 controleer(
     "hoofdstukken doorlopend genummerd",

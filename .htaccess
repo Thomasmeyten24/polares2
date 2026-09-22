@@ -1,5 +1,5 @@
 # ─────────────────────────────────────────────────────────────────────────────
-# Polares — serverconfiguratie voor Combell (Apache)
+# Polares: serverconfiguratie voor Combell (Apache)
 # Vervangt wat vercel.json deed, plus de redirects van de oude Craft-site.
 #
 # Elke blok staat in <IfModule>: ontbreekt een module op het pakket, dan wordt
@@ -54,7 +54,7 @@ Options -Indexes
 
 # ── 5. Caching ───────────────────────────────────────────────────────────────
 # Let op het verschil: lettertypen wijzigen nooit meer en mogen een jaar
-# blijven staan. Afbeeldingen hebben vaste bestandsnamen zonder versiehash —
+# blijven staan. Afbeeldingen hebben vaste bestandsnamen zonder versiehash, en
 # die een jaar vastzetten betekent dat een vervangen logo een jaar lang oud
 # blijft bij terugkerende bezoekers. Vandaar dertig dagen.
 # Komt er later een build met gehashte bestandsnamen, dan kan dat omhoog.
