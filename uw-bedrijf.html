@@ -898,6 +898,13 @@
 
       function open(knop) {
         vanaf = knop || null;
+        // Een link mag al zeggen wat de bezoeker wil: data-cform="bellen" of
+        // "bericht". Dan hoeft hij die keuze hier niet nog eens te maken.
+        var voorkeur = knop && knop.getAttribute('data-cform');
+        if (voorkeur) {
+          wijzen.forEach(function (w) { w.checked = w.value === voorkeur; });
+          toonBericht();
+        }
         melding.hidden = true;
         form.hidden = false;
         if (typeof venster.showModal === 'function') venster.showModal(); else venster.setAttribute('open', '');
