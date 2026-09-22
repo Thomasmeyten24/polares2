@@ -800,6 +800,9 @@
       border-radius: 28px 28px 0 0;
       margin-top: var(--section-y);
       padding-bottom: clamp(2.5rem, 5vw, 4rem);
+      /* "Ontdek meer" springt hierheen; de vaste navigatiebalk mag de bovenrand
+         niet afdekken */
+      scroll-margin-top: 76px;
     }
     .visie--zoom .koers-sheet {
       margin-top: -85svh;              /* schuift over de tweede helft van de overgang */
@@ -1720,8 +1723,38 @@
       hyphens: auto;
     }
 
-    /* in de smalle mobiele kolom van het traject geeft uitvullen gaten */
-    @media (max-width: 767px) { .koers__text { text-align: left; } }
+    /* In een kolom van een telefoon (zo'n 330px) geeft uitvullen rivieren en
+       een woordafbreking om de twee regels. Daar dus links uitgelijnd. */
+    @media (max-width: 767px) {
+      .missie__text, .portal-col__body, .koers__text, .waarden__intro,
+      .expertise__intro, .team__body, .faq__a,
+      .contact__sub, .visie-tip__body {
+        text-align: left;
+        -webkit-hyphens: manual;
+        hyphens: manual;
+      }
+    }
+
+    /* ── Telefoon ────────────────────────────────────────────── */
+    @media (max-width: 600px) {
+      /* De kernwoorden stonden op één rij met sterretjes ertussen. Bij het
+         afbreken bleef er telkens een sterretje alleen achter aan het eind of
+         het begin van een regel. Onder elkaar houdt de rij haar ritme. */
+      .missie__triade { flex-direction: column; gap: .85rem; }
+      .missie__triade-item { text-align: center; }
+
+      /* De hero stond bijna een half scherm laag; op een telefoon is dat net
+         het scherm waarop alles moet gebeuren. */
+      .hero__inner { margin-top: 4vh; }
+      /* de aanwijzing hoort onder het logo, niet in een hoek */
+      .hero__scroll-cue { right: auto; left: 50%; transform: translateX(-50%); }
+
+      /* tikdoelen: een tekstlink van 20px hoog is te weinig om te raken */
+      .more-link { padding-block: .55rem; }
+
+      /* de kaart met de uitleg stond met haar rand tegen het scherm */
+      .visie-tip--panel { margin-inline: var(--pad); width: auto; }
+    }
 
     @media (prefers-reduced-motion: reduce) {
       *, *::before, *::after {
@@ -3275,6 +3308,11 @@
       var landing = document.querySelector('.koers__icon--overzicht img');
       if (!sec || !track || !stage || !scene || !scroller || !landing) return;
       if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      // Op een telefoon niet. De scène is daar nauwelijks 390px breed, dus de
+      // zoom levert twee schermen leegte op met de hemellichamen ergens buiten
+      // beeld, en tijdens de zoom zijn ze ook niet aantikbaar. Zonder zoom
+      // blijft de constellatie gewoon staan en kan de bezoeker ze aanraken.
+      if (!matchMedia('(min-width: 768px)').matches) return;
 
       var globe = scroller.querySelector('[data-key="leefwereld"]');
       var globeArt = globe && globe.querySelector('.uv-art');
@@ -3431,98 +3469,19 @@
       build();
     });
 
-    // ── Scroll-stop bij de constellatie ──────────────────────────
-    // Wie naar beneden scrolt, houdt halt zodra het witte venster met de
-    // constellatie volledig in beeld staat: zo kan men rustig klikken. "Ontdek
-    // meer" laat de pagina dan zelf verder glijden (de wereldbol vliegt naar het
-    // traject) en geeft het scrollen weer vrij. Naar boven kan altijd; menulinks,
-    // Tab-navigatie en een pagina die al voorbij de constellatie opent, heffen de
-    // stop ook op. Eén keer per bezoek.
+    // ── "Ontdek meer" springt naar het traject ───────────────────
+    // Hier stond een scroll-stop die de pagina vasthield tot de bezoeker op
+    // deze knop klikte. Dat werkte averechts: wie de knop niet zag, kwam niet
+    // meer vooruit, en op een telefoon vervaagde hij net tijdens de zoom.
+    // Scrollen blijft nu altijd vrij; de knop is een snelkoppeling naar het
+    // traject, geen sluis.
     (function () {
-      var track = document.getElementById('visieTrack');
-      var stage = document.getElementById('visieStage');
       var btn = document.getElementById('visieNext');
-      if (!track || !stage || !btn) return;
+      var blad = document.querySelector('.koers-sheet');
+      if (!btn || !blad) return;
       var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var released = false, gliding = false;
-
-      function holdY() {
-        var top = parseFloat(stage.style.top) || 76;
-        return Math.round(track.getBoundingClientRect().top + window.scrollY - top);
-      }
-      function endY() {
-        return holdY() + Math.max(0, track.offsetHeight - stage.offsetHeight);
-      }
-      function atHold() { return !released && window.scrollY >= holdY() - 1; }
-      function release() { released = true; document.documentElement.classList.add('visie-vrij'); }
-
-      // opent de pagina al voorbij de constellatie (herladen) of met een anker
-      // naar iets verderop (bv. /#expertise), dan geen stop
-      function initial() {
-        if (window.scrollY > holdY() + 4) { release(); return; }
-        var id = decodeURIComponent((location.hash || '').slice(1));
-        var el = id && document.getElementById(id);
-        if (el && !track.contains(el) && (track.compareDocumentPosition(el) & Node.DOCUMENT_POSITION_FOLLOWING)) release();
-      }
-      initial();
-      window.addEventListener('load', initial);
-
-      window.addEventListener('scroll', function () {
-        if (released || gliding) return;
-        var h = holdY();
-        if (window.scrollY > h) window.scrollTo({ top: h, behavior: 'instant' });
-      }, { passive: true });
-
-      window.addEventListener('wheel', function (e) {
-        if (e.deltaY > 0 && atHold()) e.preventDefault();
-      }, { passive: false });
-
-      var tx = 0, ty = 0;
-      window.addEventListener('touchstart', function (e) {
-        tx = e.touches[0].clientX; ty = e.touches[0].clientY;
-      }, { passive: true });
-      window.addEventListener('touchmove', function (e) {
-        var dx = tx - e.touches[0].clientX, dy = ty - e.touches[0].clientY;
-        // enkel verticaal naar beneden tegenhouden: horizontaal swipen in de kaart blijft vrij
-        if (dy > 0 && Math.abs(dy) > Math.abs(dx) && atHold()) e.preventDefault();
-      }, { passive: false });
-
-      window.addEventListener('keydown', function (e) {
-        var t = e.target, tag = t && t.tagName;
-        if (tag === 'INPUT' || tag === 'TEXTAREA' || (t && t.isContentEditable)) return;
-        var keys = ['ArrowDown', 'PageDown', 'End', ' ', 'Spacebar'];
-        if (keys.indexOf(e.key) !== -1 && !(e.key === ' ' && (tag === 'BUTTON' || tag === 'A')) && atHold()) e.preventDefault();
-      });
-
-      // navigeren naar iets verderop = de stop opheffen
-      document.addEventListener('click', function (e) {
-        var a = e.target.closest && e.target.closest('a[href^="#"]');
-        if (a && a.getAttribute('href') !== '#visie') release();
-      }, true);
-      window.addEventListener('hashchange', release);
-      document.addEventListener('focusin', function (e) {
-        if (released || !e.target || track.contains(e.target)) return;
-        if (track.compareDocumentPosition(e.target) & Node.DOCUMENT_POSITION_FOLLOWING) release();
-      });
-
-      function glide(to) {
-        var from = window.scrollY, d = to - from;
-        if (reduce || Math.abs(d) < 2) { window.scrollTo({ top: to, behavior: 'instant' }); return; }
-        var dur = Math.min(2200, 900 + Math.abs(d) * .9), t0 = null;
-        gliding = true;
-        function ease(t) { return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
-        function step(ts) {
-          if (t0 === null) t0 = ts;
-          var t = Math.min(1, (ts - t0) / dur);
-          window.scrollTo({ top: from + d * ease(t), behavior: 'instant' });
-          if (t < 1) requestAnimationFrame(step); else gliding = false;
-        }
-        requestAnimationFrame(step);
-      }
-
       btn.addEventListener('click', function () {
-        release();
-        glide(endY());
+        blad.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
       });
     })();
 
