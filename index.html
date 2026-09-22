@@ -1280,7 +1280,9 @@
       object-fit: cover;
       object-position: 45% 18%;
       opacity: .85;
-      filter: saturate(.5) contrast(.93) brightness(1.04);
+      /* De foto is een studiobeeld op een lichte achtergrond; multiply laat dat
+         licht opgaan in het wit van de sectie, zodat de randen vanzelf
+         uitvloeien. De kleuren blijven gewoon zoals ze zijn. */
       mix-blend-mode: multiply;
     }
     .reveal-ready .team__photo-wrap[data-reveal] .team__photo { transform: scale(1.04); transition: transform 2.4s var(--ease-out); }
