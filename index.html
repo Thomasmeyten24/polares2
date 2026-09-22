@@ -716,7 +716,11 @@
     /* stond vroeger als inline stijl op het element zelf; zo kan een
        mediaregel de maat wel aanpassen */
     .uv-scene { display: block; width: 100%; height: auto; overflow: visible; }
-    .uv-scene image.uv-art { filter: brightness(0) invert(1); }
+    /* De tekeningen in de constellatie zijn een eigen, witte kopie van die in
+       assets/uv/ (zie tools/uv-wit.py). Ze werden wit gemaakt met
+       "filter: brightness(0) invert(1)", maar Safari past een CSS-filter niet
+       toe op een <image> in een SVG: op een iPhone bleven ze donkerblauw op
+       donkerblauw staan. */
     .uv-scene .uv-orbits { stroke: rgba(255,255,255,.6); stroke-width: .3; }
     .uv-scene .uv-paths { stroke: rgba(255,255,255,.55); stroke-width: .3; }
     .uv-scene [data-key="poolster"] path.uv-art { fill: var(--white); }
@@ -1775,6 +1779,11 @@
          een natuurlijke breedte die te klein is */
       .missie__triade-item { font-size: 1em; white-space: nowrap; flex-shrink: 0; }
       .missie__triade-sep svg { width: .62em; height: .62em; }
+      /* Laatste redmiddel op een heel smal toestel: past de rij zelfs met de
+         kleinste letter en de korte woorden niet, dan mag ze afbreken. Buiten
+         het scherm lopen is erger dan twee regels. */
+      .missie__triade.is-gewikkeld { flex-wrap: wrap; justify-content: center; }
+      .missie__triade.is-gewikkeld .missie__triade-item { white-space: normal; }
 
       /* De hero stond bijna een half scherm laag; op een telefoon is dat net
          het scherm waarop alles moet gebeuren. */
@@ -1943,7 +1952,7 @@
           <span class="missie__triade-sep" aria-hidden="true">
             <svg width="10" height="10" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
           </span>
-          <span class="missie__triade-item">Een uitgestippeld en doelgericht parcours</span>
+          <span class="missie__triade-item" data-kort="Een doelgericht parcours">Een uitgestippeld en doelgericht parcours</span>
           <span class="missie__triade-sep" aria-hidden="true">
             <svg width="10" height="10" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
           </span>
@@ -2058,55 +2067,55 @@
 
           <!-- Kompas -->
           <g class="uv-node" data-key="kompas" tabindex="0" role="button" aria-label="Het kompas">
-            <image class="uv-art" href="assets/uv/kompas.svg" x="347.9" y="463.82" width="46.03" height="45.98"></image>
+            <image class="uv-art" href="assets/uv/kompas-wit.svg" x="347.9" y="463.82" width="46.03" height="45.98"></image>
             <circle class="uv-ring" cx="371" cy="487" r="25" style="--i:3"></circle>
             <circle cx="371" cy="487" r="38" fill="transparent"></circle>
           </g>
           <!-- GPS / kaart -->
           <g class="uv-node" data-key="gps" tabindex="0" role="button" aria-label="De GPS">
-            <image class="uv-art" href="assets/uv/gps.svg" x="445.47" y="470.99" width="35.67" height="35.66"></image>
+            <image class="uv-art" href="assets/uv/gps-wit.svg" x="445.47" y="470.99" width="35.67" height="35.66"></image>
             <circle class="uv-ring" cx="463" cy="489" r="20" style="--i:4"></circle>
             <circle cx="463" cy="489" r="36" fill="transparent"></circle>
           </g>
           <!-- Munt -->
           <g class="uv-node" data-key="munt" tabindex="0" role="button" aria-label="Financiële rust">
-            <image class="uv-art" href="assets/uv/munt.svg" x="565.1" y="471.61" width="34.29" height="34.42"></image>
+            <image class="uv-art" href="assets/uv/munt-wit.svg" x="565.1" y="471.61" width="34.29" height="34.42"></image>
             <circle class="uv-ring" cx="582" cy="489" r="19" style="--i:5"></circle>
             <circle cx="582" cy="489" r="38" fill="transparent"></circle>
           </g>
           <!-- Leefwereld (globe, centrum) -->
           <g class="uv-node" data-key="leefwereld" tabindex="0" role="button" aria-label="De leefwereld">
-            <image class="uv-art" href="assets/uv/leefwereld.svg" x="680.29" y="455.78" width="66.07" height="66.07"></image>
+            <image class="uv-art" href="assets/uv/leefwereld-wit.svg" x="680.29" y="455.78" width="66.07" height="66.07"></image>
             <circle class="uv-ring" cx="713" cy="489" r="36" style="--i:6"></circle>
             <circle cx="713" cy="489" r="42" fill="transparent"></circle>
           </g>
           <!-- Satelliet -->
           <g class="uv-node" data-key="satelliet" tabindex="0" role="button" aria-label="Onze rol">
-            <image class="uv-art" href="assets/uv/satelliet.svg" x="783.98" y="470.63" width="38.07" height="36.37"></image>
+            <image class="uv-art" href="assets/uv/satelliet-wit.svg" x="783.98" y="470.63" width="38.07" height="36.37"></image>
             <circle class="uv-ring" cx="803" cy="489" r="21" style="--i:7"></circle>
             <circle cx="803" cy="489" r="36" fill="transparent"></circle>
           </g>
           <!-- Expertise (lamp) -->
           <g class="uv-node" data-key="expertise" tabindex="0" role="button" aria-label="Onze expertise">
-            <image class="uv-art" href="assets/uv/expertise.svg" x="883.12" y="468.43" width="36.09" height="40.77"></image>
+            <image class="uv-art" href="assets/uv/expertise-wit.svg" x="883.12" y="468.43" width="36.09" height="40.77"></image>
             <circle class="uv-ring" cx="901" cy="488" r="22" style="--i:8"></circle>
             <circle cx="901" cy="488" r="38" fill="transparent"></circle>
           </g>
           <!-- Vermogen (diamant) -->
           <g class="uv-node" data-key="vermogen" tabindex="0" role="button" aria-label="Het vermogen">
-            <image class="uv-art" href="assets/uv/vermogen.svg" x="981.6" y="468.59" width="74.84" height="40.49"></image>
+            <image class="uv-art" href="assets/uv/vermogen-wit.svg" x="981.6" y="468.59" width="74.84" height="40.49"></image>
             <circle class="uv-ring" cx="1019" cy="489" r="31" style="--i:9"></circle>
             <circle cx="1019" cy="489" r="42" fill="transparent"></circle>
           </g>
           <!-- Komeet -->
           <g class="uv-node" data-key="komeet" tabindex="0" role="button" aria-label="De buitenwereld">
-            <image class="uv-art" href="assets/uv/komeet.svg" x="847.2" y="312.07" width="37.57" height="43.12"></image>
+            <image class="uv-art" href="assets/uv/komeet-wit.svg" x="847.2" y="312.07" width="37.57" height="43.12"></image>
             <circle class="uv-ring" cx="866" cy="333" r="23" style="--i:2"></circle>
             <circle cx="866" cy="333" r="34" fill="transparent"></circle>
           </g>
           <!-- Zwart gat -->
           <g class="uv-node" data-key="zwartgat" tabindex="0" role="button" aria-label="Het zwarte gat">
-            <image class="uv-art" href="assets/uv/zwartgat-ring.webp" x="446" y="314" width="45" height="45"></image>
+            <image class="uv-art" href="assets/uv/zwartgat-ring-wit.webp" x="446" y="314" width="45" height="45"></image>
             <circle class="uv-ring" cx="468.5" cy="336.5" r="25" style="--i:1"></circle>
             <circle cx="468.5" cy="336.5" r="34" fill="transparent"></circle>
           </g>
@@ -2500,7 +2509,7 @@
         <span class="missie__triade-sep" aria-hidden="true">
           <svg width="10" height="10" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
         </span>
-        <span class="missie__triade-item">Met volle aandacht voor uw verhaal</span>
+        <span class="missie__triade-item" data-kort="Met volle aandacht">Met volle aandacht voor uw verhaal</span>
       </div>
       </div>
     </section>
@@ -3222,27 +3231,54 @@
       var rijen = [].slice.call(document.querySelectorAll('.missie__triade'));
       if (!rijen.length) return;
       var smal = matchMedia('(max-width: 600px)');
-      var MAX = 18.4, MIN = 7;          // px; MAX is de 1.15rem van een breed scherm
+      var MAX = 18.4, MIN = 9;          // px; MAX is de 1.15rem van een breed scherm
+      var DREMPEL = 12;                 // hieronder wordt het te klein om te lezen
+
+      // Sommige zinnen hebben een kortere vorm in data-kort. Die komt er pas aan
+      // te pas als de volle tekst niet meer leesbaar op de regel past; op een
+      // breed toestel blijft dus alles staan. De volle tekst staat hoe dan ook
+      // in de HTML, dus een zoekmachine leest die.
+      var korters = [].slice.call(document.querySelectorAll('.missie__triade-item[data-kort]'));
+      korters.forEach(function (el) { el.setAttribute('data-vol', el.textContent); });
+
+      function zet(rij, kort) {
+        [].forEach.call(rij.querySelectorAll('[data-kort]'), function (el) {
+          var t = kort ? el.getAttribute('data-kort') : el.getAttribute('data-vol');
+          if (el.textContent !== t) el.textContent = t;
+        });
+      }
+
+      // De lettergrootte waarop de rij precies past.
+      function meet(rij) {
+        var ruimte = rij.clientWidth;
+        var kind = rij.children;
+        if (!ruimte || !kind.length) return null;
+        rij.style.fontSize = MAX + 'px';
+        // Niet scrollWidth: dat kapt af bij zichtbare overloop en gaf hier een
+        // kwart te weinig, waardoor de rij alsnog buiten het scherm liep. De
+        // afstand van de linkerrand van het eerste woord tot de rechterrand
+        // van het laatste is wel de echte breedte.
+        var nodig = kind[kind.length - 1].getBoundingClientRect().right
+                  - kind[0].getBoundingClientRect().left;
+        if (nodig <= 0) return null;
+        // een half procent speling: een afronding naar boven laat de laatste
+        // letter anders net buiten de rij vallen
+        return MAX * ruimte / nodig * .995;
+      }
 
       function pas() {
         rijen.forEach(function (rij) {
+          zet(rij, false);
+          rij.classList.remove('is-gewikkeld');
           rij.style.fontSize = '';
           if (!smal.matches) return;
-          var ruimte = rij.clientWidth;
-          var kind = rij.children;
-          if (!ruimte || !kind.length) return;
-          rij.style.fontSize = MAX + 'px';
-          // Niet scrollWidth: dat kapt af bij zichtbare overloop en gaf hier een
-          // kwart te weinig, waardoor de rij alsnog buiten het scherm liep. De
-          // afstand van de linkerrand van het eerste woord tot de rechterrand
-          // van het laatste is wel de echte breedte.
-          var eerste = kind[0].getBoundingClientRect();
-          var laatste = kind[kind.length - 1].getBoundingClientRect();
-          var nodig = laatste.right - eerste.left;
-          if (nodig <= 0) { rij.style.fontSize = ''; return; }
-          // een half procent speling: een afronding naar boven laat de laatste
-          // letter anders net buiten de rij vallen
-          var fs = MAX * ruimte / nodig * .995;
+          var fs = meet(rij);
+          if (fs === null) { rij.style.fontSize = ''; return; }
+          if (fs < DREMPEL && rij.querySelector('[data-kort]')) {
+            zet(rij, true);
+            fs = meet(rij) || fs;
+          }
+          rij.classList.toggle('is-gewikkeld', fs < MIN);
           rij.style.fontSize = Math.max(MIN, Math.min(MAX, fs)).toFixed(2) + 'px';
         });
       }
