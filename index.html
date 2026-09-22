@@ -425,40 +425,66 @@
     .overlay__contact a { color: var(--text-soft); transition: color var(--dur-1) var(--ease); }
     .overlay__contact a:hover { color: var(--navy-600); }
 
-    /* ── Meridian ────────────────────────────────────────────── */
+    /* ── Meridiaan ───────────────────────────────────────────── */
+    /* Voortgangsbalk in de linkermarge: een rail met de onderwerpen ernaast en
+       een ster die meereist. De namen staan naast de rail, nooit erop, zodat de
+       ster er nooit doorheen loopt. Kleuren komen uit de JS: die kijkt welke
+       secties achter de balk staan en zet rail, vulling, ster en elke naam licht
+       of donker, desnoods halverwege de rail. */
     .meridian {
       position: fixed;
       /* Gecentreerd in de linkermarge: precies halverwege tussen de vensterrand
          en de linkerkant van de tekstkolom (= containermarge + containerpadding).
-         translateX(-50%) centreert de lijn zelf op dat punt. */
+         translateX(-50%) centreert de balk zelf op dat punt. */
       /* 50% i.p.v. 100vw: bij position:fixed telt een percentage de scrollbalk
-         niet mee, zodat de lijn exact in het midden van de marge blijft. */
+         niet mee, zodat de balk exact in het midden van de marge blijft. */
       left: calc((max(0px, 50% - var(--container) / 2) + var(--pad)) / 2);
       top: 50%;
       transform: translate(-50%, -50%);
-      height: 38vh;
       z-index: 10;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
       pointer-events: none;
     }
-    .meridian__star { color: var(--navy-600); }
-    .meridian__line {
-      flex: 1;
+    .meridian__rail,
+    .meridian__vulling {
+      position: absolute;
+      left: 0;
+      top: 0;
       width: 1px;
-      background: var(--navy-100);
+      background-color: transparent;
+      background-repeat: no-repeat;
+      /* terugval zolang de JS nog niets heeft gemeten */
+      background-image: linear-gradient(var(--navy-100), var(--navy-100));
     }
-    .meridian__label {
+    .meridian__rail { bottom: 0; }
+    .meridian__vulling { height: 0; background-image: linear-gradient(var(--navy-600), var(--navy-600)); }
+    .meridian__star {
+      position: absolute;
+      left: 0;
+      top: 0;
+      margin: -5px 0 0 -5px;           /* gecentreerd op de rail */
+      color: var(--navy-600);
+    }
+    .meridian__lijst {
+      margin: 0 0 0 13px;              /* de vrije strook waarin de ster reist */
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(14px, 2.4vh, 24px);
+    }
+    .meridian__stap {
+      writing-mode: vertical-rl;
+      white-space: nowrap;
       font-family: var(--sans);
-      font-size: 11px;
+      font-size: clamp(9px, 1.08vh, 10.5px);
       letter-spacing: .12em;
       text-transform: uppercase;
       color: var(--text-faint);
-      writing-mode: vertical-rl;
-      transform: rotate(180deg);
-      margin-top: .5rem;
     }
+    .meridian__stap.is-nu { color: var(--navy-600); }
+    .meridian__stap.is-donker { color: var(--on-navy-soft); }
+    .meridian__stap.is-donker.is-nu { color: var(--white); }
+    .meridian__star.is-donker { color: var(--white); }
 
     /* ── Hero ────────────────────────────────────────────────── */
     .hero {
@@ -1562,12 +1588,10 @@
     /* Meridiaan */
     .meridian { transition: opacity .3s var(--ease); }
     .meridian.is-off { opacity: 0; }
-    .meridian__star, .meridian__line, .meridian__label {
-      transition: color .3s var(--ease), background .3s var(--ease);
+    /* de kleur mag zacht omslaan, de stand van de ster niet: die volgt de scroll */
+    .meridian__star, .meridian__stap {
+      transition: color .3s var(--ease);
     }
-    .meridian--dark .meridian__star { color: var(--white); }
-    .meridian--dark .meridian__line { background: rgba(255,255,255,.3); }
-    .meridian--dark .meridian__label { color: rgba(255,255,255,.55); }
 
     /* Universum-interactie */
     .uv-scene .uv-node { transition: opacity .45s var(--ease); }
@@ -1641,7 +1665,9 @@
     .waarden__item:hover .waarden__name::after { transform: scaleX(1); }
 
     /* ── Responsive ──────────────────────────────────────────── */
-    @media (max-width: 1199px) { .meridian { display: none; } }
+    /* Onder 1200px staat de hoofdstuktitel weer in de pagina zelf; bij een laag
+       venster heeft de balk te weinig hoogte voor zeven namen. */
+    @media (max-width: 1199px), (max-height: 620px) { .meridian { display: none; } }
 
     @media (max-width: 1024px) {
       .expertise__grid { grid-template-columns: repeat(2, 1fr); padding-left: 0; }
@@ -1745,14 +1771,26 @@
     </div>
   </div>
 
-  <!-- ── Meridiaan (DOM hook voor taak B) ───────────────────────
+  <!-- ── Meridiaan: voortgangsbalk in de linkermarge ────────────
        Start verborgen (is-off): de JS toont hem pas zodra de bezoeker in het
-       hoofdstukkentraject zit. Voorkomt een flits over de hero bij het laden
-       en een permanent zichtbare lijn bij reduced motion of zonder JS. -->
+       onderwerpentraject zit. Voorkomt een flits over de hero bij het laden
+       en een permanent zichtbare balk zonder JS.
+       De volgorde van de <li>'s is de leesvolgorde van de pagina; data-sectie
+       koppelt elk onderwerp aan zijn sectie. Wie er een toevoegt of verplaatst,
+       hoeft alleen hier iets te wijzigen. -->
   <aside class="meridian is-off" aria-hidden="true">
+    <span class="meridian__rail"></span>
+    <span class="meridian__vulling"></span>
     <svg class="meridian__star" width="10" height="10" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-    <span class="meridian__line"></span>
-    <span class="meridian__label">I — MISSIE</span>
+    <ol class="meridian__lijst">
+      <li class="meridian__stap" data-sectie="missie">Voor wie</li>
+      <li class="meridian__stap" data-sectie="visie">Wat doen we</li>
+      <li class="meridian__stap" data-sectie="team">Team</li>
+      <li class="meridian__stap" data-sectie="expertise">Expertise</li>
+      <li class="meridian__stap" data-sectie="waarden">Waarden</li>
+      <li class="meridian__stap" data-sectie="contact">Contact</li>
+      <li class="meridian__stap" data-sectie="faq">Vragen</li>
+    </ol>
   </aside>
 
   <!-- ── Main ─────────────────────────────────────────────────── -->
@@ -2927,84 +2965,166 @@
       els.forEach(function (el) { io.observe(el); });
     })();
 
-    // ── Meridiaan: ster reist het hoofdstukkentraject ───────────
+    // ── Meridiaan: voortgangsbalk met de onderwerpen ────────────
     (function () {
       var mer = document.querySelector('.meridian');
       if (!mer) return;
       var star = mer.querySelector('.meridian__star');
-      var line = mer.querySelector('.meridian__line');
-      var label = mer.querySelector('.meridian__label');
-      // Bij reduced motion blijft de lijn gewoon werken als hoofdstukaanduiding;
-      // alleen de meereizende ster staat dan stil.
-      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var rail = mer.querySelector('.meridian__rail');
+      var vulling = mer.querySelector('.meridian__vulling');
 
-      var chapters = [
-        ['missie', 'I — MISSIE'], ['visie', 'II — ONZE VISIE'],
-        ['team', 'III — TEAM'], ['expertise', 'IV — EXPERTISE'], ['waarden', 'V — WAARDEN'],
-        ['contact', 'VI — CONTACT'], ['faq', 'VII — VEELGESTELDE VRAGEN']
-      ].map(function (c) {
-        var el = document.getElementById(c[0]);
-        return el ? { el: el, name: c[1] } : null;
-      }).filter(Boolean);
-      if (!chapters.length) return;
+      // Elk onderwerp uit de HTML naast zijn sectie. Ontbreekt de sectie, dan
+      // verdwijnt ook de naam: anders zou de ster naar een leeg vak reizen.
+      var onderwerpen = [];
+      [].forEach.call(mer.querySelectorAll('.meridian__stap'), function (li) {
+        var el = document.getElementById(li.getAttribute('data-sectie'));
+        if (el) onderwerpen.push({ el: el, li: li });
+        else li.parentNode.removeChild(li);
+      });
+      if (onderwerpen.length < 2) return;
 
-      var darkSection = document.getElementById('expertise');
-      var darkTrack = document.getElementById('visieTrack');
-      var sheet = document.querySelector('.koers-sheet');
+      // Welke vlakken achter de balk donker zijn. De volgorde is de teken-
+      // volgorde: een later vlak overschrijft een eerder. De witte bladen staan
+      // dus ná de donkere die ze overlappen — ze schuiven er met een negatieve
+      // marge en een afgeronde bovenrand overheen, telkens 28px diep.
+      var lagen = [
+        { kies: '#visieTrack',  donker: true  },
+        { kies: '#expertise',   donker: true  },
+        { kies: '#contact',     donker: true  },
+        { kies: '.koers-sheet', donker: false },   // over het podium van hoofdstuk II
+        { kies: '#team',        donker: false },   // over de bovenrand van Expertise
+        { kies: '#waarden',     donker: false },   // over de onderrand van Expertise
+        { kies: '#faq',         donker: false },   // over de onderrand van Contact
+        { kies: '.footer',      donker: true  }
+      ].filter(function (l) { l.el = document.querySelector(l.kies); return l.el; });
 
-      var startY = 0, endY = 0, lineH = 0, starH = 10, ticking = false;
+      var RAIL_LICHT = 'var(--navy-100)', RAIL_DONKER = 'rgba(255,255,255,.3)';
+      var VUL_LICHT = 'var(--navy-600)', VUL_DONKER = 'rgba(255,255,255,.85)';
 
-      function measure() {
-        var first = chapters[0].el, last = chapters[chapters.length - 1].el;
-        startY = first.getBoundingClientRect().top + window.scrollY;
-        endY = last.getBoundingClientRect().bottom + window.scrollY;
-        lineH = line.getBoundingClientRect().height;
-        update();
-      }
+      // Hoever in een sectie de ster naast haar eigen naam blijft staan; de rest
+      // van de sectie gebruikt ze om naar de volgende naam te schuiven. Zonder
+      // die verhouding hangt de ster het grootste deel van een kort hoofdstuk
+      // in de witruimte onder de naam die oplicht.
+      var BLIJF = .8;
 
-      function update() {
-        ticking = false;
-        var mid = window.scrollY + window.innerHeight / 2;
-        var p = (mid - startY) / (endY - startY);
-        p = Math.max(0, Math.min(1, p));
-        if (!reduce) star.style.transform = 'translateY(' + (p * Math.max(0, lineH)) + 'px)';
+      var ankers = [], railH = 0, bezig = false;
 
-        var active = chapters[0], best = Infinity;
-        chapters.forEach(function (c) {
-          var r = c.el.getBoundingClientRect();
-          var d = Math.abs(r.top + r.height / 2 - window.innerHeight / 2);
-          if (d < best) { best = d; active = c; }
+      // De balk zelf verandert alleen mee met het venster: per naam onthouden we
+      // haar boven- en onderkant op de rail.
+      function meet() {
+        var top = mer.getBoundingClientRect().top;
+        railH = rail.getBoundingClientRect().height;
+        ankers = onderwerpen.map(function (o) {
+          var r = o.li.getBoundingClientRect();
+          return { boven: r.top - top, onder: r.bottom - top };
         });
-        if (label.textContent !== active.name) label.textContent = active.name;
-
-        // buiten het hoofdstukkentraject (hero, contact, footer): verbergen
-        mer.classList.toggle('is-off', mid < startY || mid > endY);
-        // boven het donkere expertise-paneel: witte variant i.p.v. verdwijnen
-        var dark = false;
-        if (darkSection) {
-          var dr = darkSection.getBoundingClientRect();
-          dark = dr.top < window.innerHeight / 2 && dr.bottom > window.innerHeight / 2;
-        }
-        // ook boven het donkere podium van hoofdstuk II (tot het witte blad komt)
-        if (!dark && darkTrack) {
-          var tr = darkTrack.getBoundingClientRect(), h2 = window.innerHeight / 2;
-          var sheetTop = sheet ? sheet.getBoundingClientRect().top : Infinity;
-          dark = tr.top < h2 && sheetTop > h2 && document.getElementById('visie').getBoundingClientRect().top < h2;
-        }
-        mer.classList.toggle('meridian--dark', dark);
+        ankers.push({ boven: railH, onder: railH });
+        werkBij();
       }
 
-      function onScroll() {
-        if (!ticking) { ticking = true; requestAnimationFrame(update); }
+      function werkBij() {
+        bezig = false;
+        var mid = window.scrollY + window.innerHeight / 2;
+
+        // Elk vak hoort bij het stuk document van sectie i tot sectie i+1. Dat
+        // meten we per frame: de zoom van hoofdstuk II en de reveals verzetten
+        // de secties nog nadat de pagina geladen is.
+        var grenzen = onderwerpen.map(function (o) {
+          return o.el.getBoundingClientRect().top + window.scrollY;
+        });
+        grenzen.push(onderwerpen[onderwerpen.length - 1].el.getBoundingClientRect().bottom + window.scrollY);
+
+        var i = 0;
+        while (i < onderwerpen.length - 1 && mid >= grenzen[i + 1]) i++;
+        var vak = grenzen[i + 1] - grenzen[i];
+        var f = vak > 0 ? (mid - grenzen[i]) / vak : 0;
+        f = Math.max(0, Math.min(1, f));
+
+        var a = ankers[i], y;
+        if (f <= BLIJF) y = a.boven + (f / BLIJF) * (a.onder - a.boven);
+        else y = a.onder + ((f - BLIJF) / (1 - BLIJF)) * (ankers[i + 1].boven - a.onder);
+        y = Math.max(0, Math.min(railH, y));
+
+        star.style.transform = 'translateY(' + y + 'px)';
+        vulling.style.height = y + 'px';
+        onderwerpen.forEach(function (o, n) { o.li.classList.toggle('is-nu', n === i); });
+
+        // buiten het onderwerpentraject (hero, footer): verbergen
+        mer.classList.toggle('is-off', mid < grenzen[0] || mid > grenzen[grenzen.length - 1]);
+        kleur(y);
       }
 
-      window.addEventListener('scroll', onScroll, { passive: true });
-      window.addEventListener('resize', debounceM(measure, 150), { passive: true });
-      window.addEventListener('load', measure);
-      function debounceM(fn, ms) {
+      // Ligt dit punt (viewport-y) voor een donkere achtergrond?
+      function donkerBij(vy) {
+        var d = false;
+        for (var i = 0; i < lagen.length; i++) {
+          var r = lagen[i].el.getBoundingClientRect();
+          if (vy >= r.top && vy < r.bottom) d = lagen[i].donker;
+        }
+        return d;
+      }
+
+      // De rail is langer dan één sectie en kan dus half voor donker en half
+      // voor licht hangen. We knippen ze op de randen van de vlakken en geven
+      // elk stuk zijn eigen kleur mee als verloop met harde overgangen.
+      function stukken() {
+        var top = mer.getBoundingClientRect().top;
+        var randen = [0, railH];
+        lagen.forEach(function (l) {
+          var r = l.el.getBoundingClientRect();
+          [r.top - top, r.bottom - top].forEach(function (v) {
+            if (v > 0 && v < railH) randen.push(v);
+          });
+        });
+        randen.sort(function (a, b) { return a - b; });
+
+        var uit = [];
+        for (var i = 1; i < randen.length; i++) {
+          if (randen[i] - randen[i - 1] < .5) continue;
+          var d = donkerBij(top + (randen[i - 1] + randen[i]) / 2);
+          if (uit.length && uit[uit.length - 1].donker === d) uit[uit.length - 1].tot = randen[i];
+          else uit.push({ van: randen[i - 1], tot: randen[i], donker: d });
+        }
+        return uit;
+      }
+
+      function verloop(vakken, licht, donker) {
+        var stops = [];
+        vakken.forEach(function (v) {
+          var c = v.donker ? donker : licht;
+          stops.push(c + ' ' + v.van + 'px', c + ' ' + v.tot + 'px');
+        });
+        return 'linear-gradient(to bottom,' + stops.join(',') + ')';
+      }
+
+      function kleur(y) {
+        var top = mer.getBoundingClientRect().top;
+        var vakken = stukken();
+        if (vakken.length) {
+          rail.style.backgroundImage = verloop(vakken, RAIL_LICHT, RAIL_DONKER);
+          // de vulling is korter dan de rail; het verloop houdt de maat van de
+          // rail aan, zodat de overgangen op dezelfde hoogte blijven vallen
+          vulling.style.backgroundImage = verloop(vakken, VUL_LICHT, VUL_DONKER);
+          vulling.style.backgroundSize = '1px ' + railH + 'px';
+        }
+        star.classList.toggle('is-donker', donkerBij(top + y));
+        onderwerpen.forEach(function (o) {
+          var r = o.li.getBoundingClientRect();
+          o.li.classList.toggle('is-donker', donkerBij(r.top + r.height / 2));
+        });
+      }
+
+      function opScroll() {
+        if (!bezig) { bezig = true; requestAnimationFrame(werkBij); }
+      }
+
+      window.addEventListener('scroll', opScroll, { passive: true });
+      window.addEventListener('resize', ontdubbel(meet, 150), { passive: true });
+      window.addEventListener('load', meet);
+      function ontdubbel(fn, ms) {
         var t; return function () { clearTimeout(t); t = setTimeout(fn, ms); };
       }
-      measure();
+      meet();
     })();
 
     // ── Universum-interactie (port van de vorige site, DS-stijl) ─

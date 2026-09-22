@@ -190,11 +190,12 @@ controleer(
     f"gevonden {romeins}",
 )
 
-# De meridiaan houdt een eigen lijst met hoofdstuk-id's bij — die moeten bestaan
-meridiaan = re.search(r"var chapters = \[([\s\S]*?)\]\.map", index)
-if meridiaan:
-    for sectie in re.findall(r"\['([a-z]+)',", meridiaan.group(1)):
-        controleer(f"meridiaan verwijst naar bestaande sectie #{sectie}", sectie in ankers)
+# De meridiaan (de voortgangsbalk links) noemt haar secties in data-sectie;
+# een naam zonder sectie zou stil uit de balk verdwijnen.
+secties = re.findall(r'class="meridian__stap" data-sectie="([a-z]+)"', index)
+controleer("meridiaan heeft onderwerpen", len(secties) >= 2, f"gevonden {secties}")
+for sectie in secties:
+    controleer(f"meridiaan verwijst naar bestaande sectie #{sectie}", sectie in ankers)
 
 # ── Uitslag ──────────────────────────────────────────────────────────────────
 print(f"\n{len(gedaan)} controles geslaagd")
