@@ -20,3 +20,7 @@ jobs:
       # per bericht en de sitemap worden daaruit geschreven. Loopt dat uiteen,
       # dan faalt de build hier en niet stilletjes op de site.
       - run: python tools/berichten.py --check
+      # Het contactformulier staat op elke pagina, maar index.html is de bron.
+      # Wijzigt het daar zonder dat tools/gedeeld.py gedraaid is, dan dragen de
+      # andere pagina's een oudere versie.
+      - run: python tools/gedeeld.py --check

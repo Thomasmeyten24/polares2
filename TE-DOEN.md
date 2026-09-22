@@ -85,7 +85,9 @@ privacyverklaring nakijkt.
   `data/berichten.json`, daarna `python tools/berichten.py` en
   `python tools/og-afbeeldingen.py`. Zie `data/LEESMIJ.md`.
 - **`contact.php` bestaat nog niet.** Het formulier valt nu terug op het
-  mailprogramma van de bezoeker. Wacht op één antwoord: laat Microsoft 365 nog
+  mailprogramma van de bezoeker. Het staat intussen op elke pagina, geschreven
+  door `tools/gedeeld.py` uit `index.html`: die ene bron aanpassen en het script
+  draaien volstaat. Wacht op één antwoord: laat Microsoft 365 nog
   SMTP met wachtwoord toe, of gaat het via een verzenddienst? De mail van Polares
   loopt via Microsoft en niet via Combell, dus verzenden langs Combell zou op
   SPF stranden. Het adres van de bezoeker hoort in `Reply-To`, nooit in `From`.

@@ -1445,6 +1445,7 @@
     .btn--ghost:hover { border-color: var(--white); }
 
 
+    /* BEGIN_CFORM (gedeeld met de andere pagina's; bewerk hier en draai tools/gedeeld.py) */
     /* ── Contactformulier ────────────────────────────────────── */
     /* Veldstijl uit het design system: stille haarlijnen, het label klein en
        in kapitalen erboven. Zo weinig mogelijk velden: alleen een adres om
@@ -1544,6 +1545,12 @@
     /* display:flex zou het hidden-attribuut overstemmen */
     .cform__melding[hidden] { display: none; }
     .cform__melding svg { flex-shrink: 0; margin-top: .3rem; color: var(--navy-400); }
+
+    /* Het slot van een pagina biedt dezelfde twee wegen als het contactblok op
+       de homepage: het adres dat dit venster opent, en daaronder het nummer. */
+    .slot-acties { display: flex; flex-direction: column; align-items: flex-start; }
+    .slot-acties .more-link + .more-link { margin-left: 0; margin-top: .6rem; }
+    /* EIND_CFORM */
 
     /* ── Footer ──────────────────────────────────────────────── */
     .footer {
@@ -2496,7 +2503,7 @@
         <h2 class="contact__h2" id="contact-h2" data-reveal>Vertrouwen begint met een gesprek.</h2>
         <p class="contact__sub" data-reveal>We nemen graag de tijd om uw wereld te begrijpen en te bekijken waar we kunnen begeleiden.</p>
         <div class="contact__actions" data-reveal>
-          <a href="mailto:info@polares.be" class="more-link more-link--light">info@polares.be <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+          <a href="mailto:info@polares.be" data-cform class="more-link more-link--light">info@polares.be <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
           <a href="tel:+3254235050" class="more-link more-link--light">+32 54 23 50 50 <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
         </div>
       </div>
@@ -2567,6 +2574,7 @@
 
   <!-- ── Footer ────────────────────────────────────────────────── -->
 
+  <!-- BEGIN_CFORM (gedeeld met de andere pagina's; bewerk hier en draai tools/gedeeld.py) -->
   <!-- ── Contactformulier ─────────────────────────────────────────
        Opent vanuit het e-mailadres in het contactblok. Twee verplichte
        velden: een adres om op te antwoorden en het bericht zelf. -->
@@ -2620,6 +2628,7 @@
       <div class="cform__melding" id="cformMelding" hidden><svg aria-hidden="true" width="14" height="14" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg><p></p></div>
     </div>
   </dialog>
+  <!-- EIND_CFORM -->
 
   <footer class="footer">
     <div class="container">
@@ -2729,6 +2738,7 @@
     })();
 
 
+    // BEGIN_CFORM (gedeeld met de andere pagina's; bewerk hier en draai tools/gedeeld.py)
     // ── Contactformulier ────────────────────────────────────────
     // Het e-mailadres in het contactblok opent dit venster in plaats van
     // meteen een mailprogramma. Twee verplichte velden.
@@ -2789,12 +2799,12 @@
         if (vanaf) vanaf.focus();
       }
 
-      // alleen het adres in het contactblok; de voet en de FAQ blijven een
-      // gewone mailtolink, want daar verwacht men geen venster
-      var aanzet = document.querySelector('#contact .contact__actions a[href^="mailto:"]');
-      if (aanzet) {
+      // Alleen de adressen met data-cform openen dit venster: het contactblok
+      // van de homepage en het slot van elke andere pagina. De voet en de FAQ
+      // blijven een gewone mailtolink, want daar verwacht men geen venster.
+      [].forEach.call(document.querySelectorAll('a[data-cform]'), function (aanzet) {
         aanzet.addEventListener('click', function (e) { e.preventDefault(); open(aanzet); });
-      }
+      });
       sluitKn.addEventListener('click', sluit);
       annuleer.addEventListener('click', sluit);
       venster.addEventListener('click', function (e) { if (e.target === venster) sluit(); });
@@ -2864,6 +2874,7 @@
         });
       });
     })();
+    // EIND_CFORM
 
     // ── Hero-canvas: de hemel wentelt om het vaste punt ─────────
     (function () {

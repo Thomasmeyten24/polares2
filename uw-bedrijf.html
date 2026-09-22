@@ -158,6 +158,113 @@
     .flow--live .station.is-reached .station__stop::after{animation:ping 1.4s var(--ease-out) .15s 1 both}
     @keyframes ping{0%{opacity:.9;transform:scale(.85)}100%{opacity:0;transform:scale(1.4)}}
 
+    /* BEGIN_CFORM (geschreven door tools/gedeeld.py uit index.html; bewerk daar) */
+    /* ── Contactformulier ────────────────────────────────────── */
+    /* Veldstijl uit het design system: stille haarlijnen, het label klein en
+       in kapitalen erboven. Zo weinig mogelijk velden: alleen een adres om
+       te kunnen antwoorden en het bericht zelf. */
+    .cform {
+      border: none;
+      padding: 0;
+      background: transparent;
+      margin: auto;
+      width: min(560px, calc(100vw - 2rem));
+      max-width: none;
+    }
+    .cform::backdrop { background: rgba(7,24,38,.55); }
+    .cform__doos {
+      position: relative;
+      background: var(--white);
+      border-radius: 14px;
+      box-shadow: var(--shadow-lg);
+      padding: clamp(1.75rem, 4vw, 2.75rem);
+      max-height: min(88vh, 860px);
+      overflow: auto;
+    }
+    .cform__sluit {
+      position: absolute;
+      top: .7rem; right: .9rem;
+      width: 44px; height: 44px;
+      background: none; border: none;
+      font-size: 26px; line-height: 1;
+      color: var(--text-soft); cursor: pointer;
+    }
+    .cform__sluit:hover { color: var(--navy-600); }
+    .cform__kop { display: flex; align-items: center; gap: .75rem; padding-right: 2.5rem; color: var(--navy-600); }
+    .cform__kop h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.4rem, 2.4vw, 1.9rem); line-height: 1.2; }
+    .cform__sub { margin-top: .8rem; font-size: 14.5px; line-height: 1.7; color: var(--text-soft); }
+    .cform__keuze { border: none; margin-top: 1.5rem; display: flex; flex-wrap: wrap; gap: .4rem 1.75rem; }
+    .cform__keuze legend {
+      font-family: var(--sans); font-size: 11.5px; letter-spacing: .16em;
+      text-transform: uppercase; color: var(--text-soft); margin-bottom: .6rem;
+    }
+    .cform__keuze label {
+      display: inline-flex; align-items: center; gap: .55rem;
+      font-family: var(--sans); font-size: 14.5px; color: var(--navy-600); cursor: pointer;
+    }
+    .cform__keuze input { accent-color: var(--navy-600); width: 16px; height: 16px; cursor: pointer; }
+    .cform__velden { display: flex; flex-direction: column; gap: 1.1rem; margin-top: 1.4rem; }
+    .cform__veld { display: flex; flex-direction: column; gap: .4rem; }
+    .cform__veld label {
+      font-family: var(--sans);
+      font-size: 11.5px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+    .cform__veld label .cform__optioneel { letter-spacing: .08em; text-transform: none; color: var(--navy-300); }
+    .cform__veld input,
+    .cform__veld textarea {
+      font-family: var(--sans);
+      font-size: 15px;
+      color: var(--text);
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: .7rem .85rem;
+      width: 100%;
+      transition: border-color var(--dur-1) var(--ease), box-shadow var(--dur-1) var(--ease);
+    }
+    .cform__veld textarea { resize: vertical; min-height: 130px; line-height: 1.6; }
+    .cform__paar { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
+    @media (max-width: 520px) { .cform__paar { grid-template-columns: 1fr; } }
+    .cform__hulp { font-family: var(--sans); font-size: 12.5px; color: var(--navy-300); margin-top: -.5rem; }
+    .cform__hulp[data-fout] { color: #A1443B; }
+    .cform__veld[hidden] { display: none; }
+    .cform__veld input:focus,
+    .cform__veld textarea:focus {
+      outline: none;
+      border-color: var(--navy-400);
+      box-shadow: 0 0 0 3px rgba(90,115,136,.14);
+    }
+    .cform__veld[data-fout] input,
+    .cform__veld[data-fout] textarea { border-color: #A1443B; }
+    .cform__fout { font-family: var(--sans); font-size: 12.5px; color: #A1443B; }
+    /* onzichtbaar veld tegen geautomatiseerde inzendingen */
+    .cform__val { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+    .cform__voet { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; margin-top: 1.75rem; }
+    .cform__btn {
+      font-family: var(--sans); font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+      padding: .95rem 1.8rem; cursor: pointer; border: 1px solid var(--navy-600);
+      background: var(--navy-600); color: var(--white);
+      transition: background var(--dur-2) var(--ease), border-color var(--dur-2) var(--ease), color var(--dur-2) var(--ease);
+    }
+    .cform__btn:hover { background: var(--navy-800); border-color: var(--navy-800); }
+    .cform__btn--rand { background: none; color: var(--navy-600); font-weight: 400; }
+    .cform__btn--rand:hover { background: var(--navy-600); color: var(--white); }
+    .cform__btn[disabled] { opacity: .5; cursor: default; }
+    .cform__melding { display: flex; align-items: flex-start; gap: .75rem; margin-top: 1.5rem;
+      font-family: var(--serif); font-size: 1.05rem; line-height: 1.55; color: var(--navy-600); }
+    /* display:flex zou het hidden-attribuut overstemmen */
+    .cform__melding[hidden] { display: none; }
+    .cform__melding svg { flex-shrink: 0; margin-top: .3rem; color: var(--navy-400); }
+
+    /* Het slot van een pagina biedt dezelfde twee wegen als het contactblok op
+       de homepage: het adres dat dit venster opent, en daaronder het nummer. */
+    .slot-acties { display: flex; flex-direction: column; align-items: flex-start; }
+    .slot-acties .more-link + .more-link { margin-left: 0; margin-top: .6rem; }
+    /* EIND_CFORM */
+
     /* Footer, gelijk aan de homepage */
     .footer{background:var(--navy-900);border-top:1px solid rgba(255,255,255,.08);padding-block:clamp(3rem,6vw,5rem)}
     .footer__grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:2.5rem}
@@ -289,12 +396,71 @@
         <div class="station__body">
           <h2 id="gesprek-h2">Vertrouwen begint met een gesprek.</h2>
           <p>We nemen graag de tijd om uw wereld te begrijpen en te bekijken waar we kunnen begeleiden.</p>
-          <a class="more-link" href="index.html#contact">Maak een afspraak <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+          <div class="slot-acties">
+            <a class="more-link" data-cform href="mailto:info@polares.be">info@polares.be <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+            <a class="more-link" href="tel:+3254235050">+32 54 23 50 50 <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+          </div>
           <a class="more-link" href="uw-familie.html">Ontdek ook: uw familie <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
         </div>
       </section>
     </div>
   </main>
+
+  <!-- BEGIN_CFORM (geschreven door tools/gedeeld.py uit index.html; bewerk daar) -->
+  <!-- ── Contactformulier ─────────────────────────────────────────
+       Opent vanuit het e-mailadres in het contactblok. Twee verplichte
+       velden: een adres om op te antwoorden en het bericht zelf. -->
+  <dialog class="cform" id="cform" aria-labelledby="cformTitel">
+    <div class="cform__doos">
+      <button class="cform__sluit" type="button" id="cformSluit" aria-label="Venster sluiten">&#x00D7;</button>
+      <div class="cform__kop"><svg aria-hidden="true" width="14" height="14" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg><h2 id="cformTitel">Contacteer ons</h2></div>
+      <p class="cform__sub">Laat ons weten hoe we u kunnen begeleiden. We antwoorden persoonlijk.</p>
+
+      <form id="cformForm" novalidate>
+        <fieldset class="cform__keuze">
+          <legend>Wat wilt u doen?</legend>
+          <label><input type="radio" name="wijze" value="bellen" checked> Contacteer mij</label>
+          <label><input type="radio" name="wijze" value="bericht"> Ik stuur een bericht</label>
+        </fieldset>
+
+        <div class="cform__velden">
+          <p class="cform__veld">
+            <label for="cformNaam">Naam <span class="cform__optioneel">(optioneel)</span></label>
+            <input id="cformNaam" name="naam" type="text" autocomplete="name">
+          </p>
+          <div class="cform__paar" id="cformPaar" aria-describedby="cformFoutBereik">
+            <p class="cform__veld">
+              <label for="cformMail">E-mailadres</label>
+              <input id="cformMail" name="email" type="email" autocomplete="email" inputmode="email">
+              <span class="cform__fout" id="cformFoutMail" hidden>Controleer het e-mailadres.</span>
+            </p>
+            <p class="cform__veld">
+              <label for="cformTel">Telefoonnummer</label>
+              <input id="cformTel" name="telefoon" type="tel" autocomplete="tel" inputmode="tel">
+              <span class="cform__fout" id="cformFoutTel" hidden>Controleer het nummer.</span>
+            </p>
+          </div>
+          <p class="cform__hulp" id="cformFoutBereik">Vul minstens één van beide in, dan kunnen we u bereiken.</p>
+          <p class="cform__veld" id="cformVeldBericht" hidden>
+            <label for="cformBericht">Bericht</label>
+            <textarea id="cformBericht" name="bericht" aria-describedby="cformFoutBericht"></textarea>
+            <span class="cform__fout" id="cformFoutBericht" hidden>Schrijf hier kort waarover het gaat.</span>
+          </p>
+          <p class="cform__val" aria-hidden="true">
+            <label for="cformVal">Dit veld niet invullen</label>
+            <input id="cformVal" name="website" type="text" tabindex="-1" autocomplete="off">
+          </p>
+        </div>
+        <div class="cform__voet">
+          <button class="cform__btn" type="submit" id="cformVerstuur">Versturen</button>
+          <button class="cform__btn cform__btn--rand" type="button" id="cformAnnuleer">Annuleren</button>
+        </div>
+      </form>
+
+      <div class="cform__melding" id="cformMelding" hidden><svg aria-hidden="true" width="14" height="14" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg><p></p></div>
+    </div>
+  </dialog>
+  <!-- EIND_CFORM -->
 
   <footer class="footer">
     <div class="container">
@@ -681,6 +847,143 @@
       if (window.ResizeObserver) new ResizeObserver(later).observe(wrap);
       if (start.complete) draw(); else start.addEventListener('load', draw);
     })();
+    // BEGIN_CFORM (geschreven door tools/gedeeld.py uit index.html; bewerk daar)
+    // ── Contactformulier ────────────────────────────────────────
+    // Het e-mailadres in het contactblok opent dit venster in plaats van
+    // meteen een mailprogramma. Twee verplichte velden.
+    //
+    // VERZENDPUNT is de plek waar het bericht naartoe gaat. Zolang die leeg
+    // is, valt het formulier terug op het mailprogramma van de bezoeker, met
+    // alles al ingevuld; dan gaat er geen bezoekersgegeven langs een derde
+    // partij. Vul hier het adres in van een eigen functie of een
+    // formulierdienst en het bericht wordt rechtstreeks verstuurd.
+    (function () {
+      var VERZENDPUNT = '';
+
+      var venster  = document.getElementById('cform');
+      var form     = document.getElementById('cformForm');
+      if (!venster || !form) return;
+      var sluitKn  = document.getElementById('cformSluit');
+      var annuleer = document.getElementById('cformAnnuleer');
+      var verstuur = document.getElementById('cformVerstuur');
+      var melding  = document.getElementById('cformMelding');
+      var naam     = document.getElementById('cformNaam');
+      var mail     = document.getElementById('cformMail');
+      var tel      = document.getElementById('cformTel');
+      var bericht  = document.getElementById('cformBericht');
+      var veldBericht = document.getElementById('cformVeldBericht');
+      var hulp     = document.getElementById('cformFoutBereik');
+      var val      = document.getElementById('cformVal');
+      var wijzen   = [].slice.call(form.querySelectorAll('input[name="wijze"]'));
+      var vanaf    = null;
+
+      function wijze() {
+        var aan = wijzen.filter(function (w) { return w.checked; })[0];
+        return aan ? aan.value : 'bellen';
+      }
+      function toonBericht() {
+        var schrijven = wijze() === 'bericht';
+        veldBericht.hidden = !schrijven;
+        if (schrijven) bericht.focus();
+      }
+      wijzen.forEach(function (w) { w.addEventListener('change', toonBericht); });
+
+      function fout(el, aan, foutId) {
+        el.closest('.cform__veld').toggleAttribute('data-fout', aan);
+        var f = document.getElementById(foutId);
+        if (f) f.hidden = !aan;
+      }
+      function geldigAdres(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()); }
+      function geldigNummer(v) { return (v.replace(/\D/g, '').length >= 8); }
+
+      function open(knop) {
+        vanaf = knop || null;
+        melding.hidden = true;
+        form.hidden = false;
+        if (typeof venster.showModal === 'function') venster.showModal(); else venster.setAttribute('open', '');
+        mail.focus();
+      }
+      function sluit() {
+        if (typeof venster.close === 'function') venster.close(); else venster.removeAttribute('open');
+        if (vanaf) vanaf.focus();
+      }
+
+      // Alleen de adressen met data-cform openen dit venster: het contactblok
+      // van de homepage en het slot van elke andere pagina. De voet en de FAQ
+      // blijven een gewone mailtolink, want daar verwacht men geen venster.
+      [].forEach.call(document.querySelectorAll('a[data-cform]'), function (aanzet) {
+        aanzet.addEventListener('click', function (e) { e.preventDefault(); open(aanzet); });
+      });
+      sluitKn.addEventListener('click', sluit);
+      annuleer.addEventListener('click', sluit);
+      venster.addEventListener('click', function (e) { if (e.target === venster) sluit(); });
+
+      function regels() {
+        var r = [];
+        if (naam.value.trim()) r.push('Naam: ' + naam.value.trim());
+        if (mail.value.trim()) r.push('E-mail: ' + mail.value.trim());
+        if (tel.value.trim()) r.push('Telefoon: ' + tel.value.trim());
+        r.push('Vraag: ' + (wijze() === 'bericht' ? 'bericht' : 'graag contact opnemen'));
+        if (wijze() === 'bericht' && bericht.value.trim()) r.push('', bericht.value.trim());
+        return r;
+      }
+      function viaMailprogramma() {
+        location.href = 'mailto:info@polares.be'
+          + '?subject=' + encodeURIComponent(wijze() === 'bericht' ? 'Bericht via polares.be' : 'Contactverzoek via polares.be')
+          + '&body=' + encodeURIComponent(regels().join('\n'));
+      }
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        if (val.value) return;                       // ingevuld door een robot
+
+        // minstens één manier om te antwoorden, en wat ingevuld is moet kloppen
+        var heeftMail = mail.value.trim() !== '', heeftTel = tel.value.trim() !== '';
+        var mailOk = heeftMail && geldigAdres(mail.value);
+        var telOk  = heeftTel && geldigNummer(tel.value);
+        var bereikbaar = mailOk || telOk;
+        fout(mail, heeftMail && !mailOk, 'cformFoutMail');
+        fout(tel, heeftTel && !telOk, 'cformFoutTel');
+        hulp.toggleAttribute('data-fout', !bereikbaar);
+        hulp.textContent = bereikbaar
+          ? 'Vul minstens één van beide in, dan kunnen we u bereiken.'
+          : (heeftMail || heeftTel
+              ? 'Controleer het adres of het nummer: zo kunnen we u niet bereiken.'
+              : 'Vul minstens één van beide in, dan kunnen we u bereiken.');
+        if (!bereikbaar) { (heeftTel && !heeftMail ? tel : mail).focus(); return; }
+
+        var tekstOk = wijze() !== 'bericht' || bericht.value.trim().length > 1;
+        fout(bericht, !tekstOk, 'cformFoutBericht');
+        if (!tekstOk) { bericht.focus(); return; }
+
+        if (!VERZENDPUNT) { viaMailprogramma(); sluit(); return; }
+
+        verstuur.disabled = true;
+        verstuur.textContent = 'Versturen…';
+        fetch(VERZENDPUNT, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+          body: JSON.stringify({
+            naam: naam.value.trim(),
+            email: mail.value.trim(),
+            telefoon: tel.value.trim(),
+            wijze: wijze(),
+            bericht: wijze() === 'bericht' ? bericht.value.trim() : ''
+          })
+        }).then(function (r) {
+          if (!r.ok) throw new Error(r.status);
+          form.hidden = true;
+          melding.querySelector('p').textContent = 'Bedankt, uw bericht is verstuurd. We nemen persoonlijk contact op.';
+          melding.hidden = false;
+        }).catch(function () {
+          verstuur.disabled = false;
+          verstuur.textContent = 'Versturen';
+          melding.querySelector('p').textContent = 'Het versturen lukte niet. Probeer het opnieuw of mail rechtstreeks naar info@polares.be.';
+          melding.hidden = false;
+        });
+      });
+    })();
+    // EIND_CFORM
   </script>
 </body>
 </html>
