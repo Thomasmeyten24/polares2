@@ -193,6 +193,14 @@
       text-transform:uppercase;color:var(--text-soft);line-height:1.7}
     .lid__rol span{display:block}
     .lid__rol span+span{color:var(--navy-300)}
+    /* Het adres staat onder de functie, in kleine letters: versaald en
+       gespatieerd zoals het LinkedIn-label leest een e-mailadres slecht, en het
+       past dan ook niet in de kolom. */
+    .lid__mail{display:inline-block;margin-top:.55rem;font-family:var(--sans);font-size:12.5px;
+      color:var(--text-soft);border-bottom:1px solid transparent;
+      transition:color var(--dur-1) var(--ease),border-color var(--dur-2) var(--ease);
+      overflow-wrap:anywhere}
+    .lid__mail:hover{color:var(--navy-600);border-bottom-color:var(--navy-600)}
     .lid__linkedin{display:inline-flex;align-items:center;gap:.5rem;margin-top:.7rem;font-family:var(--sans);
       font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy-600);
       border-bottom:1px solid transparent;padding-bottom:2px;transition:border-color var(--dur-2) var(--ease)}
@@ -279,7 +287,8 @@
             <div>
               <p class="lid__naam">Nathalie Barbieur</p>
               <p class="lid__rol"><span>Capital Guide</span></p>
-            <a class="lid__linkedin" href="https://www.linkedin.com/in/nathalie-barbieur-b437a487/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+              <p><a class="lid__mail" href="mailto:nathalie@polares.be">nathalie@polares.be</a></p>
+              <a class="lid__linkedin" href="https://www.linkedin.com/in/nathalie-barbieur-b437a487/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
             </div>
           </li>
           <li class="lid">
@@ -287,7 +296,8 @@
             <div>
               <p class="lid__naam">Filip Meyten</p>
               <p class="lid__rol"><span>Capital Guide</span></p>
-            <a class="lid__linkedin" href="https://www.linkedin.com/in/filip-meyten-5082a67/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+              <p><a class="lid__mail" href="mailto:filip@polares.be">filip@polares.be</a></p>
+              <a class="lid__linkedin" href="https://www.linkedin.com/in/filip-meyten-5082a67/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
             </div>
           </li>
           <li class="lid">
@@ -295,7 +305,8 @@
             <div>
               <p class="lid__naam">Olivier Kiekens</p>
               <p class="lid__rol"><span>Corporate Advisor</span></p>
-            <a class="lid__linkedin" href="https://www.linkedin.com/in/olivier-kiekens-bb459636/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+              <p><a class="lid__mail" href="mailto:olivier@polares.be">olivier@polares.be</a></p>
+              <a class="lid__linkedin" href="https://www.linkedin.com/in/olivier-kiekens-bb459636/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
             </div>
           </li>
       </ul>
@@ -306,7 +317,8 @@
             <div>
               <p class="lid__naam">Nathalie Van de Velde</p>
               <p class="lid__rol"><span>Capital Guide</span></p>
-            <a class="lid__linkedin" href="https://www.linkedin.com/in/nathalie-van-de-velde-27619918/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+              <p><a class="lid__mail" href="mailto:nathalie.vandevelde@polares.be">nathalie.vandevelde@polares.be</a></p>
+              <a class="lid__linkedin" href="https://www.linkedin.com/in/nathalie-van-de-velde-27619918/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
             </div>
           </li>
           <li class="lid">
@@ -314,6 +326,7 @@
             <div>
               <p class="lid__naam">Fleur</p>
               <p class="lid__rol"><span>Capital Guide</span></p>
+              <p><a class="lid__mail" href="mailto:fleur@polares.be">fleur@polares.be</a></p>
             </div>
           </li>
       </ul>
@@ -324,7 +337,8 @@
             <div>
               <p class="lid__naam">Laura Verhoeven</p>
               <p class="lid__rol"><span>Legal Guide</span></p>
-            <a class="lid__linkedin" href="https://www.linkedin.com/in/laure-verhoeven/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+              <p><a class="lid__mail" href="mailto:laura@polares.be">laura@polares.be</a></p>
+              <a class="lid__linkedin" href="https://www.linkedin.com/in/laure-verhoeven/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
             </div>
           </li>
           <li class="lid">
@@ -332,7 +346,8 @@
             <div>
               <p class="lid__naam">Arne Verheedt</p>
               <p class="lid__rol"><span>Financial Guide</span><span>Investment analyst</span></p>
-            <a class="lid__linkedin" href="https://www.linkedin.com/in/arne-verheedt/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+              <p><a class="lid__mail" href="mailto:arne@polares.be">arne@polares.be</a></p>
+              <a class="lid__linkedin" href="https://www.linkedin.com/in/arne-verheedt/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
             </div>
           </li>
       </ul>
@@ -343,7 +358,8 @@
             <div>
               <p class="lid__naam">Jill De Smet</p>
               <p class="lid__rol"><span>Capital Assistant</span><span>Office manager</span></p>
-            <a class="lid__linkedin" href="https://www.linkedin.com/in/jill-de-smet-b87731126/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+              <p><a class="lid__mail" href="mailto:jill@polares.be">jill@polares.be</a></p>
+              <a class="lid__linkedin" href="https://www.linkedin.com/in/jill-de-smet-b87731126/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
             </div>
           </li>
           <li class="lid">
@@ -351,7 +367,8 @@
             <div>
               <p class="lid__naam">Elien De Rycke</p>
               <p class="lid__rol"><span>Capital Assistant</span></p>
-            <a class="lid__linkedin" href="https://www.linkedin.com/in/elien-de-rycke-3477b8267/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+              <p><a class="lid__mail" href="mailto:elien@polares.be">elien@polares.be</a></p>
+              <a class="lid__linkedin" href="https://www.linkedin.com/in/elien-de-rycke-3477b8267/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
             </div>
           </li>
           <li class="lid">
@@ -359,6 +376,7 @@
             <div>
               <p class="lid__naam">Valérie Mulayi</p>
               <p class="lid__rol"><span>Capital Assistant</span></p>
+              <p><a class="lid__mail" href="mailto:valerie@polares.be">valerie@polares.be</a></p>
             </div>
           </li>
       </ul>

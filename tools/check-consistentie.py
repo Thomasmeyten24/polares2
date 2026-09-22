@@ -197,6 +197,21 @@ controleer("meridiaan heeft onderwerpen", len(secties) >= 2, f"gevonden {secties
 for sectie in secties:
     controleer(f"meridiaan verwijst naar bestaande sectie #{sectie}", sectie in ankers)
 
+# ── 6b. Elke medewerker heeft een e-mailadres op het eigen domein ───────────
+# De adressen volgen voornaam@polares.be (Nathalie Van de Velde uitgezonderd,
+# want nathalie@ is al van Nathalie Barbieur). Een tikfout in het domein valt
+# niet op tot er een mail bouncet.
+leden = re.findall(r'<p class="lid__naam">([^<]+)</p>', team)
+mails = re.findall(r'class="lid__mail" href="mailto:([^"]+)"', team)
+controleer(
+    "elke medewerker heeft een e-mailadres",
+    len(leden) == len(mails) and len(leden) > 0,
+    f"{len(leden)} namen, {len(mails)} adressen",
+)
+for adres in mails:
+    controleer(f"adres {adres} staat op polares.be", adres.endswith("@polares.be"))
+    controleer(f"adres {adres} is in kleine letters zonder accent", adres.isascii() and adres.islower())
+
 # ── 7. De pagina's per bericht ───────────────────────────────────────────────
 # Elk bericht heeft een eigen adres, zodat het vanuit Google of vanaf sociale
 # media rechtstreeks te bereiken is. Die pagina's worden geschreven door
