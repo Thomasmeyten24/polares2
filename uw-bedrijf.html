@@ -133,9 +133,10 @@
       .station--l,.station--r,.station--wide{grid-column:1 / -1}
     }
 
-    /* Typografisch raster (hele site): titels links, tekstblokken uitgevuld,
-       acties links als tekstlink met pijltje */
-    .station p{text-align:justify;-webkit-hyphens:auto;hyphens:auto}
+    /* Typografisch raster (hele site): titels en tekstblokken links, acties
+       links als tekstlink met pijltje. Woorden worden nooit afgebroken, en dus
+       ook niet uitgevuld: dat gaf gaten van vijf spaties breed. */
+    .station p{text-align:left;-webkit-hyphens:manual;hyphens:manual;text-wrap:pretty}
 
     /* Tekstlink met pijltje */
     .more-link{display:inline-flex;align-items:center;gap:.6rem;margin-top:2rem;font-size:13px;letter-spacing:.08em;
@@ -146,8 +147,6 @@
     .more-link:hover svg{transform:translateX(8px)}
     .more-link+.more-link{margin-left:2rem}
     @media (max-width:520px){.more-link+.more-link{margin-left:0;margin-top:1rem}}
-    /* in de smalle mobiele kolom geeft uitvullen gaten en veel afbrekingen */
-    @media (max-width:767px){.station p{text-align:left;-webkit-hyphens:manual;hyphens:manual}}
 
     /* Haltes komen tot leven zodra de lijn ze bereikt (alleen met JS en
        zonder "beperkte beweging"; anders staat alles gewoon zichtbaar) */

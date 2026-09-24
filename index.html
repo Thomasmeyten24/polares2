@@ -1692,28 +1692,20 @@
       .footer__grid { grid-template-columns: 1fr; }
     }
 
-    /* Typografisch raster (hele site): titels links, tekstblokken uitgevuld,
-       acties links als tekstlink met pijltje. Woordafbreking (lang="nl")
-       voorkomt gaten in de uitgevulde regels. De korte bijschriften in smalle
-       kolommen (expertises, waarden) blijven links: uitgevuld geven die gaten. */
+    /* Typografisch raster (hele site): titels en tekstblokken links, acties
+       links als tekstlink met pijltje. Woorden worden nooit afgebroken:
+       "ambi-ties" of "fis-cale" leest slecht. Uitvullen kan dan niet meer: de
+       lange Nederlandse samenstellingen rekken een regel uit tot gaten van vijf
+       spaties breed. Links uitgelijnd blijft de ruimte tussen de woorden
+       overal gelijk; text-wrap: pretty houdt de rechterrand rustig en laat
+       geen los woord op de laatste regel achter. */
     .missie__text, .portal-col__body, .koers__text, .waarden__intro,
     .expertise__intro, .team__body, .faq__a,
     .contact__sub, .visie-tip__body {
-      text-align: justify;
-      -webkit-hyphens: auto;
-      hyphens: auto;
-    }
-
-    /* In een kolom van een telefoon (zo'n 330px) geeft uitvullen rivieren en
-       een woordafbreking om de twee regels. Daar dus links uitgelijnd. */
-    @media (max-width: 767px) {
-      .missie__text, .portal-col__body, .koers__text, .waarden__intro,
-      .expertise__intro, .team__body, .faq__a,
-      .contact__sub, .visie-tip__body {
-        text-align: left;
-        -webkit-hyphens: manual;
-        hyphens: manual;
-      }
+      text-align: left;
+      -webkit-hyphens: manual;
+      hyphens: manual;
+      text-wrap: pretty;
     }
 
     /* ── Telefoon ────────────────────────────────────────────── */
