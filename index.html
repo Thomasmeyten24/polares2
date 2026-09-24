@@ -963,6 +963,12 @@
     }
     .missie--live .missie__path { display: block; }
     .missie__path { transition: opacity .6s var(--ease); }
+    /* De lijn loopt ononderbroken door; wat ze kruist, ligt erboven en dekt haar
+       af met wit, zodat de ster erachter doorglijdt in plaats van eroverheen te
+       springen. Positioned, en later in de DOM dan het pad: dus erboven. */
+    .missie__kompas,
+    .portal__art,
+    .missie__triade--slot { position: relative; background: var(--white); }
     .missie__dots-donker { stroke: rgba(255,255,255,.7); }
     /* zodra de constellatie inzoomt, laat de lijn van hoofdstuk I los */
     body:has(#visie.is-zooming) .missie__path,
@@ -1866,7 +1872,9 @@
     <section id="missie" aria-labelledby="missie-h2">
       <div class="container missie__flow" id="missieFlow">
         <!-- Gestippelde lijn (desktop): ontstaat onder de kernwoorden en loopt langs de
-             satelliet naar Uw familie en daarna Uw bedrijf. Getekend door JS. -->
+             satelliet naar Uw familie en daarna Uw bedrijf. Getekend door JS. Ze is
+             één doorlopend pad en loopt achter de illustraties door; die dekken haar
+             af met een witte achtergrond, zoals de iconen van het traject. -->
         <svg class="missie__path" id="missiePath" aria-hidden="true" focusable="false">
           <defs>
             <mask id="missieMask" maskUnits="userSpaceOnUse" x="-100" y="-100" width="6000" height="12000">
@@ -1879,13 +1887,23 @@
             <clipPath id="missieClipDonker" clipPathUnits="userSpaceOnUse">
               <rect data-c="band" x="-5000" y="0" width="20000" height="0"/>
             </clipPath>
+            <!-- De lijn eindigt in het hart van de Poolster. Deze lijn ligt boven
+                 hoofdstuk II, dus kan de Poolster haar niet afdekken; daarom laat
+                 dit masker precies op de plek van de Poolster niets van de lijn
+                 en de ster door. Zo glijdt de ster erachter in plaats van erover. -->
+            <mask id="missieAchter" maskUnits="userSpaceOnUse" x="-5000" y="-5000" width="20000" height="40000">
+              <rect x="-5000" y="-5000" width="20000" height="40000" fill="#fff"/>
+              <path data-gat="pool" d="" fill="#000"/>
+            </mask>
           </defs>
+          <g mask="url(#missieAchter)">
           <!-- op wit navy, over het donkerblauw van hoofdstuk II licht -->
           <g mask="url(#missieMask)">
             <path class="koers__dots" data-p="main" d="" clip-path="url(#missieClipLicht)"/>
             <path class="koers__dots missie__dots-donker" data-l="main" d="" clip-path="url(#missieClipDonker)"/>
           </g>
           <g class="koers__head" data-h="main"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></g>
+          </g>
         </svg>
         <div class="chapter-head" data-reveal>
           <svg class="chapter-head__star" aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor" style="color:var(--navy-600)"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
@@ -3816,6 +3834,7 @@
       var line = { dots: svg.querySelector('[data-p="main"]'), rev: svg.querySelector('[data-r="main"]'), head: svg.querySelector('[data-h="main"]') };
       var lightCopy = svg.querySelector('[data-l="main"]');
       var clip = { boven: svg.querySelector('[data-c="boven"]'), onder: svg.querySelector('[data-c="onder"]'), band: svg.querySelector('[data-c="band"]') };
+      var gat = svg.querySelector('[data-gat="pool"]');
       var visieSec = document.getElementById('visie');
       var mq = matchMedia('(min-width: 768px)');
       var live = false, geo = null, tb = null, mik = null;
@@ -3836,9 +3855,21 @@
         if (m && m !== 'none') ty = new DOMMatrixReadOnly(m).m42;
         var base = tr.top - w.top;
         var sc = scene.getBoundingClientRect();
+        // De vorm van de Poolster in de coördinaten van deze lijn, voor het gat
+        // in het masker: de eigen coördinaten van het pad, via de groep erboven
+        // naar het scherm (zonder de twinkel-animatie van het pad zelf) en dan
+        // dezelfde verschuiving als hieronder, alsof het podium niet kleeft.
+        var gat = null, ctm = pool.parentNode.getScreenCTM && pool.parentNode.getScreenCTM();
+        if (ctm) {
+          gat = 'matrix(' + [ctm.a, ctm.b, ctm.c, ctm.d, ctm.e - w.left,
+                             ctm.f - st.top + base - ty].map(function (v) { return v.toFixed(3); }).join(',') + ')';
+        }
         return {
           x: r.left - w.left + r.width / 2,
           top: base + (r.top - st.top) - ty,
+          cy: base + (r.top - st.top) - ty + r.height / 2,
+          d: pool.getAttribute('d'),
+          gat: gat,
           titleTop: base + vTitle.offsetTop,
           // donkere band: van de bovenrand van hoofdstuk II tot het witte venster
           darkTop: document.getElementById('missie').getBoundingClientRect().bottom - w.top,
@@ -3859,22 +3890,29 @@
         var ex = P && Math.abs(P.x - e.x) < 16 ? P.x : e.x;
         var yA = (t.bottom + g.top) / 2;
         var yB = (g.bottom + p.top) / 2;
-        // haaks, door de witruimte; over de illustraties springt de lijn (M)
-        // vanonder het midden van de kernwoorden, haaks naar de satelliet
-        var d = 'M' + t.x + ',' + (t.bottom + 12) + ' V' + yA + ' H' + s.x + ' V' + (s.top - 12) +
-          ' M' + s.x + ',' + (s.bottom + 12) + ' V' + yB + ' H' + f.x + ' V' + (f.top - 14) +
-          ' M' + f.x + ',' + (f.bottom + 14) +
-          // tussen de twee rijen door naar de illustratie van Uw bedrijf
-          (Math.abs(b.x - f.x) > 2 ? ' V' + ((box(cols[0]).bottom + box(cols[1]).top) / 2) + ' H' + b.x : '') + ' V' + (b.top - 14) +
-          // en tot slot tot net boven de afsluitende regel
-          ' M' + b.x + ',' + (b.bottom + 14) + ' V' + ((box(cols[1]).bottom + box(slot).top) / 2) +
-          ' H' + ex + ' V' + (e.top - 22) +
-          // over de slotregel heen, recht naar de Poolster in hoofdstuk II
-          (P ? ' M' + ex + ',' + (e.bottom + 22) +
-               (Math.abs(P.x - ex) > 2 ? ' V' + ((e.bottom + P.titleTop) / 2) + ' H' + P.x : '') +
-               ' V' + (P.top - 9) : '');
+        // Haaks, door de witruimte, en in één doorlopend pad: de illustraties en
+        // de slotregel liggen erboven en dekken het af, zodat de ster erachter
+        // doorglijdt. Vroeger sprong de lijn eroverheen met een losse M; Safari
+        // begint het onthullen bij elk deelpad opnieuw, waardoor de lijn na elke
+        // sprong al klaarstond voor de ster er was.
+        // Vanonder het midden van de kernwoorden, haaks naar de satelliet
+        var d = 'M' + t.x + ',' + (t.bottom + 12) + ' V' + yA + ' H' + s.x +
+          // achter de satelliet door, naar de illustratie van Uw familie
+          ' V' + yB + ' H' + f.x +
+          // erachter door, tussen de twee rijen naar de tandwielen van Uw bedrijf
+          (Math.abs(b.x - f.x) > 2 ? ' V' + ((box(cols[0]).bottom + box(cols[1]).top) / 2) + ' H' + b.x : '') +
+          // erachter door, naar het midden van de slotregel
+          ' V' + ((box(cols[1]).bottom + box(slot).top) / 2) + ' H' + ex +
+          // achter de slotregel door en recht naar het hart van de Poolster, waar
+          // de ster achter verdwijnt; zonder Poolster tot net boven de slotregel
+          (P ? (Math.abs(P.x - ex) > 2 ? ' V' + ((e.bottom + P.titleTop) / 2) + ' H' + P.x : '') + ' V' + P.cy
+             : ' V' + (e.top - 22));
         line.dots.setAttribute('d', d);
         if (lightCopy) lightCopy.setAttribute('d', d);
+        if (gat) {
+          gat.setAttribute('d', P && P.gat ? P.d : '');
+          if (P && P.gat) gat.setAttribute('transform', P.gat); else gat.removeAttribute('transform');
+        }
         var bTop = P ? P.darkTop : 1e6, bBot = 1e6;
         clip.boven.setAttribute('height', bTop + 5000);
         clip.onder.setAttribute('y', bBot); clip.onder.setAttribute('height', 40000);
