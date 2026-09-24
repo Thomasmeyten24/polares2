@@ -77,13 +77,32 @@ privacyverklaring nakijkt.
 
 ---
 
+## De domeinnaam polares.be
+
+De site draait op Cloudflare, voorlopig op `polares.meyten.com`. Om ze op
+`polares.be` te zetten:
+
+1. **De registratie van polares.be naar het eigen Combell-account.** Ze staat
+   nu in het pakket van de vroegere websitebouwer; stopt dat pakket, dan kan de
+   domeinnaam verlopen, en dan vallen site én mail weg. Dringend, los van de rest.
+2. **De nameservers naar Cloudflare**: `dolly.ns.cloudflare.com` en
+   `micah.ns.cloudflare.com`, in de plaats van de drie `european-server`. De
+   zone staat in Cloudflare klaar, met alle records identiek en grijs (DNS
+   only); nagekeken tegen de bestaande DNS, 27 van 28 gelijk (alleen de AAAA van
+   `staging` ontbreekt, en die gaat weg).
+3. **De lancering**, zodra de zone actief is: de A- en AAAA-records van `@` en
+   `www` verwijderen, `polares.be` en `www.polares.be` als custom domain aan
+   het project koppelen, de Redirect Rule "WWW to root" aanzetten en Always Use
+   HTTPS. MX, TXT en de Microsoft-records blijven zoals ze zijn.
+4. Nadien: `polares.meyten.com` loskoppelen, en na een week de oude hosting
+   opzeggen.
+
 ## Voor de site live gaat
 
 - **De zes berichten op Blijf op koers zijn voorbeelden.** Ze staan met datum en
   plaats in `sitemap.xml` en in de structured data, dus zodra het domein hierop
-  draait kan Google verzonnen evenementen indexeren. Vervangen in
-  `data/berichten.json`, daarna `python tools/berichten.py` en
-  `python tools/og-afbeeldingen.py`. Zie `data/LEESMIJ.md`.
+  draait kan Google verzonnen evenementen indexeren. Vervangen of verwijderen
+  in het CMS, onder Blijf op koers.
 - **Het formulier verstuurt via Resend** (`worker/index.js`, op
   `/api/contact`, gratis plan: 3.000 mails per maand, 100 per dag). Tijdens het
   testen van `polares@meyten.com` naar `thomas@meyten.com`. Voor de lancering:
@@ -101,8 +120,12 @@ privacyverklaring nakijkt.
   jurist de tekst nakijkt.
 - **Privacyverklaring en algemene voorwaarden** staan als basistekst in de
   bestanden, met een notitie dat een jurist ze moet nakijken.
-- **De oude hosting opzeggen**, bij de vroegere websitebouwer, pas als de site
-  een week stabiel op Cloudflare draait.
+- **Het contactblok op de andere pagina's.** Alleen Uw familie heeft de variant
+  met "Laat ons u contacteren", en daaronder adres en nummer; de andere pagina's
+  hebben nog de oude twee regels. Kiezen, en dan overal hetzelfde.
+- **Vercel loskoppelen.** Elke push gaat daar nog naartoe en publiceert de hele
+  repo (ook `tools/`, `data/`, `TE-DOEN.md`) op een `vercel.app`-adres. Daarna
+  `vercel.json` weghalen.
 
 ---
 
@@ -126,7 +149,9 @@ moet, en wat alleen de eigenaar van de GitHub-repo kan:
   CMS, onder Ons team.
 - Bevestigen: `nathalie.vandevelde@polares.be` (aaneen?) en `valerie@polares.be`
   (zonder accent).
-- De teksten bij de symbolen van de constellatie zouden bijgestuurd worden.
+- Een eigen 404-pagina in de stijl van de site; nu toont Cloudflare een kale.
+- Het contactformulier heeft geen limiet per bezoeker. Misbruik kan alleen
+  spam in de eigen inbox geven en kost niets; komt het voor, dan een limiet.
 - `sessionStorage['polares-visited']` slaat één vlaggetje op om de intro-animatie
   over te slaan bij een tweede pagina. Geen persoonsgegeven, maar de
   privacyverklaring zegt nu "geen cookies". Vermelden of het trucje schrappen.
