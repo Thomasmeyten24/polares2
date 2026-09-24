@@ -3405,36 +3405,37 @@
       }
 
       // Een hoofdstuk kan korter zijn dan zijn eigen lijn. Expertise steekt
-      // 2015px pad af binnen een sectie van 911px: de sectie staat al volledig
-      // in beeld terwijl het ankermodel pas een derde getekend heeft. Dan
-      // bepaalt niet de vorm van het pad de snelheid maar het venster.
+      // 2005px pad af binnen een sectie van 911px, en moet rond zijn voor de
+      // lijn van Waarden vertrekt. Het ankermodel haalt dat niet: het zou nog
+      // bij de eerste kolom zijn als de sectie al volledig in beeld staat.
       //
-      // De reis eindigt op sEind, de ankerstand waarop de sectie volledig in
-      // beeld staat, en krijgt daarvoor precies zoveel scroll als erin past
-      // zonder dat de ster het scherm uit zakt. Met W0 de schermpositie van de
-      // bovenkant van de inhoud op dat eindmoment geldt
-      //
-      //   ster(a) = W0 + B − a·B/L + y(a)
-      //
-      // en dat is per knikpunt lineair in B, dus de grootste toegestane B volgt
-      // rechtstreeks uit de knikpunten. Gelijke kost per pixel booglengte is
-      // daarbij bewijsbaar de verdeling die de uitslag van de ster het kleinst
-      // houdt: horizontaal, omhoog en omlaag gaan dus even snel.
-      function venster(d, sEind, W0) {
-        var o = ontleed(d), segs = o.segs, L = o.lengte, H = window.innerHeight;
-        var laagst = H * .94, B = L / 2.2, i;
-        for (i = 0; i < segs.length; i++) {
-          var sg = segs[i];
-          B = Math.min(B, past(laagst - W0 - sg.y0, L - sg.l0, L),
-                          past(laagst - W0 - sg.y1, L - sg.l0 - sg.dl, L));
+      // plan() legt daarom het begin vast (sStart) en een uiterste einde
+      // (sUiterst), en zoekt per segment de kleinste kost waarbij de ster in
+      // beeld blijft. De schermpositie van de ster is y(a) − s + ANKER·H.
+      //   dalen:    zo snel als k toelaat, maar nooit onder HOOG in beeld; begint
+      //             de ster onderaan, dan loopt ze gelijk op met de pagina;
+      //   opzij:    met snelheid k, zonder boven LAAG uit te komen;
+      //   klimmen:  met snelheid k.
+      // k begint bij 3 en groeit tot de reis voor sUiterst rond is. De ster gaat
+      // dus nooit sneller dan nodig, en wacht nooit langer dan nodig.
+      function plan(d, sStart, sUiterst) {
+        var o = ontleed(d), segs = o.segs, H = window.innerHeight;
+        var hoog = H * .9, laag = H * .15, k, s = sStart, i;
+        for (k = 3; k <= 8; k += .25) {
+          var ys = o.start - sStart + ANKER * H;
+          s = sStart;
+          for (i = 0; i < segs.length; i++) {
+            var sg = segs[i], c;
+            if (sg.soort === 'omlaag') { c = Math.max(sg.dl / k, sg.dl - (hoog - ys)); ys += sg.dl - c; }
+            else if (sg.soort === 'horiz') { c = Math.min(sg.dl / k, Math.max(0, ys - laag)); ys -= c; }
+            else if (sg.soort === 'omhoog') { c = sg.dl / k; ys -= sg.dl + c; }
+            else c = 0;
+            sg.kost = c; sg.s0 = s; s += c;
+          }
+          if (s <= sUiterst) break;
         }
-        // ook als de meetkunde geen ruimte laat blijft er een reis over
-        B = Math.max(H * .18, B);
-        var f = L > 0 ? B / L : 0, s = sEind - B;
-        for (i = 0; i < segs.length; i++) { segs[i].kost = segs[i].dl * f; segs[i].s0 = s; s += segs[i].kost; }
-        return { segs: segs, lengte: L, sEind: s, sStart: sEind - B, piek: 0, band: 0 };
+        return { segs: segs, lengte: o.lengte, sEind: s, sStart: sStart, piek: 0, band: 0, k: k };
       }
-      function past(over, rest, L) { return rest > L * .001 ? over * L / rest : Infinity; }
 
       // waar staat de kop als de ankerlijn op s staat?
       function zoek(tb, s) {
@@ -3500,7 +3501,7 @@
       // marge zou de ster op een laag scherm tegen de onderrand duwen.
       function voor() { return Math.min(220, window.innerHeight * .2); }
 
-      return { tabel: tabel, venster: venster, zoek: zoek, anker: anker, sBij: sBij,
+      return { tabel: tabel, plan: plan, zoek: zoek, anker: anker, sBij: sBij,
                volger: volger, ANKER: ANKER, voor: voor };
     })();
 
@@ -3770,7 +3771,7 @@
       var items = [].slice.call(wrap.querySelectorAll('.expertise__item'));
       if (!lamp || !grid || !slot || !items.length) return;
       var mq = matchMedia('(min-width: 768px)');
-      var MARGE = 8, VOORBOOG = 90;
+      var START = .96, MARGE = 70, VOORBOOG = 90;
       var live = false, total = 0, y0 = 0, hits = [], tb = null;
 
       // positie t.o.v. de lijn; de scroll-reveal van de kop (translateY) eruit
@@ -3833,13 +3834,16 @@
           });
           return best;
         });
-        // De reis moet rond zijn op het moment dat de hele sectie in beeld
-        // staat: haar onderrand raakt dan de onderrand van het venster. W0 is
-        // waar de bovenkant van de inhoud op dat moment staat; MARGE laat de
-        // lijn een tikje daarvoor al aankomen.
+        // Vertrekken zodra de lamp helemaal in beeld is: haar onderrand op
+        // START van de vensterhoogte. Rond zijn voor de lijn van Waarden
+        // vertrekt: die start als de onderrand van deze sectie op
+        // ANKER·H + voor() staat (ze ligt er 28px onder en schuift erover);
+        // MARGE houdt daar nog wat ruimte tussen.
         var H = window.innerHeight;
-        var W0 = H - (sec.getBoundingClientRect().bottom - wrap.getBoundingClientRect().top) + MARGE;
-        tb = Reis.venster(d, Reis.ANKER * H - W0, W0);
+        var secOnder = sec.getBoundingClientRect().bottom - wrap.getBoundingClientRect().top;
+        var sStart = L.bottom - START * H + Reis.ANKER * H;
+        var sUiterst = secOnder - Reis.voor() - MARGE;
+        tb = Reis.plan(d, sStart, sUiterst);
         volg.herstel();
       }
 
