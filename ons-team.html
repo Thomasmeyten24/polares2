@@ -231,7 +231,6 @@
     .footer__grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:2.5rem}
     .footer__logo{width:150px;height:auto;margin-bottom:1.25rem}
     .footer__tagline{font-family:var(--serif);font-size:14px;line-height:1.7;color:rgba(255,255,255,.62)}
-    .footer__col-title{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:1rem}
     .footer__links{list-style:none}
     .footer__links li+li{margin-top:.4rem}
     .footer__links li{font-family:var(--sans);font-size:13px;color:rgba(255,255,255,.62)}
@@ -273,18 +272,17 @@
     .team-groep{margin-top:clamp(2.5rem,5vw,4rem)}
     .team-groep img{width:100%;height:auto;display:block}
 
-    /* Vier groepen onder elkaar, zonder opschrift: de witruimte ertussen en
-       de functie onder elke naam vertellen het verhaal. Elke groep vult één
-       rij; een groep van twee laat de derde kolom leeg, zodat de portretten
-       in alle groepen even breed blijven. */
-    .team-blokken{margin-top:clamp(3rem,6vw,4.5rem);display:flex;flex-direction:column;
-      gap:clamp(3.5rem,7vw,6rem)}
-    /* Het raster is smaller dan de groepsfoto erboven: drie kolommen, maar
-       de portretten hoeven de pagina niet te vullen. */
-    .team-grid{display:grid;grid-template-columns:repeat(3,1fr);list-style:none;
-      gap:clamp(1.25rem,2.5vw,2rem);max-width:880px}
-    @media (max-width:900px){.team-grid{grid-template-columns:1fr 1fr}}
-    @media (max-width:480px){.team-grid{gap:1.5rem 1rem}}
+    /* Eén doorlopend raster over de volle breedte, in de volgorde van de
+       HTML: vier portretten naast elkaar, die vanzelf op de volgende rij
+       verder lopen. Geen groepen meer, dus geen half lege rijen; de functie
+       onder elke naam vertelt het verhaal. De regelafstand is ruimer dan de
+       kolomafstand, zodat de rijen elkaar niet raken. */
+    .team-blokken{margin-top:clamp(3rem,6vw,4.5rem)}
+    .team-grid{display:grid;grid-template-columns:repeat(4,1fr);list-style:none;
+      gap:clamp(2.5rem,5vw,3.5rem) clamp(1.25rem,2.5vw,2rem)}
+    @media (max-width:1100px){.team-grid{grid-template-columns:repeat(3,1fr)}}
+    @media (max-width:760px){.team-grid{grid-template-columns:1fr 1fr}}
+    @media (max-width:480px){.team-grid{gap:2rem 1rem}}
     .lid{display:flex;flex-direction:column;gap:1rem}
 
     .lid__foto{position:relative;aspect-ratio:3/4;overflow:hidden;background:var(--navy-50)}
@@ -388,7 +386,7 @@
     </figure>
 
     <div class="team-blokken" aria-label="De medewerkers van Polares">
-      <ul class="team-grid team-grid--kern">
+      <ul class="team-grid">
           <li class="lid">
             <div class="lid__foto"><img src="assets/team/nathalie-barbieur.webp" alt="Nathalie Barbieur" width="560" height="747" loading="lazy" decoding="async"></div>
             <div>
@@ -416,9 +414,6 @@
               <a class="lid__linkedin" href="https://www.linkedin.com/in/olivier-kiekens-bb459636/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
             </div>
           </li>
-      </ul>
-
-      <ul class="team-grid">
           <li class="lid">
             <div class="lid__foto"><img src="assets/team/nathalie-van-de-velde.webp" alt="Nathalie Van de Velde" width="560" height="747" loading="lazy" decoding="async"></div>
             <div>
@@ -436,9 +431,6 @@
               <p><a class="lid__mail" href="mailto:fleur@polares.be">fleur@polares.be</a></p>
             </div>
           </li>
-      </ul>
-
-      <ul class="team-grid">
           <li class="lid">
             <div class="lid__foto"><img src="assets/team/laura-verhoeven.webp" alt="Laura Verhoeven" width="560" height="747" loading="lazy" decoding="async"></div>
             <div>
@@ -457,9 +449,6 @@
               <a class="lid__linkedin" href="https://www.linkedin.com/in/arne-verheedt/" target="_blank" rel="noopener noreferrer">LinkedIn <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="22" height="8"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
             </div>
           </li>
-      </ul>
-
-      <ul class="team-grid">
           <li class="lid">
             <div class="lid__foto"><img src="assets/team/jill-de-smet.webp" alt="Jill De Smet" width="560" height="747" loading="lazy" decoding="async"></div>
             <div>
@@ -565,7 +554,6 @@
         </div>
         <!-- Kolom 2: pagina's -->
         <div>
-          <p class="footer__col-title">Pagina's</p>
           <ul class="footer__links">
             <li><a href="uw-familie.html">Uw familie</a></li>
             <li><a href="uw-bedrijf.html">Uw onderneming</a></li>
@@ -576,7 +564,6 @@
         </div>
         <!-- Kolom 3: contact -->
         <div>
-          <p class="footer__col-title">Contact</p>
           <p class="footer__contact-item">Dirk Martensstraat 41<br>9300 Aalst</p>
           <p class="footer__contact-item"><a href="tel:+3254235050">+32 54 23 50 50</a></p>
           <p class="footer__contact-item"><a href="mailto:info@polares.be">info@polares.be</a></p>

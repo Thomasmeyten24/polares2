@@ -146,7 +146,7 @@
             "name": "Voor wie werkt Polares?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "Voor ondernemers en vermogende families die hun privévermogen en hun onderneming niet los van elkaar willen bekijken. Onderneming en familie staan bij ons nooit los van elkaar: elke begeleiding vertrekt vanuit één kompas."
+              "text": "Voor vermogende families en ondernemers die hun privévermogen en hun onderneming niet los van elkaar willen bekijken. Onderneming en familie staan bij ons nooit los van elkaar: elke begeleiding vertrekt vanuit één kompas."
             }
           },
           {
@@ -428,65 +428,52 @@
     .overlay__contact a:hover { color: var(--navy-600); }
 
     /* ── Meridiaan ───────────────────────────────────────────── */
-    /* Voortgangsbalk in de linkermarge: een rail met de onderwerpen ernaast en
-       een ster die meereist. De namen staan naast de rail, nooit erop, zodat de
-       ster er nooit doorheen loopt. Kleuren komen uit de JS: die kijkt welke
-       secties achter de balk staan en zet rail, vulling, ster en elke naam licht
-       of donker, desnoods halverwege de rail. */
+    /* Een hairline in de linkermarge met een ster die meereist en, eronder,
+       de naam van het onderwerp waar de bezoeker is. Kleuren komen uit de JS:
+       die kijkt welke secties achter de lijn staan en zet lijn, ster en naam
+       licht of donker, desnoods halverwege de lijn. */
     .meridian {
       position: fixed;
       /* Gecentreerd in de linkermarge: precies halverwege tussen de vensterrand
          en de linkerkant van de tekstkolom (= containermarge + containerpadding).
-         translateX(-50%) centreert de balk zelf op dat punt. */
+         translateX(-50%) centreert de lijn zelf op dat punt. */
       /* 50% i.p.v. 100vw: bij position:fixed telt een percentage de scrollbalk
-         niet mee, zodat de balk exact in het midden van de marge blijft. */
+         niet mee, zodat de lijn exact in het midden van de marge blijft. */
       left: calc((max(0px, 50% - var(--container) / 2) + var(--pad)) / 2);
       top: 50%;
       transform: translate(-50%, -50%);
+      height: 38vh;
       z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       pointer-events: none;
     }
-    .meridian__rail,
-    .meridian__vulling {
-      position: absolute;
-      left: 0;
-      top: 0;
+    .meridian__star { color: var(--navy-600); }
+    .meridian__line {
+      flex: 1;
       width: 1px;
       background-color: transparent;
       background-repeat: no-repeat;
       /* terugval zolang de JS nog niets heeft gemeten */
       background-image: linear-gradient(var(--navy-100), var(--navy-100));
     }
-    .meridian__rail { bottom: 0; }
-    .meridian__vulling { height: 0; background-image: linear-gradient(var(--navy-600), var(--navy-600)); }
-    .meridian__star {
-      position: absolute;
-      left: 0;
-      top: 0;
-      margin: -5px 0 0 -5px;           /* gecentreerd op de rail */
-      color: var(--navy-600);
-    }
-    .meridian__lijst {
-      margin: 0 0 0 13px;              /* de vrije strook waarin de ster reist */
-      padding: 0;
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: clamp(14px, 2.4vh, 24px);
-    }
-    .meridian__stap {
-      writing-mode: vertical-rl;
-      white-space: nowrap;
+    .meridian__label {
       font-family: var(--sans);
-      font-size: clamp(9px, 1.08vh, 10.5px);
+      font-size: 11px;
       letter-spacing: .12em;
       text-transform: uppercase;
       color: var(--text-faint);
+      writing-mode: vertical-rl;
+      transform: rotate(180deg);
+      margin-top: .5rem;
+      white-space: nowrap;
     }
-    .meridian__stap.is-nu { color: var(--navy-600); }
-    .meridian__stap.is-donker { color: var(--on-navy-soft); }
-    .meridian__stap.is-donker.is-nu { color: var(--white); }
+    /* De onderwerpen staan in de HTML omdat dat de enige plek hoort te zijn
+       waar ze staan; de JS zet de naam van het huidige in het label. */
+    .meridian__lijst { display: none; }
     .meridian__star.is-donker { color: var(--white); }
+    .meridian__label.is-donker { color: rgba(255,255,255,.55); }
 
     /* ── Hero ────────────────────────────────────────────────── */
     .hero {
@@ -1565,20 +1552,10 @@
     }
     .footer__logo { width: 150px; margin-bottom: 1.25rem; }
     .footer__tagline { font-family: var(--serif); font-size: 14px; line-height: 1.7; color: rgba(255,255,255,.62); }
-    .footer__col-title {
-      font-family: var(--sans);
-      font-size: 12px;
-      letter-spacing: .16em;
-      text-transform: uppercase;
-      color: rgba(255,255,255,.5);
-      margin-bottom: 1rem;
-    }
     .footer__links li + li { margin-top: .4rem; }
     .footer__links li { font-family: var(--sans); font-size: 13px; color: rgba(255,255,255,.62); }
-    .footer__links a,
-    .footer__col-title a { color: inherit; transition: color var(--dur-1) var(--ease); }
-    .footer__links a:hover,
-    .footer__col-title a:hover { color: var(--white); }
+    .footer__links a { color: inherit; transition: color var(--dur-1) var(--ease); }
+    .footer__links a:hover { color: var(--white); }
     .footer__contact-item { font-family: var(--sans); font-size: 13px; color: rgba(255,255,255,.55); line-height: 1.8; }
     .footer__contact-item a { color: rgba(255,255,255,.55); transition: color var(--dur-1) var(--ease); }
     .footer__contact-item a:hover { color: var(--white); }
@@ -1637,7 +1614,7 @@
     .meridian { transition: opacity .3s var(--ease); }
     .meridian.is-off { opacity: 0; }
     /* de kleur mag zacht omslaan, de stand van de ster niet: die volgt de scroll */
-    .meridian__star, .meridian__stap {
+    .meridian__star, .meridian__label {
       transition: color .3s var(--ease);
     }
 
@@ -1874,17 +1851,17 @@
     </div>
   </div>
 
-  <!-- ── Meridiaan: voortgangsbalk in de linkermarge ────────────
+  <!-- ── Meridiaan: hairline met ster in de linkermarge ─────────
        Start verborgen (is-off): de JS toont hem pas zodra de bezoeker in het
        onderwerpentraject zit. Voorkomt een flits over de hero bij het laden
-       en een permanent zichtbare balk zonder JS.
-       De volgorde van de <li>'s is de leesvolgorde van de pagina; data-sectie
-       koppelt elk onderwerp aan zijn sectie. Wie er een toevoegt of verplaatst,
-       hoeft alleen hier iets te wijzigen. -->
+       en een permanent zichtbare lijn zonder JS.
+       De <li>'s zijn niet zichtbaar; ze zijn de bron van de namen. Hun volgorde
+       is de leesvolgorde van de pagina en data-sectie koppelt elk onderwerp aan
+       zijn sectie. Wie er een toevoegt of verplaatst, wijzigt alleen hier. -->
   <aside class="meridian is-off" aria-hidden="true">
-    <span class="meridian__rail"></span>
-    <span class="meridian__vulling"></span>
     <svg class="meridian__star" width="10" height="10" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
+    <span class="meridian__line"></span>
+    <span class="meridian__label">Voor wie</span>
     <ol class="meridian__lijst">
       <li class="meridian__stap" data-sectie="missie">Voor wie</li>
       <li class="meridian__stap" data-sectie="visie">Wat doen we</li>
@@ -1971,7 +1948,7 @@
 
         <div class="missie__grid" data-reveal>
           <img class="missie__kompas" src="assets/uv/satelliet.svg" alt="" width="38" height="36" loading="lazy" decoding="async">
-          <p class="missie__text">Voor ondernemers en vermogende families beschermen en structureren we hun vermogen en laten we het duurzaam groeien, privé én professioneel, met oog voor vandaag én de generaties van morgen.</p>
+          <p class="missie__text">Voor vermogende families en ondernemers beschermen en structureren we hun vermogen en laten we het duurzaam groeien, privé én professioneel, met oog voor vandaag én de generaties van morgen.</p>
         </div>
 
         <!-- Uw familie & uw bedrijf (voorheen hoofdstuk III). Het anker #advies
@@ -2088,37 +2065,37 @@
             <circle cx="463" cy="489" r="36" fill="transparent"></circle>
           </g>
           <!-- Munt -->
-          <g class="uv-node" data-key="munt" tabindex="0" role="button" aria-label="Financiële rust">
+          <g class="uv-node" data-key="munt" tabindex="0" role="button" aria-label="De munt">
             <image class="uv-art" href="assets/uv/munt-wit.svg" x="565.1" y="471.61" width="34.29" height="34.42"></image>
             <circle class="uv-ring" cx="582" cy="489" r="19" style="--i:5"></circle>
             <circle cx="582" cy="489" r="38" fill="transparent"></circle>
           </g>
           <!-- Leefwereld (globe, centrum) -->
-          <g class="uv-node" data-key="leefwereld" tabindex="0" role="button" aria-label="De leefwereld">
+          <g class="uv-node" data-key="leefwereld" tabindex="0" role="button" aria-label="De wereldbol">
             <image class="uv-art" href="assets/uv/leefwereld-wit.svg" x="680.29" y="455.78" width="66.07" height="66.07"></image>
             <circle class="uv-ring" cx="713" cy="489" r="36" style="--i:6"></circle>
             <circle cx="713" cy="489" r="42" fill="transparent"></circle>
           </g>
           <!-- Satelliet -->
-          <g class="uv-node" data-key="satelliet" tabindex="0" role="button" aria-label="Onze rol">
+          <g class="uv-node" data-key="satelliet" tabindex="0" role="button" aria-label="De satelliet">
             <image class="uv-art" href="assets/uv/satelliet-wit.svg" x="783.98" y="470.63" width="38.07" height="36.37"></image>
             <circle class="uv-ring" cx="803" cy="489" r="21" style="--i:7"></circle>
             <circle cx="803" cy="489" r="36" fill="transparent"></circle>
           </g>
           <!-- Expertise (lamp) -->
-          <g class="uv-node" data-key="expertise" tabindex="0" role="button" aria-label="Onze expertise">
+          <g class="uv-node" data-key="expertise" tabindex="0" role="button" aria-label="De lamp">
             <image class="uv-art" href="assets/uv/expertise-wit.svg" x="883.12" y="468.43" width="36.09" height="40.77"></image>
             <circle class="uv-ring" cx="901" cy="488" r="22" style="--i:8"></circle>
             <circle cx="901" cy="488" r="38" fill="transparent"></circle>
           </g>
           <!-- Vermogen (diamant) -->
-          <g class="uv-node" data-key="vermogen" tabindex="0" role="button" aria-label="Het vermogen">
+          <g class="uv-node" data-key="vermogen" tabindex="0" role="button" aria-label="De diamant">
             <image class="uv-art" href="assets/uv/vermogen-wit.svg" x="981.6" y="468.59" width="74.84" height="40.49"></image>
             <circle class="uv-ring" cx="1019" cy="489" r="31" style="--i:9"></circle>
             <circle cx="1019" cy="489" r="42" fill="transparent"></circle>
           </g>
           <!-- Komeet -->
-          <g class="uv-node" data-key="komeet" tabindex="0" role="button" aria-label="De buitenwereld">
+          <g class="uv-node" data-key="komeet" tabindex="0" role="button" aria-label="De komeet">
             <image class="uv-art" href="assets/uv/komeet-wit.svg" x="847.2" y="312.07" width="37.57" height="43.12"></image>
             <circle class="uv-ring" cx="866" cy="333" r="23" style="--i:2"></circle>
             <circle cx="866" cy="333" r="34" fill="transparent"></circle>
@@ -2160,44 +2137,44 @@
         <h3 class="sr-only">De betekenis van de hemellichamen</h3>
         <dl class="visie__legenda sr-only" id="visieLegenda">
           <div data-key="poolster">
-            <dt>De Poolster</dt>
-            <dd>Zoals de noordpoolster: helder en richtinggevend. Polares is het vaste punt waarop onze klant koers zet, vandaag en in de toekomst.</dd>
+            <dt>De Poolster: <span class="legenda__zin">Uw doelen geven richting.</span></dt>
+            <dd>U bepaalt waar u naartoe wilt. Zoals de Poolster richting geeft, is Polares uw vaste referentiepunt om koers te zetten én te houden, vandaag en in de toekomst.</dd>
           </div>
           <div data-key="zwartgat">
-            <dt>Het zwarte gat</dt>
-            <dd>Onwetendheid over het eigen vermogen, gemiste kansen en onnodige risico's. Onze opdracht is helder: dit zwarte gat verkleinen met inzicht, overzicht en rust.</dd>
+            <dt>Het zwarte gat: <span class="legenda__zin">Maak het onbekende zichtbaar.</span></dt>
+            <dd>Wat u niet weet over uw vermogen, kan leiden tot gemiste kansen en onnodige risico's. Wij brengen overzicht en inzicht, zodat u met rust en vertrouwen kunt beslissen.</dd>
           </div>
           <div data-key="komeet">
-            <dt>De buitenwereld</dt>
-            <dd>Rond het universum beweegt een bredere realiteit: economische evoluties, wetgeving, fiscaliteit en maatschappelijke veranderingen. Wij detecteren ze tijdig en vertalen ze naar duidelijke inzichten.</dd>
+            <dt>De komeet: <span class="legenda__zin">Anticipeer op verandering.</span></dt>
+            <dd>Wat buiten uw leefwereld verandert, kan uw vermogen raken. Wij volgen ontwikkelingen in economie, fiscaliteit, wetgeving en samenleving en vertalen ze tijdig naar hun betekenis voor u.</dd>
           </div>
           <div data-key="kompas">
-            <dt>Het kompas</dt>
-            <dd>Waar wil onze klant naartoe? Het kompas staat voor wat écht belangrijk is en bepaalt de richting van alle keuzes die we samen maken.</dd>
+            <dt>Het kompas: <span class="legenda__zin">Laat uw prioriteiten richting geven.</span></dt>
+            <dd>Wat wilt u bereiken en wat is voor u écht belangrijk? Uw antwoord vormt het kompas voor iedere keuze die we samen maken.</dd>
           </div>
           <div data-key="gps">
-            <dt>De GPS</dt>
-            <dd>Het traject dat we samen afleggen. Soms rechtlijnig, soms met een omweg, maar altijd gericht op het doel. Wij zorgen voor opvolging, bijsturing en houvast onderweg.</dd>
+            <dt>De GPS: <span class="legenda__zin">Vind de route naar uw doelen.</span></dt>
+            <dd>Uw bestemming is duidelijk, maar de weg ernaartoe ligt niet altijd vast. Samen vertalen we uw doelen naar een concrete route, volgen we uw traject op en sturen we bij wanneer dat nodig is.</dd>
           </div>
           <div data-key="munt">
-            <dt>Financiële rust</dt>
-            <dd>De munt staat voor wat onze klant nodig heeft om zijn of haar leven te leven: de financiële basis voor bewuste en juiste keuzes.</dd>
+            <dt>De munt: <span class="legenda__zin">Kies vanuit financiële rust.</span></dt>
+            <dd>Een doordachte financiële basis geeft u de ruimte om uw leven te leiden en bewust te kiezen. Daarom stemmen we uw vermogen af op wat u vandaag nodig hebt en morgen wilt realiseren.</dd>
           </div>
           <div data-key="leefwereld">
-            <dt>De leefwereld</dt>
-            <dd>De wereld van onze klant bestaat uit twee onlosmakelijke delen: familie én onderneming. Wij bekijken ze nooit apart, maar met een 360°-aanpak.</dd>
+            <dt>De wereldbol: <span class="legenda__zin">Bekijk uw leefwereld als één geheel.</span></dt>
+            <dd>Uw familie en uw onderneming zijn onlosmakelijk met elkaar verbonden. Wat in de ene wereld verandert, kan de andere beïnvloeden. Daarom bekijken we beide altijd in samenhang.</dd>
           </div>
           <div data-key="satelliet">
-            <dt>Onze rol</dt>
-            <dd>Wij nemen de rol op van satelliet: dicht bij de klant, voortdurend meebewegend en proactief inspelend op kansen en risico's in zijn of haar leefwereld.</dd>
+            <dt>De satelliet: <span class="legenda__zin">Reken op een klankbord dat met u meebeweegt.</span></dt>
+            <dd>Wij blijven dicht bij uw situatie, bewegen mee met veranderingen en signaleren proactief kansen en risico's. Zo staat u er bij belangrijke financiële beslissingen niet alleen voor.</dd>
           </div>
           <div data-key="expertise">
-            <dt>Onze expertise</dt>
-            <dd>De lamp staat voor kennis en inzicht. We brengen licht in complexe materie zoals ondernemen, beleggen, erfrecht en fiscaliteit, zodat onze klant met vertrouwen beslist.</dd>
+            <dt>De lamp: <span class="legenda__zin">Krijg helderheid in complexe materie.</span></dt>
+            <dd>Wij vertalen onze expertise in ondernemen, beleggen, erfrecht en fiscaliteit naar heldere inzichten. Zo begrijpt u wat elke keuze voor u betekent en beslist u met vertrouwen.</dd>
           </div>
           <div data-key="vermogen">
-            <dt>Het vermogen</dt>
-            <dd>De diamant staat voor het totale vermogen, opgebouwd uit meerdere pijlers: vastgoed, beleggingen, onderneming, kunst... Elke facet maakt deel uit van één geheel.</dd>
+            <dt>De diamant: <span class="legenda__zin">Breng alle facetten van uw vermogen samen.</span></dt>
+            <dd>Uw vermogen kent vele facetten: vastgoed, beleggingen, uw onderneming, kunst en meer. Wij brengen ze samen in één helder geheel en stemmen ze af op uw doelen, zodat elk onderdeel bijdraagt aan uw toekomst.</dd>
           </div>
         </dl>
       </div>
@@ -2301,7 +2278,7 @@
         </div>
         <div class="team__grid">
           <div class="team__content">
-            <h2 class="team__h2" id="team-h2">Naast u.</h2>
+            <h2 class="team__h2" id="team-h2">Voor u.</h2>
             <p class="team__body">Bij Polares begeleiden we niet alleen vermogens, maar vooral de mensen erachter. Met betrokkenheid, expertise en heldere inzichten zorgen we dat elke beslissing bijdraagt aan wat voor u werkelijk van waarde is.</p>
             <a href="ons-team.html" class="more-link">
               Maak kennis met Polares
@@ -2544,7 +2521,7 @@
           </div>
           <div class="faq__item" data-reveal>
             <h3 class="faq__q">Voor wie werkt Polares?</h3>
-            <p class="faq__a">Voor ondernemers en vermogende families die hun privévermogen en hun onderneming niet los van elkaar willen bekijken. Onderneming en familie staan bij ons nooit los van elkaar: elke begeleiding vertrekt vanuit één kompas.</p>
+            <p class="faq__a">Voor vermogende families en ondernemers die hun privévermogen en hun onderneming niet los van elkaar willen bekijken. Onderneming en familie staan bij ons nooit los van elkaar: elke begeleiding vertrekt vanuit één kompas.</p>
           </div>
           <div class="faq__item" data-reveal>
             <h3 class="faq__q">Hoe onafhankelijk is het advies van Polares?</h3>
@@ -2640,7 +2617,6 @@
         </div>
         <!-- Kolom 2: pagina's -->
         <div>
-          <p class="footer__col-title">Pagina's</p>
           <ul class="footer__links">
             <li><a href="uw-familie.html">Uw familie</a></li>
             <li><a href="uw-bedrijf.html">Uw onderneming</a></li>
@@ -2651,7 +2627,6 @@
         </div>
         <!-- Kolom 3: contact -->
         <div>
-          <p class="footer__col-title">Contact</p>
           <p class="footer__contact-item">Dirk Martensstraat 41<br>9300 Aalst</p>
           <p class="footer__contact-item"><a href="tel:+3254235050">+32 54 23 50 50</a></p>
           <p class="footer__contact-item"><a href="mailto:info@polares.be">info@polares.be</a></p>
@@ -3088,25 +3063,27 @@
       els.forEach(function (el) { io.observe(el); });
     })();
 
-    // ── Meridiaan: voortgangsbalk met de onderwerpen ────────────
+    // ── Meridiaan: ster reist het onderwerpentraject ────────────
     (function () {
       var mer = document.querySelector('.meridian');
       if (!mer) return;
       var star = mer.querySelector('.meridian__star');
-      var rail = mer.querySelector('.meridian__rail');
-      var vulling = mer.querySelector('.meridian__vulling');
+      var line = mer.querySelector('.meridian__line');
+      var label = mer.querySelector('.meridian__label');
+      // Bij reduced motion blijft de lijn gewoon werken als aanduiding van het
+      // onderwerp; alleen de meereizende ster staat dan stil.
+      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       // Elk onderwerp uit de HTML naast zijn sectie. Ontbreekt de sectie, dan
-      // verdwijnt ook de naam: anders zou de ster naar een leeg vak reizen.
+      // vervalt ook de naam: anders zou de ster naar een leeg vak reizen.
       var onderwerpen = [];
       [].forEach.call(mer.querySelectorAll('.meridian__stap'), function (li) {
         var el = document.getElementById(li.getAttribute('data-sectie'));
-        if (el) onderwerpen.push({ el: el, li: li });
-        else li.parentNode.removeChild(li);
+        if (el) onderwerpen.push({ el: el, naam: li.textContent.trim() });
       });
       if (onderwerpen.length < 2) return;
 
-      // Welke vlakken achter de balk donker zijn. De volgorde is de teken-
+      // Welke vlakken achter de lijn donker zijn. De volgorde is de teken-
       // volgorde: een later vlak overschrijft een eerder. De witte bladen staan
       // dus ná de donkere die ze overlappen: ze schuiven er met een negatieve
       // marge en een afgeronde bovenrand overheen, telkens 28px diep.
@@ -3121,60 +3098,38 @@
         { kies: '.footer',      donker: true  }
       ].filter(function (l) { l.el = document.querySelector(l.kies); return l.el; });
 
-      var RAIL_LICHT = 'var(--navy-100)', RAIL_DONKER = 'rgba(255,255,255,.3)';
-      var VUL_LICHT = 'var(--navy-600)', VUL_DONKER = 'rgba(255,255,255,.85)';
+      var LIJN_LICHT = 'var(--navy-100)', LIJN_DONKER = 'rgba(255,255,255,.3)';
 
-      // Hoever in een sectie de ster naast haar eigen naam blijft staan; de rest
-      // van de sectie gebruikt ze om naar de volgende naam te schuiven. Zonder
-      // die verhouding hangt de ster het grootste deel van een kort hoofdstuk
-      // in de witruimte onder de naam die oplicht.
-      var BLIJF = .8;
+      var startY = 0, eindY = 0, lijnH = 0, bezig = false;
 
-      var ankers = [], railH = 0, bezig = false;
-
-      // De balk zelf verandert alleen mee met het venster: per naam onthouden we
-      // haar boven- en onderkant op de rail.
       function meet() {
-        var top = mer.getBoundingClientRect().top;
-        railH = rail.getBoundingClientRect().height;
-        ankers = onderwerpen.map(function (o) {
-          var r = o.li.getBoundingClientRect();
-          return { boven: r.top - top, onder: r.bottom - top };
-        });
-        ankers.push({ boven: railH, onder: railH });
+        var eerste = onderwerpen[0].el, laatste = onderwerpen[onderwerpen.length - 1].el;
+        startY = eerste.getBoundingClientRect().top + window.scrollY;
+        eindY = laatste.getBoundingClientRect().bottom + window.scrollY;
+        lijnH = line.getBoundingClientRect().height;
         werkBij();
       }
 
       function werkBij() {
         bezig = false;
         var mid = window.scrollY + window.innerHeight / 2;
+        var p = eindY > startY ? (mid - startY) / (eindY - startY) : 0;
+        p = Math.max(0, Math.min(1, p));
+        if (!reduce) star.style.transform = 'translateY(' + (p * Math.max(0, lijnH)) + 'px)';
 
-        // Elk vak hoort bij het stuk document van sectie i tot sectie i+1. Dat
-        // meten we per frame: de zoom van hoofdstuk II en de reveals verzetten
-        // de secties nog nadat de pagina geladen is.
-        var grenzen = onderwerpen.map(function (o) {
-          return o.el.getBoundingClientRect().top + window.scrollY;
-        });
-        grenzen.push(onderwerpen[onderwerpen.length - 1].el.getBoundingClientRect().bottom + window.scrollY);
-
+        // Het onderwerp waar de bezoeker in zit: het laatste dat boven het
+        // midden van het venster begint. Kiezen op afstand tot dat midden zou
+        // de langste sectie laten winnen; Expertise is zo hoog dat Waarden en
+        // Contact dan nooit aan bod komen.
         var i = 0;
-        while (i < onderwerpen.length - 1 && mid >= grenzen[i + 1]) i++;
-        var vak = grenzen[i + 1] - grenzen[i];
-        var f = vak > 0 ? (mid - grenzen[i]) / vak : 0;
-        f = Math.max(0, Math.min(1, f));
-
-        var a = ankers[i], y;
-        if (f <= BLIJF) y = a.boven + (f / BLIJF) * (a.onder - a.boven);
-        else y = a.onder + ((f - BLIJF) / (1 - BLIJF)) * (ankers[i + 1].boven - a.onder);
-        y = Math.max(0, Math.min(railH, y));
-
-        star.style.transform = 'translateY(' + y + 'px)';
-        vulling.style.height = y + 'px';
-        onderwerpen.forEach(function (o, n) { o.li.classList.toggle('is-nu', n === i); });
+        for (var n = 1; n < onderwerpen.length; n++) {
+          if (onderwerpen[n].el.getBoundingClientRect().top + window.scrollY <= mid) i = n;
+        }
+        if (label.textContent !== onderwerpen[i].naam) label.textContent = onderwerpen[i].naam;
 
         // buiten het onderwerpentraject (hero, footer): verbergen
-        mer.classList.toggle('is-off', mid < grenzen[0] || mid > grenzen[grenzen.length - 1]);
-        kleur(y);
+        mer.classList.toggle('is-off', mid < startY || mid > eindY);
+        kleur();
       }
 
       // Ligt dit punt (viewport-y) voor een donkere achtergrond?
@@ -3187,16 +3142,15 @@
         return d;
       }
 
-      // De rail is langer dan één sectie en kan dus half voor donker en half
+      // De lijn is langer dan één sectie en kan dus half voor donker en half
       // voor licht hangen. We knippen ze op de randen van de vlakken en geven
       // elk stuk zijn eigen kleur mee als verloop met harde overgangen.
-      function stukken() {
-        var top = mer.getBoundingClientRect().top;
-        var randen = [0, railH];
+      function stukken(top, hoogte) {
+        var randen = [0, hoogte];
         lagen.forEach(function (l) {
           var r = l.el.getBoundingClientRect();
           [r.top - top, r.bottom - top].forEach(function (v) {
-            if (v > 0 && v < railH) randen.push(v);
+            if (v > 0 && v < hoogte) randen.push(v);
           });
         });
         randen.sort(function (a, b) { return a - b; });
@@ -3220,21 +3174,14 @@
         return 'linear-gradient(to bottom,' + stops.join(',') + ')';
       }
 
-      function kleur(y) {
-        var top = mer.getBoundingClientRect().top;
-        var vakken = stukken();
-        if (vakken.length) {
-          rail.style.backgroundImage = verloop(vakken, RAIL_LICHT, RAIL_DONKER);
-          // de vulling is korter dan de rail; het verloop houdt de maat van de
-          // rail aan, zodat de overgangen op dezelfde hoogte blijven vallen
-          vulling.style.backgroundImage = verloop(vakken, VUL_LICHT, VUL_DONKER);
-          vulling.style.backgroundSize = '1px ' + railH + 'px';
-        }
-        star.classList.toggle('is-donker', donkerBij(top + y));
-        onderwerpen.forEach(function (o) {
-          var r = o.li.getBoundingClientRect();
-          o.li.classList.toggle('is-donker', donkerBij(r.top + r.height / 2));
-        });
+      function kleur() {
+        var lr = line.getBoundingClientRect();
+        var vakken = stukken(lr.top, lr.height);
+        if (vakken.length) line.style.backgroundImage = verloop(vakken, LIJN_LICHT, LIJN_DONKER);
+        var sr = star.getBoundingClientRect();
+        star.classList.toggle('is-donker', donkerBij(sr.top + sr.height / 2));
+        var br = label.getBoundingClientRect();
+        label.classList.toggle('is-donker', donkerBij(br.top + br.height / 2));
       }
 
       function opScroll() {
@@ -3348,7 +3295,10 @@
           var k = item.getAttribute('data-key');
           var dt = item.querySelector('dt'), dd = item.querySelector('dd');
           if (!MAP[k] || !dt || !dd) return;
-          MAP[k].title = dt.textContent.trim();
+          // De naam van het hemellichaam staat wel in de legenda, want daar leest
+          // een schermlezer de losse beschrijvingen; in de tooltip is hij
+          // overbodig, daar staat het symbool zelf ernaast.
+          MAP[k].title = (dt.querySelector('.legenda__zin') || dt).textContent.trim();
           MAP[k].body = dd.textContent.trim();
         });
       }

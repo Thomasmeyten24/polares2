@@ -271,7 +271,6 @@
     .footer__grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:2.5rem}
     .footer__logo{width:150px;height:auto;margin-bottom:1.25rem}
     .footer__tagline{font-family:var(--serif);font-size:14px;line-height:1.7;color:rgba(255,255,255,.62)}
-    .footer__col-title{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:1rem}
     .footer__links{list-style:none}
     .footer__links li+li{margin-top:.4rem}
     .footer__links li{font-family:var(--sans);font-size:13px;color:rgba(255,255,255,.62)}
@@ -479,7 +478,6 @@
         </div>
         <!-- Kolom 2: pagina's -->
         <div>
-          <p class="footer__col-title">Pagina's</p>
           <ul class="footer__links">
             <li><a href="uw-familie.html">Uw familie</a></li>
             <li><a href="uw-bedrijf.html">Uw onderneming</a></li>
@@ -490,7 +488,6 @@
         </div>
         <!-- Kolom 3: contact -->
         <div>
-          <p class="footer__col-title">Contact</p>
           <p class="footer__contact-item">Dirk Martensstraat 41<br>9300 Aalst</p>
           <p class="footer__contact-item"><a href="tel:+3254235050">+32 54 23 50 50</a></p>
           <p class="footer__contact-item"><a href="mailto:info@polares.be">info@polares.be</a></p>
@@ -807,7 +804,8 @@
           prev = p;
           prevBottom = sb.bottom;
         });
-        d += ' V' + (prev.y + 120);
+        // De lijn eindigt op de laatste halte: daar komt ook de ster tot
+        // stilstand. Een staart eronder zou als aanloop naar niets blijven hangen.
         dots.setAttribute('d', d);
         reveal.setAttribute('d', d);
         total = dots.getTotalLength();
