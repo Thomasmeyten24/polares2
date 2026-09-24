@@ -112,5 +112,5 @@ privacyverklaring nakijkt.
   privacyverklaring zegt nu "geen cookies". Vermelden of het trucje schrappen.
 - Op een telefoon scrolt de pagina zeven pixels horizontaal, door de SVG van de
   constellatie die buiten haar kader tekent.
-- De aanwijzing "Klik op een hemellichaam" en de knop "Ontdek meer" schuiven aan
-  het eind van het klikvenster onder het witte blad van het traject.
+- De aanwijzing "Klik op een hemellichaam" schuift aan het eind van het
+  klikvenster onder het witte blad van het traject.

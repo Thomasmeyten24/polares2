@@ -719,38 +719,9 @@
       gap: .9rem;
       margin-top: clamp(1.25rem, 2vw, 1.75rem);
     }
-    /* de "Ontdek meer"-knop: tekstlink met pijltje, als knopelement */
-    .visie__next {
-      background: none;
-      border: 0;
-      border-bottom: 1px solid transparent;
-      border-radius: 0;
-      cursor: pointer;
-      font-family: var(--sans);
-    }
-    .visie__next:focus-visible { outline: 2px solid rgba(255,255,255,.6); outline-offset: 4px; }
     .visie__caption {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: .7rem;
       color: var(--navy-100);
       text-align: center;
-    }
-    /* kloppend puntje voor het onderschrift: "hier kan je iets doen" */
-    .visie__caption::before {
-      content: "";
-      flex-shrink: 0;
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--white);
-      box-shadow: 0 0 0 0 rgba(255,255,255,.45);
-      animation: capPulse 2.4s var(--ease-out) infinite;
-    }
-    @keyframes capPulse {
-      0% { box-shadow: 0 0 0 0 rgba(255,255,255,.45); }
-      70%, 100% { box-shadow: 0 0 0 9px rgba(255,255,255,0); }
     }
     /* in het (flex)podium zou de container anders krimpen en centreren */
     .visie__head { width: 100%; }
@@ -810,9 +781,6 @@
       border-radius: 28px 28px 0 0;
       margin-top: var(--section-y);
       padding-bottom: clamp(2.5rem, 5vw, 4rem);
-      /* "Ontdek meer" springt hierheen; de vaste navigatiebalk mag de bovenrand
-         niet afdekken */
-      scroll-margin-top: 76px;
     }
     .visie--zoom .koers-sheet {
       /* Het witte blad schuift alvast op terwijl de constellatie stilstaat. Bij
@@ -2122,8 +2090,6 @@
 
       <div class="visie__foot">
         <p class="visie__caption label">Klik op een hemellichaam en ontdek zijn betekenis</p>
-        <!-- De pagina houdt hier even halt; deze knop laat haar verder glijden -->
-        <button type="button" class="more-link more-link--light visie__next" id="visieNext">Ontdek meer <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></button>
       </div>
       </div><!-- /.visie__stage -->
       </div><!-- /.visie__track -->
@@ -3608,22 +3574,6 @@
       }, { passive: true });
       build();
     });
-
-    // ── "Ontdek meer" springt naar het traject ───────────────────
-    // Hier stond een scroll-stop die de pagina vasthield tot de bezoeker op
-    // deze knop klikte. Dat werkte averechts: wie de knop niet zag, kwam niet
-    // meer vooruit, en op een telefoon vervaagde hij net tijdens de zoom.
-    // Scrollen blijft nu altijd vrij; de knop is een snelkoppeling naar het
-    // traject, geen sluis.
-    (function () {
-      var btn = document.getElementById('visieNext');
-      var blad = document.querySelector('.koers-sheet');
-      if (!btn || !blad) return;
-      var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
-      btn.addEventListener('click', function () {
-        blad.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
-      });
-    })();
 
     // ── Reis: één ankermodel voor alle trajecten ─────────────────
     // De ster staat op het snijpunt van het traject met een ankerlijn op 70%
