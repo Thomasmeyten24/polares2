@@ -7,8 +7,7 @@ CMS. Het doet drie dingen, en stopt bij de eerste fout; dan publiceert Cloudflar
 niets en blijft de vorige versie gewoon online staan:
 
 1. De pagina's maken uit de gegevens: de deelafbeeldingen en de pagina's van
-   Blijf op koers uit data/berichten.json, het team uit data/team.json, en het
-   contactformulier op elke pagina gelijk met index.html.
+   Blijf op koers uit data/berichten.json, en het team uit data/team.json.
 2. De consistentiecontrole draaien.
 3. Kopiëren wat online moet. De repo bevat meer dan de site: tools/, data/,
    notities als TE-DOEN.md. In plaats van een lijst met wat níet mee mag (die
@@ -96,7 +95,6 @@ def genereer() -> None:
         stap("deelafbeeldingen", ["tools/og-afbeeldingen.py", "--alles"], pad)
     stap("berichten", ["tools/berichten.py"])
     stap("team", ["tools/team.py"], pad)
-    stap("contactformulier", ["tools/gedeeld.py"])
     stap("consistentiecontrole", ["tools/check-consistentie.py"])
 
 

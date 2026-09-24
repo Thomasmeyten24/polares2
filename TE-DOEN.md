@@ -118,9 +118,6 @@ De site draait op Cloudflare, voorlopig op `polares.meyten.com`. Om ze op
   De privacyverklaring vermeldt sinds 24 september het contactformulier,
   Cloudflare, Resend en Microsoft als verwerkers, en het vlaggetje in de
   sessieopslag; punt 4 en punt 6 verdienen de meeste aandacht.
-- **Het contactblok op de andere pagina's.** Alleen Uw familie heeft de variant
-  met "Laat ons u contacteren", en daaronder adres en nummer; de andere pagina's
-  hebben nog de oude twee regels. Kiezen, en dan overal hetzelfde.
 - **Vercel loskoppelen.** Elke push gaat daar nog naartoe en publiceert de hele
   repo (ook `tools/`, `data/`, `TE-DOEN.md`) op een `vercel.app`-adres. Daarna
   `vercel.json` weghalen.

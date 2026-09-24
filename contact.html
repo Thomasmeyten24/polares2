@@ -132,7 +132,6 @@
     @media (max-width:520px){.more-link+.more-link{margin-left:0;margin-top:1rem}}
 
 
-    /* BEGIN_CFORM (geschreven door tools/gedeeld.py uit index.html; bewerk daar) */
     /* ── Contactformulier ────────────────────────────────────── */
     /* Veldstijl uit het design system: stille haarlijnen, het label klein en
        in kapitalen erboven. Zo weinig mogelijk velden: alleen een adres om
@@ -237,7 +236,6 @@
        de homepage: het adres dat dit venster opent, en daaronder het nummer. */
     .slot-acties { display: flex; flex-direction: column; align-items: flex-start; }
     .slot-acties .more-link + .more-link { margin-left: 0; margin-top: .6rem; }
-    /* EIND_CFORM */
 
     /* Footer, gelijk aan de homepage */
     .footer{background:var(--navy-900);border-top:1px solid rgba(255,255,255,.08);padding-block:clamp(3rem,6vw,5rem)}
@@ -266,8 +264,8 @@
 
     /* ── Contactpagina ───────────────────────────────────────────
        Kop, dan het formulier naast de gegevens van het kantoor, en onderaan
-       de kaart over de volle breedte. Het formulier is hetzelfde als in het
-       venster op de andere pagina's (tools/gedeeld.py), hier zonder venster. */
+       de kaart over de volle breedte. Dit is de enige plek met het formulier:
+       elk contactblok op de site linkt hierheen. */
     .contact{padding-bottom:clamp(5rem,10vw,8rem)}
     .c-hero{padding-top:clamp(3rem,7vw,5.5rem)}
     .c-hero h1{font-family:var(--serif);font-weight:400;font-size:clamp(2.1rem,4.2vw,3.6rem);line-height:1.15;
@@ -354,14 +352,12 @@
     </section>
 
     <div class="c-grid">
-      <!-- Het formulier van het venster op de andere pagina's, hier op de pagina
-           zelf. De velden komen uit index.html (tools/gedeeld.py); kop, knop en
-           melding staan hier. Zonder Annuleren: er is niets om te sluiten. -->
+      <!-- Het contactformulier. Het verstuurt naar /api/contact (worker/index.js);
+           de veldnamen moeten daarmee overeenkomen. -->
       <section class="cform cform--pagina" id="cform" aria-labelledby="cformTitel">
         <h2 class="c-h2" id="cformTitel">Contacteer ons</h2>
         <p class="cform__sub">Laat ons weten hoe we u kunnen begeleiden. We antwoorden persoonlijk.</p>
         <form id="cformForm" novalidate>
-          <!-- BEGIN_CFORM_VELDEN (geschreven door tools/gedeeld.py uit index.html; bewerk daar) -->
         <fieldset class="cform__keuze">
           <legend>Wat wilt u doen?</legend>
           <label><input type="radio" name="wijze" value="bellen" checked> Contacteer mij</label>
@@ -396,7 +392,6 @@
             <input id="cformVal" name="website" type="text" tabindex="-1" autocomplete="off">
           </p>
         </div>
-        <!-- EIND_CFORM_VELDEN -->
           <div class="cform__voet">
             <button class="cform__btn" type="submit" id="cformVerstuur">Versturen</button>
           </div>
@@ -497,11 +492,10 @@
       });
     })();
 
-    // BEGIN_CFORM (geschreven door tools/gedeeld.py uit index.html; bewerk daar)
     // ── Contactformulier ────────────────────────────────────────
-    // Op de meeste pagina's een venster dat opent vanuit het contactblok. Op
-    // contact.html staat hetzelfde formulier gewoon op de pagina: dan is #cform
-    // geen <dialog> en valt al het openen en sluiten weg.
+    // Staat alleen op deze pagina; elk contactblok op de site linkt hierheen.
+    // De code kan ook een <dialog> bedienen (zo stond het vroeger op elke
+    // pagina); hier is #cform een gewone sectie en valt openen en sluiten weg.
     //
     // VERZENDPUNT is de functie die het bericht verstuurt: worker/index.js,
     // op Cloudflare. Bestaat die op dit adres niet (een lokale testserver
@@ -663,7 +657,6 @@
         });
       });
     })();
-    // EIND_CFORM
   </script>
 </body>
 </html>
