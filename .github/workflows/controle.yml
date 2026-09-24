@@ -1,9 +1,14 @@
 name: Consistentiecontrole
 
-# Draait bij elke push en pull request. Controleert of feiten die op meerdere
-# plaatsen in de HTML staan (contactgegevens, ondernemingsnummer, FAQ-teksten)
-# nog overal gelijk zijn, en of de pagina's van Blijf op koers nog overeenkomen
-# met data/berichten.json. Gebruikt alleen de Python-standaardbibliotheek.
+# Draait bij elke push en pull request, ook na elke wijziging in het CMS.
+# Bouwt de site precies zoals Cloudflare dat doet (tools/bouw-site.py): de
+# pagina's uit data/berichten.json en data/team.json, het contactformulier op
+# elke pagina, en daarna de consistentiecontrole op het resultaat. Faalt het
+# hier, dan faalt het ook op Cloudflare, en blijft daar de vorige versie staan.
+#
+# Vroeger controleerde dit ook of de gemaakte pagina's in de repo gelijk liepen
+# met de gegevens. Dat kan niet meer: het CMS wijzigt alleen de gegevens, en de
+# pagina's worden pas bij het bouwen gemaakt.
 
 on: [push, pull_request]
 
@@ -15,15 +20,4 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - run: python tools/check-consistentie.py
-      # De berichten staan in data/berichten.json; het overzicht, de pagina
-      # per bericht en de sitemap worden daaruit geschreven. Loopt dat uiteen,
-      # dan faalt de build hier en niet stilletjes op de site.
-      - run: python tools/berichten.py --check
-      # Het contactformulier staat op elke pagina, maar index.html is de bron.
-      # Wijzigt het daar zonder dat tools/gedeeld.py gedraaid is, dan dragen de
-      # andere pagina's een oudere versie.
-      - run: python tools/gedeeld.py --check
-      # Cloudflare bouwt de site met hetzelfde script. Ontbreekt een bestand
-      # dat online moet, dan faalt het hier al en niet pas bij het publiceren.
       - run: python tools/bouw-site.py

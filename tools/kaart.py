@@ -21,6 +21,8 @@ Het resultaat bevat kaartgegevens van OpenStreetMap (ODbL). De naamsvermelding
 Vraagt: pip install fonttools brotli (voor de labels in de huisletter).
 """
 
+from __future__ import annotations
+
 import argparse
 import heapq
 import json

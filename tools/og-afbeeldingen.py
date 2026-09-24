@@ -19,6 +19,8 @@ afbeelding vanzelf op.
     pip install pillow fonttools brotli
 """
 
+from __future__ import annotations
+
 import io
 import json
 import re
@@ -27,6 +29,10 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 from fontTools.ttLib import TTFont
+
+# dezelfde berichten als de pagina's, met de afgeleide velden (datum voluit)
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from berichten import lees_berichten  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "data" / "berichten.json"
@@ -144,7 +150,7 @@ def kaart(b: dict) -> Image.Image:
 
 
 def main() -> int:
-    berichten = json.loads(DATA.read_text(encoding="utf-8"))
+    berichten = lees_berichten()
     UIT.mkdir(parents=True, exist_ok=True)
     opnieuw = "--alles" in sys.argv
     gemaakt = 0

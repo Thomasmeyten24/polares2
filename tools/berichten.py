@@ -25,7 +25,10 @@ Draait op de standaardbibliotheek. De voorbeeldafbeeldingen voor het delen
 worden apart gemaakt door tools/og-afbeeldingen.py, dat Pillow nodig heeft.
 """
 
+from __future__ import annotations
+
 import html
+from datetime import date
 import json
 import re
 import sys
@@ -68,8 +71,44 @@ def e(tekst) -> str:
     return html.escape(str(tekst), quote=True)
 
 
+# Wat een redacteur niet hoeft in te vullen, want het volgt uit iets anders.
+CATEGORIE = {"evenement": "Evenement", "nieuws": "Nieuws & Updates", "inzicht": "Inzichten & Advies"}
+MAANDEN = ["januari", "februari", "maart", "april", "mei", "juni", "juli",
+           "augustus", "september", "oktober", "november", "december"]
+DAGEN = ["Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"]
+VERPLICHT = ("id", "type", "titel", "datum", "inleiding", "inhoud")
+
+
+def normaliseer(b: dict) -> dict:
+    """Maakt een bericht uit data/berichten.json klaar voor de pagina's.
+
+    Het CMS bewaart een leeg veld als "" en een uitgeschakelde schakelaar als
+    false; beide betekenen hier: niet ingevuld. Categorie en uitgeschreven
+    datum worden afgeleid als ze ontbreken, zodat een redacteur ze niet
+    hoeft te kennen. Een fout geeft een melding met de titel erin: die ziet
+    de redacteur terug in het logboek van de build."""
+    b = {k: (v.strip() if isinstance(v, str) else v) for k, v in b.items()}
+    b = {k: v for k, v in b.items() if v not in ("", None, False)}
+    naam = b.get("titel") or b.get("id") or "(bericht zonder titel)"
+    for veld in VERPLICHT:
+        if not b.get(veld):
+            raise SystemExit(f"bericht '{naam}': het veld '{veld}' is leeg")
+    if b["type"] not in CATEGORIE:
+        raise SystemExit(f"bericht '{naam}': type moet evenement, nieuws of inzicht zijn, niet '{b['type']}'")
+    try:
+        d = date.fromisoformat(str(b["datum"])[:10])
+    except ValueError:
+        raise SystemExit(f"bericht '{naam}': de datum '{b['datum']}' is geen geldige datum (jjjj-mm-dd)")
+    b["datum"] = d.isoformat()
+    b.setdefault("categorie", CATEGORIE[b["type"]])
+    # evenementen met de dag erbij, zoals op een uitnodiging
+    b.setdefault("datumWeergave", (DAGEN[d.weekday()] + " " if b["type"] == "evenement" else "")
+                 + f"{d.day} {MAANDEN[d.month - 1]} {d.year}")
+    return b
+
+
 def lees_berichten() -> list[dict]:
-    berichten = json.loads(DATA.read_text(encoding="utf-8"))
+    berichten = [normaliseer(b) for b in json.loads(DATA.read_text(encoding="utf-8"))]
     berichten.sort(key=lambda b: b["datum"], reverse=True)
     ids = [b["id"] for b in berichten]
     dubbel = {i for i in ids if ids.count(i) > 1}

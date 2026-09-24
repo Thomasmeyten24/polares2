@@ -1,89 +1,79 @@
-# Een bericht toevoegen aan "Blijf op koers"
+# De inhoud van polares.be bewerken
 
-Alles staat in **`berichten.json`**, in dezelfde map als dit bestand. Dat is de
-enige plaats waar een bericht bestaat. Daaruit worden geschreven:
+Twee dingen op de site worden bijgehouden als gegevens, niet als pagina's:
 
-* het overzicht op `blijf-op-koers.html`;
-* een **eigen pagina per bericht**, `blijf-op-koers/<id>.html`;
-* de regels in `sitemap.xml`.
+* **Blijf op koers**: `berichten.json`. Daaruit komen het overzicht, een eigen
+  pagina per bericht, de deelafbeelding per bericht en de regels in de sitemap.
+* **Ons team**: `team.json`. Daaruit komt het raster op `ons-team.html`.
 
-Elk bericht heeft een eigen adres omdat dat de enige manier is om er vanuit
-Google of vanaf LinkedIn rechtstreeks op te landen. Een zoekmachine rangschikt
-per pagina, en een gedeelde link toont de titel en de afbeelding van de pagina
-waarnaar hij wijst.
+De rest van de site (de teksten op de pagina's, de opmaak, de constellatie) is
+handwerk en staat in de HTML-bestanden zelf.
 
-## Zo doet u het
+## Via het CMS (de gewone weg)
 
-1. Open `data/berichten.json` op github.com en klik het potloodje.
-2. Kopieer een bestaand blok (van `{` tot en met `},`), plak het bovenaan de
-   lijst en pas de velden aan.
-3. Sla op met "Commit changes".
+1. Ga naar **app.pagescms.org** en meld je aan. Wie uitgenodigd is, kreeg een
+   e-mail; een GitHub-account is daarvoor niet nodig.
+2. Kies **Blijf op koers** of **Ons team**.
+3. Pas aan, of voeg een nieuw item toe, en klik op **Save**.
 
-Loopt er iets mis met de punctuatie, dan faalt de controle bij het opslaan en
-staat er niets fout op de site. Twijfelt u: stuur de tekst door, dan zetten we
-hem erop.
+Na het opslaan bouwt Cloudflare de site opnieuw. Na een minuut of twee staat de
+wijziging online, ook de nieuwe deelafbeelding en de sitemap.
 
-> **Let op:** wie alleen op github.com werkt, laat de gegenereerde pagina's
-> achter. Iemand moet daarna nog `python tools/berichten.py` draaien en het
-> resultaat mee committen; de controle in GitHub Actions zegt het als dat
-> vergeten is. Zie hieronder.
+Loopt er iets mis (een verplicht veld leeg, een ongeldig webadres), dan
+publiceert Cloudflare niets en blijft de vorige versie gewoon online. De
+melding staat dan in Cloudflare onder Workers & Pages → polares → Deployments,
+met de naam van het bericht of de medewerker erin.
 
-## De velden
+## Een bericht
 
-| veld | verplicht | wat |
-|---|---|---|
-| `id` | ja | korte naam zonder spaties, uniek, bijvoorbeeld `ontbijtsessie-mei-2027`. **Dit wordt het webadres** en verandert dus best niet meer nadat het bericht gedeeld is. Alleen kleine letters, cijfers en koppeltekens. |
-| `type` | ja | `evenement`, `nieuws` of `inzicht`; bepaalt het label en het filter |
-| `categorie` | ja | hoe het in de lijst heet, bijvoorbeeld `Inzichten & Advies` |
-| `titel` | ja | de kop |
-| `titelKort` | nee | kortere kop voor het tabblad en het zoekresultaat, als de titel lang is. Google toont ongeveer zestig tekens. |
-| `datum` | ja | `jjjj-mm-dd`; hierop wordt gesorteerd, nieuwste bovenaan |
-| `datumWeergave` | ja | dezelfde datum zoals hij op het scherm hoort, bijvoorbeeld `19 november 2026` |
-| `tijd` | bij een evenement | `08:30 tot 10:30`. Hieruit komen begin- en einduur in de gegevens voor Google. |
-| `locatie` | bij een evenement | adres |
-| `deelname` | nee | bijvoorbeeld `Max. 10 families` |
-| `leestijd` | nee | `4 min leestijd`, of bij een evenement `Aanmelden voor 12 november` |
-| `uitgelicht` | nee | `true` bij het ene bericht dat bovenaan groot uitgelicht staat |
-| `inleiding` | ja | twee zinnen; dit staat op de kaart, in het zoekresultaat en in het linkvoorbeeld |
-| `inhoud` | ja | de volledige tekst, in HTML: `<p>…</p>`, eventueel `<ul><li>…</li></ul>` en `<strong>…</strong>` |
+| veld | wat |
+|---|---|
+| Titel | de kop |
+| Soort | evenement, nieuws of inzicht; bepaalt het label en het filter |
+| Datum | bij een evenement de dag zelf; de nieuwste staan bovenaan |
+| Inleiding | twee zinnen voor de kaart, Google en het voorbeeld van een gedeelde link |
+| Tekst | de volledige tekst |
+| Uur, Plaats, Deelname | bij een evenement; het uur als `08:30 tot 10:30` |
+| Onder de titel | `4 min leestijd`, of `Aanmelden voor 12 november` |
+| Korte titel | alleen als de titel lang is; Google toont ongeveer zestig tekens |
+| Groot bovenaan | bij hoogstens één bericht |
+| Webadres | kleine letters, cijfers en koppeltekens, bijvoorbeeld `ontbijtsessie-mei-2027`. **Niet meer wijzigen als het bericht gedeeld is**: een gedeelde link wijst naar dit adres. |
 
-Zet `uitgelicht` bij hoogstens één bericht. Staat het bij niemand, dan toont de
-pagina gewoon het kaartenraster.
+De categorie ("Inzichten & Advies") en de datum voluit ("Donderdag 19 november
+2026") hoeven niet ingevuld te worden: `tools/berichten.py` leidt ze af.
 
-## De pagina's bijwerken
+## Een medewerker
 
-Na een wijziging aan `berichten.json`:
+| veld | wat |
+|---|---|
+| Naam | voornaam en familienaam |
+| Functie | één regel per functie, meestal één |
+| E-mailadres | op @polares.be, of leeg |
+| LinkedIn | de volledige link, of leeg |
+| Portret | een staande foto; de site snijdt hem bij tot 3 bij 4 en maakt hem licht |
 
-```
-python tools/berichten.py
-```
+De volgorde in de lijst is de volgorde op de pagina.
 
-Dat schrijft het overzicht, de pagina per bericht en de sitemap bij, en gooit de
-pagina weg van een bericht dat u uit de JSON gehaald hebt. Het gebruikt alleen
-de Python-standaardbibliotheek.
-
-`python tools/berichten.py --check` zegt alleen of alles nog klopt. Dat is ook
-wat de controle bij elke push doet: loopt het uiteen, dan faalt de build in
-plaats van dat de site stilletjes achterloopt.
-
-## De afbeelding voor het delen
-
-Elk bericht krijgt een eigen kaart van 1200 bij 630 in `assets/og/`, die
-LinkedIn en WhatsApp tonen bij een gedeelde link:
+## Voor wie lokaal werkt
 
 ```
-pip install pillow fonttools brotli
-python tools/og-afbeeldingen.py
+python3 tools/bouw-site.py
 ```
 
-Dat maakt alleen wat nog ontbreekt; `--alles` maakt ze allemaal opnieuw. Draai
-daarna nog eens `python tools/berichten.py`, want dat pikt de nieuwe afbeelding
-op in de pagina.
+Dat doet wat Cloudflare doet: de pagina's maken uit de gegevens, de
+consistentiecontrole draaien en `dist/` vullen. Na een wijziging in het CMS
+lopen de gemaakte bestanden in de repo zelf achter; draai dit eerst, en commit
+wat verandert als je die bestanden bijgewerkt in de repo wilt.
 
-Ontbreekt de afbeelding, dan valt het bericht terug op het algemene beeld van de
-site. Dat werkt, maar dan lijken alle gedeelde links op elkaar.
+Pillow en fontTools zijn nodig voor de deelafbeeldingen en de portretten
+(`pip install pillow fonttools brotli`). Ontbreken ze lokaal, dan blijven de
+bestaande afbeeldingen gewoon staan.
 
-## Het uitzicht van een berichtpagina
+De opmaak van een berichtpagina staat in `tools/sjabloon-bericht.html`. Pas die
+aan, niet de bestanden in `blijf-op-koers/`: die worden bij elke build
+overschreven. Hetzelfde geldt voor het raster op `ons-team.html`, tussen de
+merktekens `BEGIN_TEAM` en `EIND_TEAM`.
 
-De opmaak staat in `tools/sjabloon-bericht.html`. Pas die aan, niet de bestanden
-in `blijf-op-koers/`: die worden bij de volgende keer overschreven.
+Wat het CMS toont, staat in `.pages.yml` in de hoofdmap. Een veld dat daar niet
+staat, kan het CMS bij het opslaan weglaten; de consistentiecontrole bewaakt dat
+elk veld uit de gegevens er ook in staat.

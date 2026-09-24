@@ -1,0 +1,148 @@
+# Pages CMS (app.pagescms.org): wat de redactie van polares.be kan bewerken.
+#
+# Twee gegevensbestanden, geen pagina's: de opmaak van de site blijft
+# handwerk. Elke keer opslaan is een commit op main; Cloudflare bouwt de site
+# daarna opnieuw (tools/bouw-site.py) en na een minuut of twee staat het online.
+# Faalt de controle bij het bouwen, dan blijft de vorige versie gewoon staan.
+#
+# Een veld dat hier niet staat, kan het CMS bij het opslaan weglaten. Voeg je
+# een veld toe aan data/berichten.json of data/team.json, zet het dan ook hier;
+# tools/check-consistentie.py controleert dat.
+
+media:
+  - name: team
+    label: Portretten
+    input: assets/team
+    output: assets/team
+    categories: [image]
+    rename: safe
+
+content:
+  # ── Blijf op koers ─────────────────────────────────────────────────────────
+  - name: berichten
+    label: Blijf op koers
+    type: file
+    path: data/berichten.json
+    format: json
+    list: true
+    fields:
+      - name: titel
+        label: Titel
+        type: string
+        required: true
+        options:
+          maxlength: 140
+      - name: type
+        label: Soort
+        type: select
+        required: true
+        description: Bepaalt het label en het filter op de pagina.
+        options:
+          values:
+            - name: evenement
+              label: Evenement
+            - name: nieuws
+              label: Nieuws
+            - name: inzicht
+              label: Inzicht
+      - name: datum
+        label: Datum
+        type: date
+        required: true
+        description: Bij een evenement de dag van het evenement. De nieuwste staan bovenaan.
+        options:
+          format: yyyy-MM-dd
+      - name: inleiding
+        label: Inleiding
+        type: text
+        required: true
+        description: Twee zinnen. Staan op de kaart, in Google en in het voorbeeld van een gedeelde link.
+        options:
+          maxlength: 320
+      - name: inhoud
+        label: Tekst
+        type: rich-text
+        required: true
+        options:
+          format: html
+          media: false
+
+      # bij een evenement
+      - name: tijd
+        label: Uur (evenement)
+        type: string
+        description: "Zo geschreven: 08:30 tot 10:30. Hieruit haalt Google begin- en einduur."
+        pattern:
+          regex: "^$|^\\d{1,2}:\\d{2}( tot \\d{1,2}:\\d{2})?$"
+          message: "Schrijf het uur als 08:30 of 08:30 tot 10:30"
+      - name: locatie
+        label: Plaats (evenement)
+        type: string
+        description: Bijvoorbeeld Kantoor Polares, Dirk Martensstraat 41, Aalst
+      - name: deelname
+        label: Deelname (evenement)
+        type: string
+        description: Bijvoorbeeld Max. 10 families
+      - name: leestijd
+        label: Onder de titel
+        type: string
+        description: "Bij een artikel: 4 min leestijd. Bij een evenement: Aanmelden voor 12 november."
+
+      # zelden nodig
+      - name: titelKort
+        label: Korte titel
+        type: string
+        description: Alleen als de titel lang is. Voor het tabblad en Google, dat ongeveer zestig tekens toont.
+        options:
+          maxlength: 70
+      - name: uitgelicht
+        label: Groot bovenaan
+        type: boolean
+        description: Bij hoogstens één bericht tegelijk.
+      - name: id
+        label: Webadres
+        type: string
+        required: true
+        description: "Wordt polares.be/blijf-op-koers/<dit>.html. Kleine letters, cijfers en koppeltekens, bijvoorbeeld ontbijtsessie-mei-2027. Niet meer wijzigen als het bericht gedeeld is."
+        pattern:
+          regex: "^[a-z0-9]+(-[a-z0-9]+)*$"
+          message: "Alleen kleine letters, cijfers en koppeltekens, zonder spaties"
+
+  # ── Ons team ───────────────────────────────────────────────────────────────
+  - name: team
+    label: Ons team
+    type: file
+    path: data/team.json
+    format: json
+    list: true
+    fields:
+      - name: naam
+        label: Naam
+        type: string
+        required: true
+      - name: rollen
+        label: Functie
+        type: string
+        list: true
+        required: true
+        description: Eén regel per functie, meestal één. Bijvoorbeeld Capital Assistant en daaronder Office manager.
+      - name: email
+        label: E-mailadres
+        type: string
+        description: Leeg laten als er geen adres op de site hoort.
+        pattern:
+          regex: "^$|^[a-z0-9._-]+@polares\\.be$"
+          message: "Een adres op @polares.be, in kleine letters"
+      - name: linkedin
+        label: LinkedIn
+        type: string
+        description: De volledige link, beginnend met https://
+        pattern:
+          regex: "^$|^https://"
+          message: "Begint met https://"
+      - name: foto
+        label: Portret
+        type: image
+        description: Een staande foto. De site snijdt hem zelf bij tot 3 bij 4 en maakt hem licht. Zonder foto staat er een kader met de poolster.
+        options:
+          media: team

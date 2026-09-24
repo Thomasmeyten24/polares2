@@ -13,6 +13,8 @@ Geeft exitcode 1 bij een fout, zodat het ook als CI-stap kan dienen.
 Vervalt zodra de inhoud uit één contentbestand gegenereerd wordt.
 """
 
+from __future__ import annotations
+
 import json
 import re
 import sys
@@ -182,6 +184,18 @@ for bestand in ("index.html", "uw-familie.html", "uw-bedrijf.html", "ons-team.ht
     menu = re.search(r'<nav class="overlay__nav".*?</nav>', lees(bestand), re.S)
     controleer(f"menu van {bestand} wijst naar contact.html",
                bool(menu) and 'href="contact.html"' in menu.group(0))
+
+# ── 4c. Het CMS kent elk veld uit de gegevens ─────────────────────────────
+# Pages CMS kan bij het opslaan een veld weglaten dat niet in .pages.yml staat.
+# Voegt iemand een sleutel toe aan de JSON zonder hem daar te beschrijven, dan
+# verdwijnt hij bij de volgende bewerking stilletjes.
+cms = lees(".pages.yml")
+cms_velden = set(re.findall(r"^\s*- name: ([A-Za-z0-9_]+)\s*$", cms, re.M))
+for bestand in ("data/berichten.json", "data/team.json"):
+    controleer(f"{bestand} staat in .pages.yml", f"path: {bestand}" in cms)
+    sleutels = sorted({k for rij in json.loads(lees(bestand)) for k in rij})
+    for k in sleutels:
+        controleer(f"veld '{k}' uit {bestand} staat in .pages.yml", k in cms_velden)
 
 # ── 4b. Elke pagina uit het menu hoort in de sitemap ────────────────────────
 # De juridische pagina's staan er bewust met een lage prioriteit in; de rest

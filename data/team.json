@@ -1,0 +1,94 @@
+[
+  {
+    "naam": "Nathalie Barbieur",
+    "rollen": [
+      "Capital Guide"
+    ],
+    "email": "nathalie@polares.be",
+    "linkedin": "https://www.linkedin.com/in/nathalie-barbieur-b437a487/",
+    "foto": "assets/team/nathalie-barbieur.webp"
+  },
+  {
+    "naam": "Filip Meyten",
+    "rollen": [
+      "Capital Guide"
+    ],
+    "email": "filip@polares.be",
+    "linkedin": "https://www.linkedin.com/in/filip-meyten-5082a67/",
+    "foto": "assets/team/filip-meyten.webp"
+  },
+  {
+    "naam": "Olivier Kiekens",
+    "rollen": [
+      "Corporate Advisor"
+    ],
+    "email": "olivier@polares.be",
+    "linkedin": "https://www.linkedin.com/in/olivier-kiekens-bb459636/",
+    "foto": "assets/team/olivier-kiekens.webp"
+  },
+  {
+    "naam": "Nathalie Van de Velde",
+    "rollen": [
+      "Capital Guide"
+    ],
+    "email": "nathalie.vandevelde@polares.be",
+    "linkedin": "https://www.linkedin.com/in/nathalie-van-de-velde-27619918/",
+    "foto": "assets/team/nathalie-van-de-velde.webp"
+  },
+  {
+    "naam": "Fleur",
+    "rollen": [
+      "Capital Guide"
+    ],
+    "email": "fleur@polares.be",
+    "linkedin": "",
+    "foto": "assets/team/fleur.webp"
+  },
+  {
+    "naam": "Laura Verhoeven",
+    "rollen": [
+      "Legal Guide"
+    ],
+    "email": "laura@polares.be",
+    "linkedin": "https://www.linkedin.com/in/laure-verhoeven/",
+    "foto": "assets/team/laura-verhoeven.webp"
+  },
+  {
+    "naam": "Arne Verheedt",
+    "rollen": [
+      "Financial Guide",
+      "Investment analyst"
+    ],
+    "email": "arne@polares.be",
+    "linkedin": "https://www.linkedin.com/in/arne-verheedt/",
+    "foto": "assets/team/arne-verheedt.webp"
+  },
+  {
+    "naam": "Jill De Smet",
+    "rollen": [
+      "Capital Assistant",
+      "Office manager"
+    ],
+    "email": "jill@polares.be",
+    "linkedin": "https://www.linkedin.com/in/jill-de-smet-b87731126/",
+    "foto": "assets/team/jill-de-smet.webp"
+  },
+  {
+    "naam": "Elien De Rycke",
+    "rollen": [
+      "Capital Assistant"
+    ],
+    "email": "elien@polares.be",
+    "linkedin": "https://www.linkedin.com/in/elien-de-rycke-3477b8267/",
+    "foto": "assets/team/elien.webp"
+  },
+  {
+    "naam": "Valérie Mulayi",
+    "rollen": [
+      "Capital Assistant"
+    ],
+    "email": "valerie@polares.be",
+    "linkedin": "",
+    "foto": ""
+  }
+]

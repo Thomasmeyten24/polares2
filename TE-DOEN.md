@@ -106,12 +106,24 @@ privacyverklaring nakijkt.
 
 ---
 
+## Het CMS in gebruik nemen
+
+Pages CMS is ingesteld (`.pages.yml`, uitleg in `data/LEESMIJ.md`). Wat nog
+moet, en wat alleen de eigenaar van de GitHub-repo kan:
+
+1. Aanmelden op app.pagescms.org met het GitHub-account van de repo.
+2. De GitHub-app van Pages CMS installeren, alleen voor de repo `polares2`.
+3. De redacteurs uitnodigen per e-mail (Collaborators). Zij hebben geen
+   GitHub-account nodig.
+4. Eén proefbewerking doen en nagaan dat ze na een minuut of twee online staat.
+
 ## Kleiner, niet blokkerend
 
 - `algemene-voorwaarden.html` en `privacyverklaring.html` hebben nog geen kop,
   menu of huidige voet.
-- **Fleur** mist haar familienaam; die staat niet in het brondocument.
-- **Valérie Mulayi** heeft nog geen portret (nu een kader met de poolster).
+- **Fleur** mist haar familienaam, en **Valérie Mulayi** heeft nog geen portret
+  (nu een kader met de poolster). Beide kan de redactie zelf aanvullen in het
+  CMS, onder Ons team.
 - Bevestigen: `nathalie.vandevelde@polares.be` (aaneen?) en `valerie@polares.be`
   (zonder accent).
 - De teksten bij de symbolen van de constellatie zouden bijgestuurd worden.

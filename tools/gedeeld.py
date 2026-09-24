@@ -29,6 +29,8 @@ Kop, knoppen en melding horen bij die pagina zelf.
 Draait op de standaardbibliotheek, net als de andere controles.
 """
 
+from __future__ import annotations
+
 import re
 import sys
 from pathlib import Path
