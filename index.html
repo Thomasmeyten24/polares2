@@ -610,18 +610,6 @@
       transition: transform 2.2s var(--ease-out) .1s;
     }
     .reveal-ready .missie__grid[data-reveal].is-in .missie__kompas { transform: none; }
-    .missie__text {
-      font-family: var(--serif);
-      font-size: clamp(1.1rem, 1.6vw, 1.35rem);
-      line-height: 1.75;
-      letter-spacing: .005em;
-      color: var(--navy-500);
-      max-width: 34rem;
-      text-wrap: pretty;
-      /* Cantata One heeft maar één gewicht: een contour in de achtergrondkleur
-         maakt de letters subtiel fijner */
-      -webkit-text-stroke: .3px var(--white);
-    }
     @media (max-width: 767px) {
       .missie__grid { grid-template-columns: 1fr; gap: 2rem; }
       .missie__kompas { justify-self: start; }
@@ -1014,6 +1002,8 @@
       margin-bottom: .75rem;
     }
     .portal-col__body { font-size: 15px; color: var(--text-soft); margin-bottom: 1.5rem; }
+    /* Voor u. (naast de satelliet) heeft geen link eronder, dus geen ondermarge */
+    .missie__grid .portal-col__body { margin-bottom: 0; }
     @media (max-width: 767px) {
       .portal-col,
       .portal-col--spiegel { grid-template-columns: 1fr; gap: 1.5rem; }
@@ -1603,7 +1593,7 @@
        spaties breed. Links uitgelijnd blijft de ruimte tussen de woorden
        overal gelijk; text-wrap: pretty houdt de rechterrand rustig en laat
        geen los woord op de laatste regel achter. */
-    .missie__text, .portal-col__body, .koers__text, .waarden__intro,
+    .portal-col__body, .koers__text, .waarden__intro,
     .expertise__intro, .team__body, .faq__a,
     .contact__sub, .visie-tip__body {
       text-align: left;
@@ -1839,7 +1829,10 @@
 
         <div class="missie__grid" data-reveal>
           <img class="missie__kompas" src="assets/uv/satelliet.svg" alt="" width="38" height="36" loading="lazy" decoding="async">
-          <p class="missie__text">Voor vermogende families en ondernemers beschermen en structureren we hun vermogen en laten we het duurzaam groeien, privé én professioneel, met oog voor vandaag én de generaties van morgen.</p>
+          <div class="portal__copy">
+            <h3 class="portal__label">Voor u.</h3>
+            <p class="portal-col__body">Voor vermogende families en ondernemers beschermen en structureren we hun vermogen en laten we het duurzaam groeien, privé én professioneel, met oog voor vandaag én de generaties van morgen.</p>
+          </div>
         </div>
 
         <!-- Uw familie & uw bedrijf (voorheen hoofdstuk III). Het anker #advies
