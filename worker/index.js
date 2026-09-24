@@ -12,6 +12,8 @@
 // nooit in de code of de repo. Geef die sleutel bij Resend alleen
 // verzendrechten, en alleen voor het domein van AFZENDER.
 
+import { maakMail } from './mail.js';
+
 const LIMIET = { naam: 200, email: 254, telefoon: 40, bericht: 5000 };
 
 export default {
@@ -56,23 +58,11 @@ export default {
     if (!mailOk && !telOk) return json({ ok: false, fout: 'Geen geldig adres of nummer.' }, 400);
     if (wijze === 'bericht' && bericht.length < 2) return json({ ok: false, fout: 'Geen bericht.' }, 400);
 
-    const onderwerp = (wijze === 'bericht' ? 'Bericht' : 'Contactverzoek') + ' via polares.be' + (naam ? ': ' + naam : '');
-    const regels = [
-      ['Naam', naam || '(niet ingevuld)'],
-      ['E-mail', email || '(niet ingevuld)'],
-      ['Telefoon', telefoon || '(niet ingevuld)'],
-      ['Vraag', wijze === 'bericht' ? 'stuurt een bericht' : 'wil graag gecontacteerd worden'],
-    ];
-    const tekstversie = regels.map(([k, v]) => k + ': ' + v).join('\n')
-      + (bericht ? '\n\n' + bericht : '')
-      + '\n\n—\nVerstuurd via het contactformulier op ' + url.host + '.'
-      + (mailOk ? ' Antwoorden gaat rechtstreeks naar ' + email + '.' : '');
-    const htmlversie = '<table cellpadding="4" style="font-family:Arial,sans-serif;font-size:14px;color:#10324E">'
-      + regels.map(([k, v]) => '<tr><td style="color:#5A7388">' + k + '</td><td>' + ontsnap(v) + '</td></tr>').join('')
-      + '</table>'
-      + (bericht ? '<p style="font-family:Arial,sans-serif;font-size:14px;color:#10324E;white-space:pre-wrap">' + ontsnap(bericht) + '</p>' : '')
-      + '<p style="font-family:Arial,sans-serif;font-size:12px;color:#7E94A6">Verstuurd via het contactformulier op '
-      + ontsnap(url.host) + '.' + (mailOk ? ' Antwoorden gaat rechtstreeks naar ' + ontsnap(email) + '.' : '') + '</p>';
+    // het tijdstip zoals Polares het leest, niet in UTC
+    const moment = new Intl.DateTimeFormat('nl-BE', {
+      timeZone: 'Europe/Brussels', dateStyle: 'long', timeStyle: 'short',
+    }).format(new Date());
+    const mail = maakMail({ naam, email, telefoon, wijze, bericht, mailOk, telOk, host: url.host, moment });
 
     // Nog geen sleutel ingesteld: 501, en dan valt het formulier in de browser
     // terug op het mailprogramma van de bezoeker in plaats van te falen.
@@ -92,9 +82,9 @@ export default {
           from: 'Polares website <' + env.AFZENDER + '>',
           to: [env.ONTVANGER],
           ...(mailOk ? { reply_to: email } : {}),
-          subject: onderwerp,
-          text: tekstversie,
-          html: htmlversie,
+          subject: mail.onderwerp,
+          text: mail.tekst,
+          html: mail.html,
         }),
       });
       if (!r.ok) throw new Error('Resend ' + r.status + ': ' + (await r.text()).slice(0, 300));
@@ -111,9 +101,6 @@ function tekst(v) {
   return typeof v === 'string' ? v.replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '').trim() : '';
 }
 
-function ontsnap(s) {
-  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
-}
 
 function json(inhoud, status = 200, extra = {}) {
   return new Response(JSON.stringify(inhoud), {
