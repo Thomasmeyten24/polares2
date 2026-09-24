@@ -36,12 +36,11 @@
     "foto": "assets/team/nathalie-van-de-velde.webp"
   },
   {
-    "naam": "Fleur",
+    "naam": "Fleur Vanschoubroek",
     "rollen": [
       "Capital Guide"
     ],
     "email": "fleur@polares.be",
-    "linkedin": "",
     "foto": "assets/team/fleur.webp"
   },
   {
@@ -87,8 +86,6 @@
     "rollen": [
       "Capital Assistant"
     ],
-    "email": "valerie@polares.be",
-    "linkedin": "",
-    "foto": ""
+    "email": "valerie@polares.be"
   }
 ]
