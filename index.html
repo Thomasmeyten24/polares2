@@ -1223,6 +1223,10 @@
       /* eindigt vóór de stippellijn tussen foto en tekst */
       width: min(33%, 480px);
       pointer-events: none;
+      /* De foto zoomt bij het verschijnen van 104% naar 100%. Het masker
+         hieronder verbergt wat uitsteekt al, maar telt niet voor de breedte
+         van de pagina: zonder dit scrolde een telefoon 7px opzij. */
+      overflow: hidden;
       /* rechthoekig uitvloeien: twee lineaire maskers (horizontaal en verticaal) die elkaar snijden */
       -webkit-mask-image: linear-gradient(to right, transparent 0, #000 16%, #000 84%, transparent 100%),
                           linear-gradient(to bottom, transparent 0, #000 14%, #000 86%, transparent 100%);
@@ -3440,7 +3444,13 @@
       var globeArt = globe && globe.querySelector('.uv-art');
       if (!globeArt) return;
       var fadeSvg = [].slice.call(scroller.querySelectorAll('.uv-node:not([data-key="leefwereld"]), .uv-orbits, .uv-paths'));
-      var fadeHtml = [].slice.call(stage.querySelectorAll('.visie__head, .visie__foot, #visieTip'));
+      var fadeHtml = [].slice.call(stage.querySelectorAll('.visie__head, #visieTip'));
+      // Het onderschrift onderaan het podium krijgt het witte blad al over zich
+      // heen terwijl de constellatie nog stilstaat en aanklikbaar is, dus lang
+      // voor de zoom begint. Het vervaagt daarom ook op het naderende blad.
+      var foot = stage.querySelector('.visie__foot');
+      var blad = document.querySelector('.koers-sheet');
+      var FOOT_MARGE = 80;
 
       var flyer = document.createElement('img');
       flyer.className = 'visie__flyer';
@@ -3496,6 +3506,10 @@
         // het witte venster lost mee op; de wereldbol vliegt er (op een witte schijf) uit
         scene.style.opacity = z >= .35 ? '0' : z > 0 ? (1 - z / .35).toFixed(3) : '';
         setOpacity(fadeHtml, 1 - clamp(z / .2));
+        if (foot) {
+          var vrij = blad ? clamp((blad.getBoundingClientRect().top - foot.getBoundingClientRect().bottom) / FOOT_MARGE) : 1;
+          setOpacity([foot], Math.min(vrij, 1 - clamp(z / .2)));
+        }
 
         if (z <= 0 || z >= .995) {
           // rust: ofwel de bol in het universum, ofwel het icoon van stap 1

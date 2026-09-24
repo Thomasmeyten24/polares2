@@ -125,7 +125,9 @@
     .station--wide{grid-column:1 / span 10}
     .station__stop{position:relative;width:44px;height:44px;border-radius:50%;background:var(--white);display:flex;align-items:center;justify-content:center;color:var(--navy-600);margin-top:-12px}
     .station__stop::after{content:"";position:absolute;inset:-6px;border:1px solid var(--navy-300);border-radius:50%;opacity:0;pointer-events:none}
-    .station h2{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,2.6vw,2.1rem);line-height:1.25;margin:.9rem 0 1.25rem;text-wrap:balance}
+    /* min(…, 5.3vw): op een smal scherm krimpt de kop mee, zodat het langste
+       woord (Vermogensarchitectuur) heel blijft; woorden worden niet afgebroken */
+    .station h2{font-family:var(--serif);font-weight:400;font-size:min(clamp(1.5rem,2.6vw,2.1rem),5.3vw);line-height:1.25;margin:.9rem 0 1.25rem;text-wrap:balance}
     .station p{font-size:16px;color:var(--text-soft)}
     .station p+p{margin-top:1.1em}
     @media (max-width:860px){

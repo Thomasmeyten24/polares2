@@ -114,12 +114,10 @@ De site draait op Cloudflare, voorlopig op `polares.meyten.com`. Om ze op
   3. Een nieuwe API-sleutel, alleen verzendrechten en alleen voor polares.be,
      als geheim `RESEND_API_KEY` in Cloudflare. De oude sleutel intrekken.
   Het adres van de bezoeker staat in `Reply-To`, nooit in `From`.
-- **Privacyverklaring: Cloudflare vermelden.** Cloudflare levert de site en ziet
-  daarbij de IP-adressen van bezoekers, en de gegevens uit het contactformulier
-  gaan via Resend (Amerikaans bedrijf, verzonden vanuit Ierland) naar Polares. Mee te nemen wanneer de
-  jurist de tekst nakijkt.
-- **Privacyverklaring en algemene voorwaarden** staan als basistekst in de
-  bestanden, met een notitie dat een jurist ze moet nakijken.
+- **Privacyverklaring en algemene voorwaarden** laten nakijken door een jurist.
+  De privacyverklaring vermeldt sinds 24 september het contactformulier,
+  Cloudflare, Resend en Microsoft als verwerkers, en het vlaggetje in de
+  sessieopslag; punt 4 en punt 6 verdienen de meeste aandacht.
 - **Het contactblok op de andere pagina's.** Alleen Uw familie heeft de variant
   met "Laat ons u contacteren", en daaronder adres en nummer; de andere pagina's
   hebben nog de oude twee regels. Kiezen, en dan overal hetzelfde.
@@ -149,13 +147,5 @@ moet, en wat alleen de eigenaar van de GitHub-repo kan:
   CMS, onder Ons team.
 - Bevestigen: `nathalie.vandevelde@polares.be` (aaneen?) en `valerie@polares.be`
   (zonder accent).
-- Een eigen 404-pagina in de stijl van de site; nu toont Cloudflare een kale.
 - Het contactformulier heeft geen limiet per bezoeker. Misbruik kan alleen
   spam in de eigen inbox geven en kost niets; komt het voor, dan een limiet.
-- `sessionStorage['polares-visited']` slaat één vlaggetje op om de intro-animatie
-  over te slaan bij een tweede pagina. Geen persoonsgegeven, maar de
-  privacyverklaring zegt nu "geen cookies". Vermelden of het trucje schrappen.
-- Op een telefoon scrolt de pagina zeven pixels horizontaal, door de SVG van de
-  constellatie die buiten haar kader tekent.
-- De aanwijzing "Klik op een hemellichaam" schuift aan het eind van het
-  klikvenster onder het witte blad van het traject.

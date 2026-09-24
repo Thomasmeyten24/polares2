@@ -10,7 +10,9 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
-  <!-- NB: basistekst. Laat deze verklaring vóór lancering nakijken door een jurist. -->
+  <!-- NB: basistekst. Laat deze verklaring vóór lancering nakijken door een jurist, in het
+       bijzonder punt 4 (de sessieopslag) en punt 6 (Cloudflare, Resend, Microsoft en de doorgifte
+       buiten de EER). Bijgewerkt op 24 september 2026 voor het contactformulier en de hosting. -->
   <style>
     @font-face{font-family:'Cantata One';font-style:normal;font-weight:400;font-display:swap;
       src:url(assets/fonts/cantata-one-400.woff2) format('woff2');}
@@ -32,10 +34,12 @@
     .back:hover{border-bottom-color:var(--navy-600)}
     h1{font-family:var(--serif);font-weight:400;font-size:clamp(1.8rem,4vw,2.6rem);line-height:1.2;margin-bottom:.5rem}
     .updated{font-size:13px;color:var(--text-soft);margin-bottom:2.5rem}
-    h2{font-family:var(--serif);font-weight:400;font-size:1.25rem;margin:2.2rem 0 .6rem;padding-top:1.4rem;border-top:1px solid var(--line)}
+    /* krimpt mee op een smal scherm: Verwerkingsverantwoordelijke blijft heel */
+    h2{font-family:var(--serif);font-weight:400;font-size:min(1.25rem,5.3vw);margin:2.2rem 0 .6rem;padding-top:1.4rem;border-top:1px solid var(--line)}
     p,li{font-size:15px;color:var(--text-soft)}
     p{text-align:left;-webkit-hyphens:manual;hyphens:manual;text-wrap:pretty}
     p+p{margin-top:.8em}
+    code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;background:var(--navy-50,#EEF1F5);padding:.05em .35em;border-radius:3px}
     ul{padding-left:1.2rem;margin-top:.5rem}
     li+li{margin-top:.3rem}
     a{color:var(--navy-600)}
@@ -48,7 +52,7 @@
     <a class="back" href="index.html">&#8592; Terug naar polares.be</a>
 
     <h1>Privacyverklaring</h1>
-    <p class="updated">Laatst bijgewerkt: 24 augustus 2026</p>
+    <p class="updated">Laatst bijgewerkt: 24 september 2026</p>
 
     <p>Polares hecht groot belang aan de bescherming van uw persoonsgegevens en aan uw privacy. In deze verklaring leest u hoe wij omgaan met de gegevens die u ons toevertrouwt, in overeenstemming met de Algemene Verordening Gegevensbescherming (AVG/GDPR).</p>
 
@@ -59,30 +63,42 @@
     E-mail: <a href="mailto:info@polares.be">info@polares.be</a> &middot; Telefoon: <a href="tel:+3254235050">+32 54 23 50 50</a></p>
 
     <h2>2. Welke gegevens wij verwerken</h2>
-    <p>Wanneer u contact met ons opneemt via e-mail of telefoon, verwerken wij de gegevens die u ons zelf bezorgt:</p>
+    <p>Wanneer u contact met ons opneemt, via het contactformulier op deze website, per e-mail of telefonisch, verwerken wij de gegevens die u ons zelf bezorgt:</p>
     <ul>
-      <li>identificatiegegevens (naam, voornaam);</li>
+      <li>identificatiegegevens (naam, voornaam), als u die invult;</li>
       <li>contactgegevens (e-mailadres, telefoonnummer);</li>
-      <li>de inhoud van uw vraag of bericht.</li>
+      <li>de inhoud van uw vraag of bericht, en of u gecontacteerd wilt worden of zelf een bericht stuurt.</li>
     </ul>
+    <p>Wanneer u de website bezoekt, worden technische gegevens verwerkt die nodig zijn om de pagina's af te leveren en de site te beveiligen: uw IP-adres, het type browser, het tijdstip en de pagina die u opvraagt. Dat gebeurt bij onze hostingpartner (zie punt 6). Wij gebruiken die gegevens niet om bezoekers te herkennen of te volgen.</p>
     <p>In het kader van een latere dienstverlening kunnen bijkomende gegevens worden verwerkt; daarover wordt u dan afzonderlijk geïnformeerd.</p>
 
     <h2>3. Waarvoor wij uw gegevens gebruiken</h2>
     <ul>
       <li>het beantwoorden van uw vraag en het opvolgen van uw contactname (gerechtvaardigd belang, art. 6.1.f AVG);</li>
       <li>het voorbereiden of uitvoeren van een overeenkomst (art. 6.1.b AVG);</li>
+      <li>het veilig en goed laten werken van de website (gerechtvaardigd belang, art. 6.1.f AVG);</li>
       <li>het naleven van wettelijke verplichtingen die op ons rusten (art. 6.1.c AVG).</li>
     </ul>
     <p>Wij gebruiken uw gegevens niet voor commerciële mailings zonder uw toestemming en verkopen ze nooit aan derden.</p>
 
-    <h2>4. Cookies en analyse</h2>
-    <p>Deze website gebruikt <strong>geen cookies</strong> en geen tracking- of analysetools. Er worden geen persoonsgegevens verzameld door het louter bezoeken van deze website. De lettertypen en alle andere onderdelen van de site worden vanaf onze eigen server geladen; er worden geen gegevens doorgegeven aan externe dienstverleners zoals Google.</p>
+    <h2>4. Cookies, opslag in uw browser en analyse</h2>
+    <p>Deze website gebruikt <strong>geen cookies</strong> en geen tracking- of analysetools.</p>
+    <p>Eén klein gegeven bewaren wij wel in uw browser, in de zogenaamde sessieopslag (<code>sessionStorage</code>): het vlaggetje <code>polares-visited</code> met de waarde <code>1</code>. Het onthoudt dat u de homepage al gezien hebt, zodat de openingsanimatie niet elke keer opnieuw speelt wanneer u tijdens hetzelfde bezoek terugkeert. Het bevat geen persoonsgegevens, wordt nooit naar ons of naar derden verstuurd en verdwijnt vanzelf wanneer u het tabblad of de browser sluit.</p>
+    <p>De lettertypen, afbeeldingen en de kaart op de contactpagina worden vanaf onze eigen website geladen; er komt geen kaartdienst of lettertypedienst van derden aan te pas. Klikt u op &ldquo;Plan uw route&rdquo;, dan opent Google Maps in een nieuw venster en geldt vanaf dat moment het privacybeleid van Google.</p>
 
     <h2>5. Bewaartermijn</h2>
-    <p>Wij bewaren uw gegevens niet langer dan nodig voor het doel waarvoor ze werden verzameld. Gegevens uit een vrijblijvende contactname worden uiterlijk twee jaar na het laatste contact verwijderd, tenzij er een klantrelatie tot stand komt of een wettelijke bewaarplicht geldt.</p>
+    <p>Wij bewaren uw gegevens niet langer dan nodig voor het doel waarvoor ze werden verzameld. Gegevens uit een vrijblijvende contactname, ook een bericht via het contactformulier, worden uiterlijk twee jaar na het laatste contact verwijderd, tenzij er een klantrelatie tot stand komt of een wettelijke bewaarplicht geldt.</p>
+    <p>De dienst die het contactformulier verstuurt (Resend, zie punt 6) bewaart een kopie van het verzonden bericht hoogstens dertig dagen, om de aflevering te kunnen opvolgen.</p>
 
-    <h2>6. Delen met derden</h2>
-    <p>Uw gegevens worden enkel gedeeld met derden wanneer dat noodzakelijk is voor onze dienstverlening (bijvoorbeeld met een notaris of advocaat in uw dossier, en steeds in overleg met u) of wanneer wij daartoe wettelijk verplicht zijn. Onze website wordt gehost bij een professionele hostingpartner die de gegevens uitsluitend in opdracht van ons verwerkt.</p>
+    <h2>6. Delen met derden en verwerkers</h2>
+    <p>Uw gegevens worden enkel gedeeld met derden wanneer dat noodzakelijk is voor onze dienstverlening (bijvoorbeeld met een notaris of advocaat in uw dossier, en steeds in overleg met u) of wanneer wij daartoe wettelijk verplicht zijn.</p>
+    <p>Voor de website en onze e-mail werken wij met dienstverleners die uw gegevens uitsluitend in onze opdracht verwerken:</p>
+    <ul>
+      <li><strong>Cloudflare</strong> (Cloudflare, Inc., Verenigde Staten) host de website en levert ze af vanuit het dichtstbijzijnde datacenter. Cloudflare verwerkt daarbij de technische gegevens uit punt 2, en ook de gegevens die u in het contactformulier invult wanneer u op versturen klikt.</li>
+      <li><strong>Resend</strong> (Verenigde Staten) verstuurt het bericht uit het contactformulier per e-mail naar ons, vanuit zijn Europese vestiging in Ierland.</li>
+      <li><strong>Microsoft</strong> (Microsoft 365) beheert onze mailbox. Berichten via het formulier en e-mails die u ons stuurt, komen daar binnen.</li>
+    </ul>
+    <p>Waar gegevens buiten de Europese Economische Ruimte kunnen worden verwerkt, gebeurt dat op basis van de waarborgen die de AVG daarvoor voorziet, zoals het EU-VS Data Privacy Framework of de modelcontractbepalingen van de Europese Commissie.</p>
 
     <h2>7. Uw rechten</h2>
     <p>U heeft het recht op inzage, verbetering, wissing en overdraagbaarheid van uw persoonsgegevens, evenals het recht om bezwaar te maken tegen de verwerking of de beperking ervan te vragen. U oefent deze rechten uit door ons te contacteren via <a href="mailto:info@polares.be">info@polares.be</a>. Wij reageren binnen de wettelijke termijn van één maand.</p>
