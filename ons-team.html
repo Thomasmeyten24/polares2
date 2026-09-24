@@ -219,6 +219,10 @@
     /* Het slot van een pagina: één link naar de contactpagina, waar het
        formulier, het adres, het nummer en de kaart samen staan. */
     .slot-acties { display: flex; flex-direction: column; align-items: flex-start; }
+    /* MyPolares: het klantenportaal (MyFaro), rechts naast het menu */
+    .nav__rechts{display:flex;align-items:center;gap:clamp(.75rem,2vw,1.5rem)}
+    .nav__portaal{display:inline-flex;align-items:center;gap:.45rem;font-family:var(--sans);font-size:13px;letter-spacing:.06em;color:var(--navy-600);padding-block:4px;border-bottom:1px solid transparent;transition:border-color var(--dur-2) var(--ease)}
+    .nav__portaal:hover{border-bottom-color:currentColor}
   </style>
 </head>
 <body>
@@ -227,10 +231,13 @@
       <span class="brand__logo" role="img" aria-label="Polares"></span>
     </a>
 
-    <button class="nav__burger" id="burgerBtn"
-            aria-expanded="false" aria-controls="overlay" aria-label="Menu openen">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="nav__rechts">
+      <a class="nav__portaal" href="https://app.myfaro.be/users/sign_in?locale=nl&amp;broker_id=65609bbf5c1c3200231547f0" target="_blank" rel="noopener noreferrer" aria-label="MyPolares, het klantenportaal (opent in een nieuw tabblad)">MyPolares <svg aria-hidden="true" width="9" height="9" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 1h6v6M9 1 1 9"/></svg></a>
+      <button class="nav__burger" id="burgerBtn"
+              aria-expanded="false" aria-controls="overlay" aria-label="Menu openen">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
   </header>
 
   <div class="overlay" id="overlay">
