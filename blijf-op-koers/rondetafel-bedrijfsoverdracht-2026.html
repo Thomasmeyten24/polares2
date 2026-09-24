@@ -567,13 +567,12 @@
     // contact.html staat hetzelfde formulier gewoon op de pagina: dan is #cform
     // geen <dialog> en valt al het openen en sluiten weg.
     //
-    // VERZENDPUNT is de plek waar het bericht naartoe gaat. Zolang die leeg
-    // is, valt het formulier terug op het mailprogramma van de bezoeker, met
-    // alles al ingevuld; dan gaat er geen bezoekersgegeven langs een derde
-    // partij. Vul hier het adres in van een eigen functie of een
-    // formulierdienst en het bericht wordt rechtstreeks verstuurd.
+    // VERZENDPUNT is de functie die het bericht verstuurt: worker/index.js,
+    // op Cloudflare. Bestaat die op dit adres niet (een lokale testserver
+    // kent geen POST), dan valt het formulier terug op het mailprogramma van
+    // de bezoeker, met alles al ingevuld. Leeg maken doet dat altijd.
     (function () {
-      var VERZENDPUNT = '';
+      var VERZENDPUNT = '/api/contact';
 
       var venster  = document.getElementById('cform');
       var form     = document.getElementById('cformForm');
@@ -705,6 +704,17 @@
             bericht: wijze() === 'bericht' ? bericht.value.trim() : ''
           })
         }).then(function (r) {
+          // geen functie op dit adres: dan toch nog via het mailprogramma
+          if (r.status === 404 || r.status === 405 || r.status === 501) {
+            verstuur.disabled = false;
+            verstuur.textContent = 'Versturen';
+            viaMailprogramma();
+            if (inline) {
+              melding.querySelector('p').textContent = 'Uw mailprogramma opent met alles al ingevuld. Verstuur het bericht daar en we nemen persoonlijk contact op.';
+              melding.hidden = false;
+            } else sluit();
+            return;
+          }
           if (!r.ok) throw new Error(r.status);
           form.hidden = true;
           melding.querySelector('p').textContent = 'Bedankt, uw bericht is verstuurd. We nemen persoonlijk contact op.';

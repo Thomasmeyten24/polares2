@@ -84,20 +84,21 @@ privacyverklaring nakijkt.
   draait kan Google verzonnen evenementen indexeren. Vervangen in
   `data/berichten.json`, daarna `python tools/berichten.py` en
   `python tools/og-afbeeldingen.py`. Zie `data/LEESMIJ.md`.
-- **Het formulier verstuurt nog niet zelf.** Het valt terug op het
-  mailprogramma van de bezoeker; dat werkt, maar is een drempel. De site staat op
-  Cloudflare, dus geen `contact.php`: het wordt een kleine Cloudflare-functie op
-  `/api/contact`, en `VERZENDPUNT` in `index.html` gaat daarnaar wijzen (daarna
-  `python tools/gedeeld.py`). Wacht op één keuze: versturen via Microsoft 365
-  (Graph API, met een app-registratie in het eigen tenant) of via een
-  verzenddienst. De mail van Polares loopt via Microsoft, dus een verzenddienst
-  moet in SPF en DKIM mee. Sleutels horen in de instellingen van Cloudflare,
-  nooit in de repo. Het adres van de bezoeker hoort in `Reply-To`, nooit in
-  `From`. Zet ook `html_handling` en de route voor `/api/*` na in
-  `wrangler.jsonc`.
+- **Het formulier verstuurt via Resend** (`worker/index.js`, op
+  `/api/contact`, gratis plan: 3.000 mails per maand, 100 per dag). Tijdens het
+  testen van `polares@meyten.com` naar `thomas@meyten.com`. Voor de lancering:
+  1. Bij Resend `polares.be` toevoegen als domein, regio Ireland. De records
+     komen op `send.polares.be` en `resend._domainkey.polares.be`; de MX en
+     SPF van Microsoft blijven ongemoeid.
+  2. In `wrangler.jsonc` `AFZENDER` op polares.be zetten (bijvoorbeeld
+     `website@polares.be`) en `ONTVANGER` op `info@polares.be`.
+  3. Een nieuwe API-sleutel, alleen verzendrechten en alleen voor polares.be,
+     als geheim `RESEND_API_KEY` in Cloudflare. De oude sleutel intrekken.
+  Het adres van de bezoeker staat in `Reply-To`, nooit in `From`.
 - **Privacyverklaring: Cloudflare vermelden.** Cloudflare levert de site en ziet
-  daarbij de IP-adressen van bezoekers. Eén zin, mee te nemen wanneer de jurist
-  de tekst nakijkt.
+  daarbij de IP-adressen van bezoekers, en de gegevens uit het contactformulier
+  gaan via Resend (Amerikaans bedrijf, verzonden vanuit Ierland) naar Polares. Mee te nemen wanneer de
+  jurist de tekst nakijkt.
 - **Privacyverklaring en algemene voorwaarden** staan als basistekst in de
   bestanden, met een notitie dat een jurist ze moet nakijken.
 - **De oude hosting opzeggen**, bij de vroegere websitebouwer, pas als de site

@@ -1,15 +1,30 @@
-// Cloudflare: de site is een statische site zonder eigen code. Cloudflare
-// draait bij elke push naar main eerst tools/bouw-site.py en publiceert
-// daarna de map dist/.
+// Cloudflare: de site is statisch, met één stukje code voor het
+// contactformulier. Cloudflare draait bij elke push naar main eerst
+// tools/bouw-site.py en publiceert daarna de map dist/.
 {
   "name": "polares",
   "compatibility_date": "2026-09-24",
+  // Alleen het contactformulier: POST /api/contact (zie worker/index.js).
+  "main": "worker/index.js",
   "assets": {
     "directory": "./dist",
+    "binding": "ASSETS",
     // Geen automatische adressen zonder .html: de canonieke adressen, de
     // sitemap en alle interne links gebruiken .html. Met de standaard zou
     // Cloudflare elk van die adressen omleiden naar een versie zonder .html.
     "html_handling": "none",
-    "not_found_handling": "404-page"
-  }
+    "not_found_handling": "404-page",
+    // De code draait alleen voor het formulier. Al de rest komt rechtstreeks
+    // uit dist/ en kost dus ook geen aanroep van de Worker.
+    "run_worker_first": ["/api/*"]
+  },
+  // Het formulier verstuurt via Resend. AFZENDER moet op een domein staan dat
+  // bij Resend geverifieerd is. Voorlopig tijdens het testen; later
+  // info@polares.be en een afzender op polares.be.
+  // De sleutel staat niet hier maar als geheim in Cloudflare: RESEND_API_KEY.
+  "vars": {
+    "AFZENDER": "polares@meyten.com",
+    "ONTVANGER": "thomas@meyten.com"
+  },
+  "observability": { "enabled": true }
 }
