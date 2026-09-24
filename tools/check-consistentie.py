@@ -57,6 +57,7 @@ familie = lees("uw-familie.html")
 bedrijf = lees("uw-bedrijf.html")
 koers = lees("blijf-op-koers.html")
 team = lees("ons-team.html")
+contact = lees("contact.html")
 
 # ── De structured data is de referentie: daar staan de feiten gestructureerd ──
 ld_ruw = re.search(r'application/ld\+json">([\s\S]*?)</script>', index)
@@ -118,6 +119,7 @@ for bestand, inhoud in (
     ("uw-bedrijf.html", bedrijf),
     ("blijf-op-koers.html", koers),
     ("ons-team.html", team),
+    ("contact.html", contact),
 ):
     tekst = zichtbare_tekst(inhoud)
     controleer(f"juridische naam in {bestand}", naam in tekst, naam)
@@ -149,6 +151,7 @@ for bestand, inhoud in (
     ("uw-bedrijf.html", bedrijf),
     ("blijf-op-koers.html", koers),
     ("ons-team.html", team),
+    ("contact.html", contact),
 ):
     for href in set(re.findall(r'href="index\.html#([^"]+)"', inhoud)):
         controleer(f"anker index.html#{href} (vanuit {bestand}) bestaat", href in ankers)
@@ -160,6 +163,25 @@ for bestand, inhoud in (
 # Footer-links naar diensten moeten op de dienstpagina's een anker hebben
 for pagina, anker in set(re.findall(r'href="(uw-[a-z]+\.html)#([^"]+)"', index)):
     controleer(f"anker {pagina}#{anker} bestaat", f'id="{anker}"' in lees(pagina))
+
+# ── 4a. De contactpagina ────────────────────────────────────────────────────
+# Het menu van elke pagina wijst naar contact.html; daar moeten het adres uit de
+# structured data, het formulier en de kaart met haar naamsvermelding staan.
+contact_tekst = zichtbare_tekst(contact)
+for veld in ("streetAddress", "postalCode", "addressLocality"):
+    controleer(f"contactpagina toont adres ({veld})", adres[veld] in contact_tekst, adres[veld])
+controleer("contactpagina toont het telefoonnummer",
+           cijfers(org["telephone"])[-8:] in cijfers(contact_tekst), org["telephone"])
+controleer("contactpagina toont het e-mailadres", org["email"] in contact, org["email"])
+controleer("contactpagina draagt het formulier op de pagina",
+           'id="cformForm"' in contact and '<dialog class="cform"' not in contact)
+controleer("kaart van het kantoor aanwezig", (ROOT / "assets/kaart-kantoor.svg").exists())
+controleer("kaart vermeldt OpenStreetMap (ODbL)", "OpenStreetMap-bijdragers" in contact)
+for bestand in ("index.html", "uw-familie.html", "uw-bedrijf.html", "ons-team.html",
+                "blijf-op-koers.html", "contact.html"):
+    menu = re.search(r'<nav class="overlay__nav".*?</nav>', lees(bestand), re.S)
+    controleer(f"menu van {bestand} wijst naar contact.html",
+               bool(menu) and 'href="contact.html"' in menu.group(0))
 
 # ── 4b. Elke pagina uit het menu hoort in de sitemap ────────────────────────
 # De juridische pagina's staan er bewust met een lage prioriteit in; de rest

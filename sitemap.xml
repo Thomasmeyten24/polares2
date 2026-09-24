@@ -30,6 +30,12 @@
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>https://polares.be/contact.html</loc>
+    <lastmod>2026-09-24</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
   <!-- BEGIN_BERICHTEN (geschreven door tools/berichten.py uit data/berichten.json) -->
   <url>
     <loc>https://polares.be/blijf-op-koers/koffiesessie-vermogensarchitectuur.html</loc>

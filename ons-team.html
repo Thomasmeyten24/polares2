@@ -354,7 +354,7 @@
         <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
         Blijf op koers
       </a>
-      <a href="index.html#contact" class="overlay__link">
+      <a href="contact.html" class="overlay__link">
         <svg aria-hidden="true" width="10" height="10" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
         Contact
       </a>
@@ -497,6 +497,7 @@
       <p class="cform__sub">Laat ons weten hoe we u kunnen begeleiden. We antwoorden persoonlijk.</p>
 
       <form id="cformForm" novalidate>
+        <!-- BEGIN_CFORM_VELDEN (ook op contact.html, daar zonder venster) -->
         <fieldset class="cform__keuze">
           <legend>Wat wilt u doen?</legend>
           <label><input type="radio" name="wijze" value="bellen" checked> Contacteer mij</label>
@@ -531,6 +532,7 @@
             <input id="cformVal" name="website" type="text" tabindex="-1" autocomplete="off">
           </p>
         </div>
+        <!-- EIND_CFORM_VELDEN -->
         <div class="cform__voet">
           <button class="cform__btn" type="submit" id="cformVerstuur">Versturen</button>
           <button class="cform__btn cform__btn--rand" type="button" id="cformAnnuleer">Annuleren</button>
@@ -557,7 +559,7 @@
             <li><a href="uw-bedrijf.html">Uw onderneming</a></li>
             <li><a href="ons-team.html">Ons team</a></li>
             <li><a href="blijf-op-koers.html">Blijf op koers</a></li>
-            <li><a href="index.html#contact">Contact</a></li>
+            <li><a href="contact.html">Contact</a></li>
           </ul>
         </div>
         <!-- Kolom 3: contact -->
@@ -634,8 +636,9 @@
     })();
     // BEGIN_CFORM (geschreven door tools/gedeeld.py uit index.html; bewerk daar)
     // ── Contactformulier ────────────────────────────────────────
-    // Het e-mailadres in het contactblok opent dit venster in plaats van
-    // meteen een mailprogramma. Twee verplichte velden.
+    // Op de meeste pagina's een venster dat opent vanuit het contactblok. Op
+    // contact.html staat hetzelfde formulier gewoon op de pagina: dan is #cform
+    // geen <dialog> en valt al het openen en sluiten weg.
     //
     // VERZENDPUNT is de plek waar het bericht naartoe gaat. Zolang die leeg
     // is, valt het formulier terug op het mailprogramma van de bezoeker, met
@@ -648,6 +651,7 @@
       var venster  = document.getElementById('cform');
       var form     = document.getElementById('cformForm');
       if (!venster || !form) return;
+      var inline   = venster.tagName !== 'DIALOG';
       var sluitKn  = document.getElementById('cformSluit');
       var annuleer = document.getElementById('cformAnnuleer');
       var verstuur = document.getElementById('cformVerstuur');
@@ -692,10 +696,13 @@
         }
         melding.hidden = true;
         form.hidden = false;
-        if (typeof venster.showModal === 'function') venster.showModal(); else venster.setAttribute('open', '');
-        mail.focus();
+        if (inline) venster.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        else if (typeof venster.showModal === 'function') venster.showModal();
+        else venster.setAttribute('open', '');
+        mail.focus({ preventScroll: inline });
       }
       function sluit() {
+        if (inline) return;
         if (typeof venster.close === 'function') venster.close(); else venster.removeAttribute('open');
         if (vanaf) vanaf.focus();
       }
@@ -706,9 +713,9 @@
       [].forEach.call(document.querySelectorAll('a[data-cform]'), function (aanzet) {
         aanzet.addEventListener('click', function (e) { e.preventDefault(); open(aanzet); });
       });
-      sluitKn.addEventListener('click', sluit);
-      annuleer.addEventListener('click', sluit);
-      venster.addEventListener('click', function (e) { if (e.target === venster) sluit(); });
+      if (sluitKn) sluitKn.addEventListener('click', sluit);
+      if (annuleer) annuleer.addEventListener('click', sluit);
+      if (!inline) venster.addEventListener('click', function (e) { if (e.target === venster) sluit(); });
 
       function regels() {
         var r = [];
@@ -748,7 +755,15 @@
         fout(bericht, !tekstOk, 'cformFoutBericht');
         if (!tekstOk) { bericht.focus(); return; }
 
-        if (!VERZENDPUNT) { viaMailprogramma(); sluit(); return; }
+        if (!VERZENDPUNT) {
+          viaMailprogramma();
+          // Op de pagina zelf blijft het formulier staan; zeg dan wat er gebeurt.
+          if (inline) {
+            melding.querySelector('p').textContent = 'Uw mailprogramma opent met alles al ingevuld. Verstuur het bericht daar en we nemen persoonlijk contact op.';
+            melding.hidden = false;
+          } else sluit();
+          return;
+        }
 
         verstuur.disabled = true;
         verstuur.textContent = 'Versturen…';

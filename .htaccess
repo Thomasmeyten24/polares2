@@ -23,7 +23,7 @@ Options -Indexes
   # De vlag NE is hier essentieel: zonder NE maakt Apache van # een %23 en
   # komt de bezoeker op een kapotte URL uit.
   # Familie en onderneming hebben nu elk een eigen pagina.
-  RewriteRule ^contact/?$                          /#contact   [R=301,L,NE]
+  RewriteRule ^contact/?$                          /contact.html [R=301,L]
   RewriteRule ^expertise/?$                        /#expertise [R=301,L,NE]
   RewriteRule ^uw-familie/?$                       /uw-familie.html [R=301,L]
   RewriteRule ^uw-familie/vermogensarchitectuur/?$ /uw-familie.html#vermogensarchitectuur [R=301,L,NE]

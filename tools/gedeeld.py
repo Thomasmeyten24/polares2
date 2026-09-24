@@ -15,6 +15,14 @@ index.html is de bron. Daar staan drie blokken tussen merktekens:
 
 Dit script schrijft die drie in elke doelpagina tussen dezelfde merktekens.
 
+contact.html is anders: daar staat het formulier op de pagina zelf, niet in
+een venster. Die pagina krijgt de stijl en het script, en van de opmaak alleen
+de velden, het stuk tussen
+
+    <!-- BEGIN_CFORM_VELDEN --> ... <!-- EIND_CFORM_VELDEN -->
+
+Kop, knoppen en melding horen bij die pagina zelf.
+
     python tools/gedeeld.py            # schrijft de pagina's bij
     python tools/gedeeld.py --check    # controleert alleen, exitcode 1 bij verschil
 
@@ -35,12 +43,17 @@ DOELEN = [
     ROOT / "tools" / "sjabloon-bericht.html",
 ]
 
+# Pagina's met het formulier op de pagina zelf in plaats van in een venster.
+OP_PAGINA = [ROOT / "contact.html"]
+
 # merk, begin, eind. De drie talen hebben elk hun eigen commentaarvorm.
+# (?!_) houdt BEGIN_CFORM_VELDEN buiten het begin van het hele venster.
 BLOKKEN = [
     ("css", r"/\* BEGIN_CFORM[^*]*\*/", r"/\* EIND_CFORM \*/"),
-    ("markup", r"<!-- BEGIN_CFORM[^>]*-->", r"<!-- EIND_CFORM -->"),
+    ("markup", r"<!-- BEGIN_CFORM(?!_)[^>]*-->", r"<!-- EIND_CFORM -->"),
     ("js", r"// BEGIN_CFORM[^\n]*", r"// EIND_CFORM"),
 ]
+VELDEN = ("velden", r"<!-- BEGIN_CFORM_VELDEN[^>]*-->", r"<!-- EIND_CFORM_VELDEN -->")
 
 # De berichtpagina's staan een map dieper, dus hun verwijzingen ook.
 DIEPER = {"sjabloon-bericht.html"}
@@ -72,6 +85,15 @@ def bouw() -> dict[Path, str]:
             if doel.name in DIEPER:
                 inhoud = inhoud.replace('href="index.html', 'href="../index.html')
             tekst = zet(tekst, b, e, inhoud, doel.name)
+        uit[doel] = tekst
+
+    velden = haal(bron, VELDEN[1], VELDEN[2], BRON.name)
+    for doel in OP_PAGINA:
+        tekst = doel.read_text(encoding="utf-8")
+        for merk, b, e in BLOKKEN:
+            if merk != "markup":
+                tekst = zet(tekst, b, e, stukken[merk], doel.name)
+        tekst = zet(tekst, VELDEN[1], VELDEN[2], velden, doel.name)
         uit[doel] = tekst
     return uit
 
