@@ -7,14 +7,13 @@ wat hier staat is besproken en beslist, of wacht op één duidelijk antwoord.
 
 ## Analytics en vindbaarheid
 
-**Wacht op:** de site draait op een echt Combell-adres (een afgeschermd
-testadres volstaat).
+**Wacht op:** de site draait op Cloudflare onder `polares.be` of `new.polares.be`.
 
 **Waarom niet eerder.** Search Console verifieert een *domein*; vanaf een lokale
 server kan dat niet. Het meetscript moet op de echte URL getest worden. En het
-testadres mag niet meetellen in de cijfers: `.htaccess` zet daar al
-`X-Robots-Tag: noindex` op via de host-conditie, het meetscript moet dezelfde
-uitzondering krijgen.
+testadres mag niet meetellen in de cijfers: `_headers` zet daar al
+`X-Robots-Tag: noindex` op (alles behalve `polares.be`), het meetscript moet
+dezelfde uitzondering krijgen.
 
 ### Eerst beslissen (Polares)
 
@@ -27,9 +26,10 @@ uitzondering krijgen.
      klikt of het formulier verstuurt. Prijzen wijzigen; check ze op dat moment.
 2. **Welk Google-account** voor Search Console? Liefst een kantooraccount, geen
    persoonlijk: het moet een collega kunnen overnemen.
-3. **Waar staat de DNS van polares.be** (Combell of elders)? Verificatie via een
-   DNS-record verdient de voorkeur boven een bestand of meta-tag: die blijft
-   geldig los van wat er op de site verandert.
+3. De DNS van polares.be staat bij Cloudflare. Verificatie via een DNS-record
+   verdient de voorkeur boven een bestand of meta-tag: die blijft geldig los van
+   wat er op de site verandert. Cloudflare Web Analytics staat dan ook in
+   hetzelfde account.
 
 De accounts maakt Polares zelf aan.
 
@@ -84,17 +84,24 @@ privacyverklaring nakijkt.
   draait kan Google verzonnen evenementen indexeren. Vervangen in
   `data/berichten.json`, daarna `python tools/berichten.py` en
   `python tools/og-afbeeldingen.py`. Zie `data/LEESMIJ.md`.
-- **`contact.php` bestaat nog niet.** Het formulier valt nu terug op het
-  mailprogramma van de bezoeker. Het staat intussen op elke pagina, geschreven
-  door `tools/gedeeld.py` uit `index.html`: die ene bron aanpassen en het script
-  draaien volstaat. Wacht op één antwoord: laat Microsoft 365 nog
-  SMTP met wachtwoord toe, of gaat het via een verzenddienst? De mail van Polares
-  loopt via Microsoft en niet via Combell, dus verzenden langs Combell zou op
-  SPF stranden. Het adres van de bezoeker hoort in `Reply-To`, nooit in `From`.
+- **Het formulier verstuurt nog niet zelf.** Het valt terug op het
+  mailprogramma van de bezoeker; dat werkt, maar is een drempel. De site staat op
+  Cloudflare, dus geen `contact.php`: het wordt een kleine Cloudflare-functie op
+  `/api/contact`, en `VERZENDPUNT` in `index.html` gaat daarnaar wijzen (daarna
+  `python tools/gedeeld.py`). Wacht op één keuze: versturen via Microsoft 365
+  (Graph API, met een app-registratie in het eigen tenant) of via een
+  verzenddienst. De mail van Polares loopt via Microsoft, dus een verzenddienst
+  moet in SPF en DKIM mee. Sleutels horen in de instellingen van Cloudflare,
+  nooit in de repo. Het adres van de bezoeker hoort in `Reply-To`, nooit in
+  `From`. Zet ook `html_handling` en de route voor `/api/*` na in
+  `wrangler.jsonc`.
+- **Privacyverklaring: Cloudflare vermelden.** Cloudflare levert de site en ziet
+  daarbij de IP-adressen van bezoekers. Eén zin, mee te nemen wanneer de jurist
+  de tekst nakijkt.
 - **Privacyverklaring en algemene voorwaarden** staan als basistekst in de
   bestanden, met een notitie dat een jurist ze moet nakijken.
-- **Hoe komen de bestanden op Combell?** FTP, het paneel, of git? Dat is nog nooit
-  beantwoord en het bepaalt hoe een redactiewijziging online raakt.
+- **De oude hosting opzeggen**, bij de vroegere websitebouwer, pas als de site
+  een week stabiel op Cloudflare draait.
 
 ---
 

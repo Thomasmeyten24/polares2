@@ -24,3 +24,6 @@ jobs:
       # Wijzigt het daar zonder dat tools/gedeeld.py gedraaid is, dan dragen de
       # andere pagina's een oudere versie.
       - run: python tools/gedeeld.py --check
+      # Cloudflare bouwt de site met hetzelfde script. Ontbreekt een bestand
+      # dat online moet, dan faalt het hier al en niet pas bij het publiceren.
+      - run: python tools/bouw-site.py

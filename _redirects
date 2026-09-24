@@ -1,0 +1,25 @@
+# Doorsturingen voor Cloudflare (vervangt de regels uit de vroegere .htaccess).
+# Formaat: bron  doel  status. Varianten met en zonder slash staan er elk apart:
+# Cloudflare vult die niet zelf aan.
+
+# De homepage. html_handling staat op "none" (zie wrangler.jsonc), zodat de
+# pagina's hun .html-adres houden; dan moet "/" hier zelf naar index.html.
+/                                        /index.html                              200
+
+# Oude adressen van de Craft-site
+/contact                                 /contact.html                            301
+/contact/                                /contact.html                            301
+/expertise                               /#expertise                              301
+/expertise/                              /#expertise                              301
+/uw-familie                              /uw-familie.html                         301
+/uw-familie/                             /uw-familie.html                         301
+/uw-familie/vermogensarchitectuur        /uw-familie.html#vermogensarchitectuur   301
+/uw-familie/vermogensarchitectuur/       /uw-familie.html#vermogensarchitectuur   301
+/uw-familie/vermogensmonitoring          /uw-familie.html#vermogensmonitoring     301
+/uw-familie/vermogensmonitoring/         /uw-familie.html#vermogensmonitoring     301
+/uw-familie/concrete-uitwerking          /uw-familie.html                         301
+/uw-familie/concrete-uitwerking/         /uw-familie.html                         301
+/uw-onderneming                          /uw-bedrijf.html                         301
+/uw-onderneming/                         /uw-bedrijf.html                         301
+/uw-bedrijf                              /uw-bedrijf.html                         301
+/uw-bedrijf/                             /uw-bedrijf.html                         301

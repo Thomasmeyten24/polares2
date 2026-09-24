@@ -1,0 +1,15 @@
+// Cloudflare: de site is een statische site zonder eigen code. Cloudflare
+// draait bij elke push naar main eerst tools/bouw-site.py en publiceert
+// daarna de map dist/.
+{
+  "name": "polares",
+  "compatibility_date": "2026-09-24",
+  "assets": {
+    "directory": "./dist",
+    // Geen automatische adressen zonder .html: de canonieke adressen, de
+    // sitemap en alle interne links gebruiken .html. Met de standaard zou
+    // Cloudflare elk van die adressen omleiden naar een versie zonder .html.
+    "html_handling": "none",
+    "not_found_handling": "404-page"
+  }
+}

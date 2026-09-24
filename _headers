@@ -1,0 +1,34 @@
+# Headers voor Cloudflare (vervangt de regels uit de vroegere .htaccess).
+# Een pad dat met meerdere regels overeenkomt, krijgt ze allemaal. Zet een
+# header daarom maar op één plek, anders plakt Cloudflare de waarden aaneen.
+
+# Alles behalve polares.be blijft uit de zoekresultaten: het testadres, het
+# adres op workers.dev en elke voorvertoning. Standaard noindex, en op het
+# echte domein haalt de tweede regel die weer weg.
+/*
+  X-Robots-Tag: noindex, nofollow
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+
+https://polares.be/*
+  ! X-Robots-Tag
+
+# Lettertypes wijzigen nooit: een jaar. Afbeeldingen hebben vaste namen zonder
+# versienummer; een vervangen logo zou een jaar oud blijven, dus dertig dagen.
+# HTML en de rest krijgen de standaard van Cloudflare: telkens opnieuw nagaan.
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/*.webp
+  Cache-Control: public, max-age=2592000
+/*.png
+  Cache-Control: public, max-age=2592000
+/*.jpg
+  Cache-Control: public, max-age=2592000
+/*.svg
+  Cache-Control: public, max-age=2592000
+/*.ico
+  Cache-Control: public, max-age=2592000
+
+/site.webmanifest
+  Content-Type: application/manifest+json
