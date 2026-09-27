@@ -2,6 +2,13 @@
 # Een pad dat met meerdere regels overeenkomt, krijgt ze allemaal. Zet een
 # header daarom maar op één plek, anders plakt Cloudflare de waarden aaneen.
 
+# De Content-Security-Policy staat maar hier: alleen wat van de site zelf komt,
+# en van de scripts in de pagina's alleen die met een bekende hash. Die hashes
+# vult tools/bouw-site.py in bij het bouwen, op de plaatshouder hieronder, uit de
+# pagina's in dist/: wie een script in een pagina wijzigt, hoeft hier niets te
+# doen. Eén regel voor alle paden: twee CSP-regels op één pad worden twee
+# policies die allebei moeten kloppen.
+#
 # Alles behalve polares.be blijft uit de zoekresultaten: het testadres, het
 # adres op workers.dev en elke voorvertoning. Standaard noindex, en op het
 # echte domein haalt de tweede regel die weer weg.
@@ -10,6 +17,10 @@
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
+  Strict-Transport-Security: max-age=31536000
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+  Content-Security-Policy: default-src 'self'; script-src 'self' __SCRIPT_HASHES__; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
 
 https://polares.be/*
   ! X-Robots-Tag

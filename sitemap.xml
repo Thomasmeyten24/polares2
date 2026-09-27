@@ -2,50 +2,48 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://polares.be/</loc>
-    <lastmod>2026-08-24</lastmod>
+    <lastmod>2026-09-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
     <loc>https://polares.be/uw-familie.html</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-09-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://polares.be/uw-bedrijf.html</loc>
-    <lastmod>2026-09-18</lastmod>
+    <lastmod>2026-09-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://polares.be/ons-team.html</loc>
-    <lastmod>2026-09-21</lastmod>
+    <lastmod>2026-09-27</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://polares.be/blijf-op-koers.html</loc>
-    <lastmod>2026-09-21</lastmod>
+    <lastmod>2026-09-27</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
     <loc>https://polares.be/contact.html</loc>
-    <lastmod>2026-09-24</lastmod>
+    <lastmod>2026-09-27</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.7</priority>
   </url>
   <!-- BEGIN_BERICHTEN (geschreven door tools/berichten.py uit data/berichten.json) -->
   <url>
-    <loc>https://polares.be/blijf-op-koers/koffiesessie-vermogensarchitectuur.html</loc>
-    <lastmod>2026-11-19</lastmod>
+    <loc>https://polares.be/blijf-op-koers/rondetafel-bedrijfsoverdracht-2026.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>
   <url>
-    <loc>https://polares.be/blijf-op-koers/rondetafel-bedrijfsoverdracht-2026.html</loc>
-    <lastmod>2026-10-22</lastmod>
+    <loc>https://polares.be/blijf-op-koers/koffiesessie-vermogensarchitectuur.html</loc>
     <changefreq>yearly</changefreq>
     <priority>0.5</priority>
   </url>

@@ -2,8 +2,8 @@ name: Consistentiecontrole
 
 # Draait bij elke push en pull request, ook na elke wijziging in het CMS.
 # Bouwt de site precies zoals Cloudflare dat doet (tools/bouw-site.py): de
-# pagina's uit data/berichten.json en data/team.json, het contactformulier op
-# elke pagina, en daarna de consistentiecontrole op het resultaat. Faalt het
+# pagina's uit data/berichten.json en data/team.json, en daarna de
+# consistentiecontrole op het resultaat. Faalt het
 # hier, dan faalt het ook op Cloudflare, en blijft daar de vorige versie staan.
 #
 # Vroeger controleerde dit ook of de gemaakte pagina's in de repo gelijk liepen

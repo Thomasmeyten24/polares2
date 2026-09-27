@@ -1,0 +1,44 @@
+name: Blijf op koers bij de datum van vandaag
+
+# Wat er op Blijf op koers staat, hangt af van de datum: een evenement dat
+# voorbij is, heet "afgelopen" en heeft geen aanmeldknop meer, en na de
+# aanmeldtermijn staat er "Aanmelden afgesloten". Cloudflare bouwt alleen bij
+# een push. Daarom maakt dit elke nacht de pagina's opnieuw; verandert er iets,
+# dan commit het die, en die push laat Cloudflare de site opnieuw bouwen.
+# Verandert er niets (de meeste nachten), dan gebeurt er ook niets.
+
+on:
+  schedule:
+    - cron: "10 3 * * *"   # 05:10 in Brussel in de zomer, 04:10 in de winter
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: dagelijks
+  cancel-in-progress: false
+
+jobs:
+  bijwerken:
+    runs-on: ubuntu-latest
+    env:
+      TZ: Europe/Brussels
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python tools/berichten.py
+      - name: Commit als er iets veranderde
+        run: |
+          git add blijf-op-koers.html blijf-op-koers sitemap.xml
+          if git diff --cached --quiet; then
+            echo "Niets veranderd."
+            exit 0
+          fi
+          git config user.name "polares-site"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Werk Blijf op koers bij voor $(date +%Y-%m-%d)"
+          git pull --rebase
+          git push

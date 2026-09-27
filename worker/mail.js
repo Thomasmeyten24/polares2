@@ -18,8 +18,14 @@ export function maakMail(v) {
   const titel = v.wijze === 'bericht' ? 'Nieuw bericht via de website' : 'Contactverzoek via de website';
   const zin = v.wijze === 'bericht' ? wie + ' stuurt een bericht.' : wie + ' wil graag gecontacteerd worden.';
   const onderwerp = (v.wijze === 'bericht' ? 'Bericht' : 'Contactverzoek') + ' via polares.be' + (v.naam ? ': ' + v.naam : '');
-  const telHref = 'tel:' + v.telefoon.replace(/[^\d+]/g, '');
-  const antwoordHref = 'mailto:' + v.email + '?subject=' + encodeURIComponent('Re: ' + onderwerp);
+  // het eerste nummer in het veld, zonder de (0) die men in België vaak
+  // tussen landcode en zone zet: '+32 (0)54 23 50 50 of 0470 …' belt zo het
+  // kantoor en niet een aaneenschakeling van beide nummers
+  const eerste = (v.telefoon.replace(/\(0\)/g, '').match(/\+?\d[\d\s\/.\-]{6,}\d/) || [''])[0];
+  const telHref = eerste ? 'tel:' + eerste.replace(/[^\d+]/g, '') : '';
+  // het adres gecodeerd in de link, met de @ leesbaar
+  const adres = encodeURIComponent(v.email).replace(/%40/g, '@');
+  const antwoordHref = 'mailto:' + adres + '?subject=' + encodeURIComponent('Re: ' + onderwerp);
 
   // ── tekstversie: voor wie geen HTML toont, en voor de spamfilters ────────
   const tekst = [
@@ -51,7 +57,7 @@ export function maakMail(v) {
     + K.navy600 + ';' + (vol ? 'background:' + K.navy600 + ';color:' + K.wit + ';' : 'background:' + K.wit + ';color:' + K.navy600 + ';')
     + '">' + tekst + '</a>';
 
-  const knoppen = (v.mailOk ? knop(antwoordHref, 'Beantwoorden', true) : '') + (v.telOk ? knop(telHref, 'Bellen', !v.mailOk) : '');
+  const knoppen = (v.mailOk ? knop(antwoordHref, 'Beantwoorden', true) : '') + (v.telOk && telHref ? knop(telHref, 'Bellen', !v.mailOk) : '');
 
   // de eerste regels in het voorbeeld van de inbox, niet zichtbaar in de mail
   const voorbeeld = v.bericht ? v.bericht.replace(/\s+/g, ' ').slice(0, 110) : zin;
@@ -85,8 +91,8 @@ export function maakMail(v) {
     + '<tr><td class="p" style="padding:24px 40px 6px 40px;"><div style="border-top:1px solid ' + K.lijn + ';font-size:0;line-height:0;">&nbsp;</div></td></tr>'
     + '<tr><td class="p" style="padding:14px 40px 0 40px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">'
     + rij('Naam', v.naam ? ontsnap(v.naam) : leeg)
-    + rij('E-mail', v.email ? (v.mailOk ? link('mailto:' + v.email, v.email) : ontsnap(v.email)) : leeg)
-    + rij('Telefoon', v.telefoon ? (v.telOk ? link(telHref, v.telefoon) : ontsnap(v.telefoon)) : leeg)
+    + rij('E-mail', v.email ? (v.mailOk ? link('mailto:' + adres, v.email) : ontsnap(v.email)) : leeg)
+    + rij('Telefoon', v.telefoon ? (v.telOk && telHref ? link(telHref, v.telefoon) : ontsnap(v.telefoon)) : leeg)
     + '</table></td></tr>'
 
     // het bericht, als een citaat met de haarlijn van de site

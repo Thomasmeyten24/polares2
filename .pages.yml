@@ -83,10 +83,12 @@ content:
         label: Deelname (evenement)
         type: string
         description: Bijvoorbeeld Max. 10 families
-      - name: leestijd
-        label: Onder de titel
-        type: string
-        description: "Bij een artikel: 4 min leestijd. Bij een evenement: Aanmelden voor 12 november."
+      - name: aanmeldenTot
+        label: Aanmelden tot (evenement)
+        type: date
+        description: "De laatste dag om aan te melden. Daarna staat er vanzelf Aanmelden afgesloten, en na het evenement Afgelopen. Bij een artikel berekent de site zelf de leestijd."
+        options:
+          format: yyyy-MM-dd
 
       # zelden nodig
       - name: titelKort
@@ -94,11 +96,11 @@ content:
         type: string
         description: Alleen als de titel lang is. Voor het tabblad en Google, dat ongeveer zestig tekens toont.
         options:
-          maxlength: 70
+          maxlength: 50
       - name: uitgelicht
         label: Groot bovenaan
         type: boolean
-        description: Bij hoogstens één bericht tegelijk.
+        description: Bij hoogstens één bericht tegelijk. Een evenement dat voorbij is, staat vanzelf niet meer bovenaan.
       - name: id
         label: Webadres
         type: string

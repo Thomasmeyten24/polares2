@@ -21,6 +21,13 @@ concurreren ze om dezelfde plaats en tonen alle links hetzelfde voorbeeld.
     python tools/berichten.py --check    # controleert alleen, exitcode 1 als
                                          # er iets niet meer klopt met de data
 
+Wat er op de pagina's staat, hangt ook af van de datum van vandaag: een
+evenement dat voorbij is, heet "afgelopen" en heeft geen aanmeldknop meer, en
+na de aanmeldtermijn staat er "Aanmelden afgesloten". Daarom draait
+.github/workflows/dagelijks.yml dit script elke nacht; verandert er iets, dan
+commit het de pagina's en bouwt Cloudflare de site opnieuw. Voor een test op
+een andere dag: POLARES_VANDAAG=2026-11-01 python tools/berichten.py.
+
 Draait op de standaardbibliotheek. De voorbeeldafbeeldingen voor het delen
 worden apart gemaakt door tools/og-afbeeldingen.py, dat Pillow nodig heeft.
 """
@@ -30,6 +37,7 @@ from __future__ import annotations
 import html
 from datetime import date
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -42,6 +50,7 @@ MAP = ROOT / "blijf-op-koers"
 SITEMAP = ROOT / "sitemap.xml"
 
 SITE = "https://polares.be"
+VANDAAG = date.fromisoformat(os.environ["POLARES_VANDAAG"]) if os.environ.get("POLARES_VANDAAG") else date.today()
 OG_TERUGVAL = "/assets/og-image.png"
 
 # Zoveel mogelijk in de taal van de site: het type bepaalt de kleur van het
@@ -104,12 +113,49 @@ def normaliseer(b: dict) -> dict:
     # evenementen met de dag erbij, zoals op een uitnodiging
     b.setdefault("datumWeergave", (DAGEN[d.weekday()] + " " if b["type"] == "evenement" else "")
                  + f"{d.day} {MAANDEN[d.month - 1]} {d.year}")
+
+    # Wat onder de kaart staat, volgt uit de gegevens en de datum van vandaag,
+    # zodat het nooit achterloopt: de leestijd uit de tekst, bij een evenement
+    # de aanmeldtermijn of dat het voorbij is.
+    b["_voorbij"] = False
+    b["_open"] = False
+    if b["type"] == "evenement":
+        tot = None
+        if b.get("aanmeldenTot"):
+            try:
+                tot = date.fromisoformat(str(b["aanmeldenTot"])[:10])
+            except ValueError:
+                raise SystemExit(f"bericht '{naam}': 'aanmelden tot' ({b['aanmeldenTot']}) is geen geldige datum")
+            if tot > d:
+                raise SystemExit(f"bericht '{naam}': de aanmeldtermijn ligt na het evenement zelf")
+        b["_voorbij"] = d < VANDAAG
+        b["_open"] = not b["_voorbij"] and (tot is None or tot >= VANDAAG)
+        b["_tot"] = f"{tot.day} {MAANDEN[tot.month - 1]}" if tot else ""
+        if b["_voorbij"]:
+            b["_extra"] = "Afgelopen"
+        elif not b["_open"]:
+            b["_extra"] = "Aanmelden afgesloten"
+        else:
+            b["_extra"] = f"Aanmelden voor {b['_tot']}" if tot else ""
+    else:
+        woorden = len(re.sub(r"<[^>]+>", " ", b["inhoud"]).split())
+        b["_extra"] = f"{max(1, round(woorden / 200))} min leestijd"
     return b
+
+
+def badge(b: dict) -> str:
+    if b["type"] == "evenement" and b["_voorbij"]:
+        return "Afgelopen evenement"
+    return SOORTEN.get(b["type"], b["type"])
 
 
 def lees_berichten() -> list[dict]:
     berichten = [normaliseer(b) for b in json.loads(DATA.read_text(encoding="utf-8"))]
-    berichten.sort(key=lambda b: b["datum"], reverse=True)
+    # eerst de komende evenementen, het eerstvolgende bovenaan; daarna de rest
+    # van nieuw naar oud
+    komend = sorted((b for b in berichten if b["type"] == "evenement" and not b["_voorbij"]), key=lambda b: b["datum"])
+    rest = sorted((b for b in berichten if b not in komend), key=lambda b: b["datum"], reverse=True)
+    berichten = komend + rest
     ids = [b["id"] for b in berichten]
     dubbel = {i for i in ids if ids.count(i) > 1}
     if dubbel:
@@ -155,11 +201,14 @@ def gegevens_rijen(b: dict) -> list[tuple[str, str]]:
         rijen.append(("Waar", b["locatie"]))
     if b.get("deelname"):
         rijen.append(("Deelname", b["deelname"]))
+    if b["type"] == "evenement" and b["_open"] and b["_tot"]:
+        rijen.append(("Aanmelden", "Tot " + b["_tot"]))
     return rijen
 
 
 def actie(b: dict) -> tuple[str, str]:
-    evenement = b["type"] == "evenement"
+    # aanmelden kan alleen zolang het evenement komt en de termijn loopt
+    evenement = b["type"] == "evenement" and b["_open"]
     tekst = "Aanmelden voor dit evenement" if evenement else "Contact opnemen"
     onderwerp = ("Aanmelding: " if evenement else "Vraag over: ") + b["titel"]
     from urllib.parse import quote
@@ -169,12 +218,13 @@ def actie(b: dict) -> tuple[str, str]:
 # ── Het overzicht ────────────────────────────────────────────────────────────
 
 def tellers(berichten: list[dict]) -> str:
+    # gewone schakelknoppen: aria-pressed zegt welke filter aan staat
     regels = []
     for sleutel, naam in FILTERS:
         n = len(berichten) if sleutel == "alles" else sum(1 for b in berichten if b["type"] == sleutel)
-        actief = ' aria-selected="true" class="filter is-actief"' if sleutel == "alles" else ' aria-selected="false" class="filter"'
+        actief = ' aria-pressed="true" class="filter is-actief"' if sleutel == "alles" else ' aria-pressed="false" class="filter"'
         regels.append(
-            f'          <button type="button" role="tab" data-soort="{sleutel}"{actief}>'
+            f'          <button type="button" data-soort="{sleutel}"{actief}>'
             f'{naam} <span class="filter__aantal">{n}</span></button>'
         )
     return "\n".join(regels)
@@ -182,10 +232,10 @@ def tellers(berichten: list[dict]) -> str:
 
 def kaart(b: dict) -> str:
     soort = b["type"]
-    extra = b.get("leestijd", "")
+    extra = b["_extra"]
     return f"""      <article class="bericht" data-soort="{e(soort)}">
         <p class="bericht__kop">
-          <span class="badge badge--{e(soort)}">{e(SOORTEN.get(soort, soort))}</span>
+          <span class="badge badge--{e(soort)}">{e(badge(b))}</span>
           <time class="bericht__datum" datetime="{e(b["datum"])}">{e(b["datumWeergave"])}</time>
         </p>
         <h3 class="bericht__titel"><a class="bericht__opener" href="{e(pad(b))}">{e(b["titel"])}</a></h3>
@@ -202,9 +252,13 @@ def uitgelicht(b: dict) -> str:
         f'            <div class="uitgelicht__rij"><dt>{e(k)}</dt><dd>{e(v)}</dd></div>'
         for k, v in gegevens_rijen(b)
     )
-    knop = "Programma en aanmelden" if b["type"] == "evenement" else "Lees het volledige bericht"
-    kop = "Aankomend evenement" if b["type"] == "evenement" else SOORTEN.get(b["type"], b["type"])
-    deadline = f'\n          <p class="uitgelicht__deadline">{e(b["leestijd"])}</p>' if b.get("leestijd") else ""
+    evenement = b["type"] == "evenement"
+    if evenement:
+        knop = "Programma en aanmelden" if b["_open"] else "Bekijk het programma"
+    else:
+        knop = "Lees het volledige bericht"
+    kop = "Aankomend evenement" if evenement else SOORTEN.get(b["type"], b["type"])
+    deadline = f'\n          <p class="uitgelicht__deadline">{e(b["_extra"])}</p>' if evenement and b["_extra"] else ""
     return f"""      <article class="uitgelicht" data-soort="{e(b["type"])}">
         <div class="uitgelicht__tekst">
           <p class="bericht__kop"><span class="badge badge--{e(b["type"])}">{e(kop)}</span></p>
@@ -233,24 +287,33 @@ def lijstdata(berichten: list[dict]) -> str:
             for i, b in enumerate(berichten, 1)
         ],
     }
-    ruw = json.dumps(data, ensure_ascii=False, indent=2)
+    ruw = json_ld(data)
     return ('  <script type="application/ld+json">\n'
             + "\n".join("  " + r for r in ruw.split("\n"))
             + "\n  </script>")
 
 
+def json_ld(data) -> str:
+    """JSON voor in een <script>-blok. Geen enkel CMS-veld mag het blok kunnen
+    sluiten met </script>: <, > en & worden als \\u-code geschreven. Dat blijft
+    geldige JSON met precies dezelfde betekenis."""
+    ruw = json.dumps(data, ensure_ascii=False, indent=2)
+    return ruw.replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026")
+
+
 # ── De pagina per bericht ────────────────────────────────────────────────────
 
 def tijdvak(b: dict) -> tuple[str, str]:
-    """'08:30 tot 10:30' wordt begin- en eindtijd in ISO 8601. Zonder tijdzone:
-    schema.org leest zo'n tijd als lokale tijd op de plaats van het evenement,
-    en dat is precies wat hier bedoeld is."""
+    """'08:30 tot 10:30' wordt begin- en eindtijd in ISO 8601, '08:30' alleen
+    een begintijd. Zonder tijdzone: schema.org leest zo'n tijd als lokale tijd
+    op de plaats van het evenement, en dat is precies wat hier bedoeld is."""
     datum = b["datum"]
-    m = re.match(r"\s*(\d{1,2}[:.]\d{2})\s*(?:tot|-|–)\s*(\d{1,2}[:.]\d{2})", b.get("tijd", "") or "")
+    m = re.match(r"\s*(\d{1,2}[:.]\d{2})(?:\s*(?:tot|-|–)\s*(\d{1,2}[:.]\d{2}))?", b.get("tijd", "") or "")
     if not m:
         return datum, ""
-    begin, eind = (t.replace(".", ":") for t in m.groups())
-    return f"{datum}T{begin.zfill(5)}", f"{datum}T{eind.zfill(5)}"
+    begin = m.group(1).replace(".", ":").zfill(5)
+    eind = m.group(2).replace(".", ":").zfill(5) if m.group(2) else ""
+    return f"{datum}T{begin}", (f"{datum}T{eind}" if eind else "")
 
 
 def structured_data(b: dict) -> str:
@@ -261,7 +324,9 @@ def structured_data(b: dict) -> str:
         "addressLocality": "Aalst",
         "addressCountry": "BE",
     }
-    polares = {"@type": "Organization", "name": "Polares", "url": SITE + "/"}
+    # dezelfde organisatie als in de gegevens op de homepage
+    polares = {"@type": "Organization", "@id": SITE + "/#organisatie", "name": "Polares", "url": SITE + "/",
+               "logo": SITE + "/assets/icon-512.png"}
     kruimels = {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
@@ -283,7 +348,7 @@ def structured_data(b: dict) -> str:
             "startDate": begin,
             "eventStatus": "https://schema.org/EventScheduled",
             "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-            "location": {"@type": "Place", "name": b.get("locatie", "Kantoor Polares"), "address": adres},
+            "location": locatie(b, adres),
             "organizer": polares,
             "image": og_afbeelding(b),
             "url": url(b),
@@ -295,7 +360,7 @@ def structured_data(b: dict) -> str:
         hoofd = {
             "@context": "https://schema.org",
             "@type": "Article",
-            "headline": b.get("titelKort") or b["titel"],
+            "headline": b["titel"],
             "description": beschrijving(b, 300),
             "datePublished": b["datum"],
             "dateModified": b["datum"],
@@ -306,8 +371,17 @@ def structured_data(b: dict) -> str:
             "inLanguage": "nl-BE",
         }
 
-    ruw = json.dumps([hoofd, kruimels], ensure_ascii=False, indent=2)
+    ruw = json_ld([hoofd, kruimels])
     return "\n".join("  " + r for r in ruw.split("\n")).lstrip()
+
+
+def locatie(b: dict, kantoor: dict) -> dict:
+    """Het adres van het kantoor alleen als het evenement daar is; anders de
+    plaats zoals ze in het CMS staat."""
+    plaats = b.get("locatie", "")
+    if not plaats or plaats.startswith("Kantoor Polares") or "Dirk Martensstraat" in plaats:
+        return {"@type": "Place", "name": plaats.split(",")[0] if plaats else "Kantoor Polares", "address": kantoor}
+    return {"@type": "Place", "name": plaats.split(",")[0], "address": plaats}
 
 
 def gegevensblok(b: dict) -> str:
@@ -324,7 +398,7 @@ def verder(b: dict, alle: list[dict]) -> str:
         return ""
     items = "\n".join(
         f'        <li class="verder__item">\n'
-        f'          <p class="verder__datum">{e(SOORTEN.get(a["type"], a["type"]))} · {e(a["datumWeergave"])}</p>\n'
+        f'          <p class="verder__datum">{e(badge(a))} · {e(a["datumWeergave"])}</p>\n'
         f'          <h3 class="verder__kop"><a href="{e(a["id"])}.html">{e(a["titel"])}</a></h3>\n'
         f'        </li>'
         for a in rest
@@ -342,7 +416,7 @@ def bouw_bericht(b: dict, alle: list[dict]) -> str:
     knop, href = actie(b)
     velden = {
         "SOORT": e(b["type"]),
-        "BADGE": e(SOORTEN.get(b["type"], b["type"])),
+        "BADGE": e(badge(b)),
         "TITEL": e(b["titel"]),
         "TITEL_KORT": e(b.get("titelKort") or b["titel"]),
         "BESCHRIJVING": e(beschrijving(b)),
@@ -359,6 +433,11 @@ def bouw_bericht(b: dict, alle: list[dict]) -> str:
         "STRUCTURED_DATA": structured_data(b),
     }
     tekst = SJABLOON.read_text(encoding="utf-8")
+    # een evenement heeft geen publicatiedatum: de datum is die van het
+    # evenement zelf, en die ligt vaak in de toekomst
+    publicatie = ("" if b["type"] == "evenement"
+                  else f'  <meta property="article:published_time" content="{e(b["datum"])}">\n')
+    tekst = tekst.replace("{{PUBLICATIE}}\n", publicatie)
     for sleutel, waarde in velden.items():
         tekst = tekst.replace("{{" + sleutel + "}}", waarde)
     rest = re.findall(r"\{\{[A-Z_]+\}\}", tekst)
@@ -370,11 +449,13 @@ def bouw_bericht(b: dict, alle: list[dict]) -> str:
 # ── De sitemap ───────────────────────────────────────────────────────────────
 
 def sitemap_regels(berichten: list[dict]) -> str:
+    # lastmod alleen bij een artikel: bij een evenement is de datum die van
+    # het evenement, niet van de pagina
     return "\n".join(
         f"  <url>\n"
         f"    <loc>{url(b)}</loc>\n"
-        f"    <lastmod>{b['datum']}</lastmod>\n"
-        f"    <changefreq>yearly</changefreq>\n"
+        + (f"    <lastmod>{b['datum']}</lastmod>\n" if b["type"] != "evenement" else "")
+        + f"    <changefreq>yearly</changefreq>\n"
         f"    <priority>0.5</priority>\n"
         f"  </url>"
         for b in berichten
@@ -401,7 +482,8 @@ def vervang(tekst: str, merk: str, inhoud: str, bestand: str) -> str:
 def alles(berichten: list[dict]) -> dict[Path, str]:
     """Elk bestand dat dit script beheert, met de inhoud die het hoort te
     hebben. Zo zijn schrijven en controleren precies dezelfde berekening."""
-    kop = next((b for b in berichten if b.get("uitgelicht")), None)
+    # een voorbij evenement staat nooit meer groot bovenaan
+    kop = next((b for b in berichten if b.get("uitgelicht") and not b["_voorbij"]), None)
     rest = [b for b in berichten if b is not kop]
 
     pagina = PAGINA.read_text(encoding="utf-8")

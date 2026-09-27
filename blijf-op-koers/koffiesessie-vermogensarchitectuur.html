@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="nl-BE">
 <head>
   <meta charset="UTF-8">
   <script>document.documentElement.classList.add('js');</script>
@@ -17,11 +17,12 @@
   <meta property="og:image" content="https://polares.be/assets/og/koffiesessie-vermogensarchitectuur.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="article:published_time" content="2026-11-19">
+  <meta property="og:image:alt" content="Inspiratiesessie: Van versnipperd vermogen naar één helder overzicht">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
   <link rel="preload" href="../assets/fonts/cantata-one-400.woff2" as="font" type="font/woff2" crossorigin>
   <!-- Deze pagina is geschreven door tools/berichten.py uit data/berichten.json
        en tools/sjabloon-bericht.html. Bewerk die twee, niet dit bestand: elke
@@ -37,7 +38,7 @@
       "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
       "location": {
         "@type": "Place",
-        "name": "Kantoor Polares, Dirk Martensstraat 41, Aalst",
+        "name": "Kantoor Polares",
         "address": {
           "@type": "PostalAddress",
           "streetAddress": "Dirk Martensstraat 41",
@@ -48,8 +49,10 @@
       },
       "organizer": {
         "@type": "Organization",
+        "@id": "https://polares.be/#organisatie",
         "name": "Polares",
-        "url": "https://polares.be/"
+        "url": "https://polares.be/",
+        "logo": "https://polares.be/assets/icon-512.png"
       },
       "image": "https://polares.be/assets/og/koffiesessie-vermogensarchitectuur.png",
       "url": "https://polares.be/blijf-op-koers/koffiesessie-vermogensarchitectuur.html",
@@ -104,12 +107,19 @@
       --container:1280px; --pad:clamp(1.5rem,5vw,5rem); --section-y:clamp(4.5rem,9vw,7rem);
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{font-size:93.75%;scroll-behavior:smooth}
+    html{font-size:93.75%;scroll-behavior:smooth;scroll-padding-top:92px}
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+    /* [hidden] wint altijd, ook van een display op de klasse */
+    [hidden]{display:none!important}
     body{font-family:var(--sans);line-height:1.7;color:var(--text);background:var(--white);-webkit-font-smoothing:antialiased}
     img,svg{display:block}
     img{max-width:100%;height:auto}
     a{color:inherit;text-decoration:none}
-    :focus-visible{outline:2px solid rgba(90,115,136,.6);outline-offset:3px}
+    :focus-visible{outline:2px solid var(--navy-600);outline-offset:2px;box-shadow:0 0 0 2px #fff}
+    /* witte binnenring plus navy rand: zichtbaar op wit én op navy, en de
+       rand blijft staan in de modus hoog contrast */
+    .skip{position:absolute;top:-100%;left:1rem;z-index:9999;background:var(--white);color:var(--navy-600);padding:.6rem 1.2rem;font-size:14px;border:1px solid var(--navy-600)}
+    .skip:focus{top:1rem}
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     .container{max-width:var(--container);margin-inline:auto;padding-inline:var(--pad)}
 
@@ -130,6 +140,7 @@
 
     /* Menu: een klein paneel onder de knop, geen schermvullend vlak. */
     .overlay{position:fixed;top:84px;right:var(--pad);z-index:300;
+      max-height:calc(100vh - 96px);max-height:calc(100dvh - 96px);overflow-y:auto;overscroll-behavior:contain;
       width:min(300px,calc(100vw - 2 * var(--pad)));
       background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);
       padding-block:.75rem .25rem;opacity:0;visibility:hidden;transform:translateY(-8px) scale(.98);
@@ -145,7 +156,7 @@
     .overlay__link:focus-visible{outline-offset:-2px}
     .overlay__contact{margin-top:.5rem;padding:.85rem 1.25rem .55rem;border-top:1px solid var(--line)}
     .overlay__contact p{font-family:var(--sans);font-size:12.5px;color:var(--text-soft);line-height:1.8}
-    .overlay__contact a{color:var(--text-soft);transition:color var(--dur-1) var(--ease)}
+    .overlay__contact a{display:inline-block;padding-block:3px;color:var(--text-soft);transition:color var(--dur-1) var(--ease)}
     .overlay__contact a:hover{color:var(--navy-600)}
 
     .back{display:inline-flex;align-items:center;gap:.5rem;font-size:13px;letter-spacing:.08em;text-transform:uppercase;
@@ -163,7 +174,10 @@
     .artikel__kop{display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
     .artikel__datum{font-family:var(--sans);font-size:12px;color:var(--text-soft)}
     .artikel h1{margin-top:1.4rem;font-family:var(--serif);font-weight:400;
-      font-size:clamp(1.9rem,3.6vw,2.9rem);line-height:1.18;letter-spacing:-.01em;text-wrap:balance}
+      font-size:clamp(1.9rem,3.6vw,2.9rem);line-height:1.18;letter-spacing:-.01em;text-wrap:balance;overflow-wrap:break-word}
+    /* een lang samengesteld woord (vermogensbescherming) past zo op 320 px;
+       past het nog niet, dan breekt overflow-wrap het, zonder afbreekstreepje */
+    @media (max-width:420px){.artikel h1{font-size:1.5rem}}
     .artikel__inleiding{margin-top:1.3rem;font-family:var(--serif);font-size:clamp(1.05rem,1.6vw,1.25rem);
       line-height:1.6;color:var(--navy-400)}
     .artikel__gegevens{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:1.25rem;
@@ -171,8 +185,17 @@
     .artikel__gegevens dt{font-family:var(--sans);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-soft)}
     .artikel__gegevens dd{font-family:var(--sans);font-size:14px;color:var(--navy-600);margin-top:.3rem;line-height:1.5}
     .artikel__tekst{margin-top:2rem;font-size:15.5px;line-height:1.8;color:var(--text)}
-    .artikel__tekst p+p,.artikel__tekst ul{margin-top:1.1em}
-    .artikel__tekst ul{padding-left:1.2rem}
+    /* ritme voor alles wat de CMS-editor kan maken: alinea's, lijsten,
+       tussenkoppen en citaten */
+    .artikel__tekst>*+*{margin-top:1.1em}
+    .artikel__tekst ul,.artikel__tekst ol{padding-left:1.4rem}
+    .artikel__tekst h2,.artikel__tekst h3{font-family:var(--serif);font-weight:400;line-height:1.3;color:var(--navy-600);text-wrap:balance}
+    .artikel__tekst h2{font-size:1.35rem}
+    .artikel__tekst h3{font-size:1.15rem}
+    .artikel__tekst>h2,.artikel__tekst>h3{margin-top:2em}
+    .artikel__tekst>h2+*,.artikel__tekst>h3+*{margin-top:.6em}
+    .artikel__tekst blockquote{padding-left:1.1rem;border-left:2px solid var(--navy-100);color:var(--navy-400);font-family:var(--serif)}
+    .artikel__tekst strong{font-weight:700}
     .artikel__tekst li+li{margin-top:.4em}
     .artikel__tekst a{color:var(--navy-600);text-decoration:underline;text-underline-offset:3px}
     .artikel__actie{margin-top:2.5rem;padding-top:1.75rem;border-top:1px solid var(--line)}
@@ -182,18 +205,19 @@
       background:var(--navy-600);color:var(--white);cursor:pointer;
       transition:background var(--dur-2) var(--ease),border-color var(--dur-2) var(--ease)}
     .btn:hover{background:var(--navy-800);border-color:var(--navy-800)}
+    @media (max-width:360px){.btn{padding-inline:1rem;letter-spacing:.08em}}
 
     /* Verder lezen: drie andere berichten, in dezelfde kaartvorm als het
        overzicht maar zonder aanhef. */
     .verder{margin-top:clamp(3.5rem,7vw,5rem)}
     .verder__titel{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-soft)}
-    .verder__lijst{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
+    .verder__lijst{list-style:none;display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
       gap:clamp(1.25rem,2.5vw,2rem);margin-top:1.5rem}
     .verder__item{position:relative;padding:clamp(1.25rem,2.5vw,1.6rem);border:1px solid var(--line);
       transition:border-color var(--dur-2) var(--ease),box-shadow var(--dur-2) var(--ease),transform var(--dur-2) var(--ease)}
     .verder__item:hover{border-color:var(--navy-200);box-shadow:var(--shadow-lg);transform:translateY(-2px)}
-    .verder__datum{font-family:var(--sans);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy-300)}
-    .verder__kop{margin-top:.6rem;font-family:var(--serif);font-weight:400;font-size:1.15rem;line-height:1.3}
+    .verder__datum{font-family:var(--sans);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-soft)}
+    .verder__kop{margin-top:.6rem;font-family:var(--serif);font-weight:400;font-size:1.15rem;line-height:1.3;text-wrap:balance;overflow-wrap:break-word}
     .verder__kop a::after{content:"";position:absolute;inset:0}
 
     .more-link{display:inline-flex;align-items:center;gap:.6rem;margin-top:2rem;font-size:13px;letter-spacing:.08em;
@@ -239,12 +263,14 @@
     .nav__rechts{display:flex;align-items:center;gap:clamp(.75rem,2vw,1.5rem)}
     .nav__portaal{display:inline-flex;align-items:center;gap:.45rem;font-family:var(--sans);font-size:13px;letter-spacing:.06em;color:var(--navy-600);padding-block:4px;border-bottom:1px solid transparent;transition:border-color var(--dur-2) var(--ease)}
     .nav__portaal:hover{border-bottom-color:currentColor}
+    a[href^="tel:"]{white-space:nowrap}
   </style>
 </head>
 <body>
+  <a class="skip" href="#main">Naar inhoud</a>
 
   <header class="nav">
-    <a class="brand" href="../index.html" aria-label="Polares, naar de homepage">
+    <a class="brand" href="/" aria-label="Polares, naar de homepage">
       <span class="brand__logo" role="img" aria-label="Polares"></span>
     </a>
 
@@ -297,7 +323,7 @@
       </p>
       <h1>Inspiratiesessie: Van versnipperd vermogen naar één helder overzicht</h1>
       <p class="artikel__inleiding">Een nuchtere ontbijtsessie over vermogensarchitectuur: hoe brengt u bankrelaties, vennootschappen, vastgoed en privébezit samen in één transparant kompas?</p>
-      <dl class="artikel__gegevens"><div><dt>Wanneer</dt><dd>Donderdag 19 november 2026 · 08:30 tot 10:30</dd></div><div><dt>Waar</dt><dd>Kantoor Polares, Dirk Martensstraat 41, Aalst</dd></div></dl>
+      <dl class="artikel__gegevens"><div><dt>Wanneer</dt><dd>Donderdag 19 november 2026 · 08:30 tot 10:30</dd></div><div><dt>Waar</dt><dd>Kantoor Polares, Dirk Martensstraat 41, Aalst</dd></div><div><dt>Aanmelden</dt><dd>Tot 12 november</dd></div></dl>
 
       <div class="artikel__tekst">
         <p>Veel vermogende families werken door de jaren heen samen met verschillende private banks, boekhouders, notarissen en vastgoedbeheerders. Elk van die partijen levert degelijk werk binnen zijn eigen domein, maar niemand bewaart het helikopteroverzicht.</p><p>Tijdens deze ontbijtsessie demonstreren we hoe u via systematische vermogensmonitoring:</p><ul><li>Inzicht krijgt in de werkelijke globale kosten en rendementen over alle banken heen.</li><li>Dubbele risico's en verborgen correlaties tijdig detecteert.</li><li>De brug slaat tussen het vermogen in uw vennootschap en uw doelstellingen op lange termijn.</li></ul><p>Deelname is kosteloos maar registratie is verplicht wegens de kleinschalige opzet. Koffie en ontbijt worden verzorgd vanaf 08:15.</p><p><strong>Interesse?</strong> Mail naar <a href="mailto:info@polares.be?subject=Inschrijving%20Inspiratiesessie%20Vermogensarchitectuur">info@polares.be</a>.</p>
@@ -368,7 +394,7 @@
           <a href="../algemene-voorwaarden.html">Algemene voorwaarden</a> &middot;
           <a href="../privacyverklaring.html">Privacyverklaring</a>
         </p>
-        <p class="footer__coords">50.94° N, 4.04° O</p>
+        <p class="footer__coords">50.94° N, 4.03° O</p>
       </div>
     </div>
   </footer>

@@ -28,7 +28,10 @@ draait dit script eerst.
 
 from __future__ import annotations
 
+import base64
+import hashlib
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -98,6 +101,34 @@ def genereer() -> None:
     stap("consistentiecontrole", ["tools/check-consistentie.py"])
 
 
+def csp_hashes() -> None:
+    """Vult in dist/_headers de hashes in van elk script dat in een pagina
+    staat. Alleen scripts zonder src en zonder type (of met een JavaScript-
+    type): een blok met gegevens, zoals JSON-LD, voert de browser niet uit."""
+    hashes = set()
+    for pagina in UIT.rglob("*.html"):
+        for attrs, inhoud in re.findall(r"<script([^>]*)>([\s\S]*?)</script>", pagina.read_text(encoding="utf-8")):
+            if "src=" in attrs:
+                continue
+            soort = re.search(r'type="([^"]+)"', attrs)
+            if soort and soort.group(1) not in ("text/javascript", "module"):
+                continue
+            digest = base64.b64encode(hashlib.sha256(inhoud.encode("utf-8")).digest()).decode()
+            hashes.add(f"'sha256-{digest}'")
+    kop = UIT / "_headers"
+    tekst = kop.read_text(encoding="utf-8")
+    if "__SCRIPT_HASHES__" not in tekst:
+        print("FOUT: _headers heeft geen __SCRIPT_HASHES__ voor de Content-Security-Policy", file=sys.stderr)
+        raise SystemExit(1)
+    tekst = tekst.replace("__SCRIPT_HASHES__", " ".join(sorted(hashes)))
+    regel = next(r for r in tekst.splitlines() if "Content-Security-Policy:" in r)
+    if len(regel) > 2000:
+        print(f"FOUT: de Content-Security-Policy is {len(regel)} tekens; Cloudflare aanvaardt er 2000", file=sys.stderr)
+        raise SystemExit(1)
+    kop.write_text(tekst, encoding="utf-8")
+    print(f"Content-Security-Policy: {len(hashes)} scripts, {len(regel)} tekens")
+
+
 def main() -> int:
     genereer()
     print("── dist/", flush=True)
@@ -114,6 +145,8 @@ def main() -> int:
         shutil.copy2(bron, UIT / naam)
     for naam in MAPPEN:
         shutil.copytree(ROOT / naam, UIT / naam, ignore=shutil.ignore_patterns(".*"))
+
+    csp_hashes()
 
     aantal = sum(1 for p in UIT.rglob("*") if p.is_file())
     grootte = sum(p.stat().st_size for p in UIT.rglob("*") if p.is_file())

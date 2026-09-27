@@ -117,7 +117,20 @@ De site draait op Cloudflare, voorlopig op `polares.meyten.com`. Om ze op
 - **Privacyverklaring en algemene voorwaarden** laten nakijken door een jurist.
   De privacyverklaring vermeldt sinds 24 september het contactformulier,
   Cloudflare, Resend en Microsoft als verwerkers, en het vlaggetje in de
-  sessieopslag; punt 4 en punt 6 verdienen de meeste aandacht.
+  sessieopslag; punt 4 en punt 6 verdienen de meeste aandacht. Sinds 27
+  september ook MyPolares (MyFaro) en LinkedIn, en onder het formulier staat
+  een regel over het gebruik van de gegevens: neem die mee. In de voet staat
+  "KBO BE 1032.172.446": laat de jurist ook de wettelijke vermeldingen
+  (ondernemingsnummer, RPR en rechtbank) nakijken.
+- **Always Use HTTPS voor het testadres.** `polares.meyten.com` antwoordt nog
+  over gewone HTTP. In Cloudflare, zone meyten.com: SSL/TLS → Edge
+  Certificates → Always Use HTTPS. De site stuurt zelf al HSTS mee (`_headers`),
+  maar die werkt pas na een eerste bezoek over HTTPS.
+- **De nachtelijke update van Blijf op koers nakijken.** `.github/workflows/dagelijks.yml`
+  commit de pagina's als er een evenement voorbij is. Na de eerste keer dat dat
+  gebeurt (na 15 oktober: "Aanmelden afgesloten" bij de rondetafel) nagaan
+  dat Cloudflare daarna ook echt opnieuw gebouwd heeft. Werkt dat niet, dan
+  een deploy hook van Cloudflare aanroepen vanuit de workflow.
 - **Vercel loskoppelen.** Elke push gaat daar nog naartoe en publiceert de hele
   repo (ook `tools/`, `data/`, `TE-DOEN.md`) op een `vercel.app`-adres. Daarna
   `vercel.json` weghalen.

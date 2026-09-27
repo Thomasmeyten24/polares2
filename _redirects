@@ -23,3 +23,17 @@
 /uw-onderneming/                         /uw-bedrijf.html                         301
 /uw-bedrijf                              /uw-bedrijf.html                         301
 /uw-bedrijf/                             /uw-bedrijf.html                         301
+
+# Wie een adres zonder .html intikt (of een oude link volgt)
+/ons-team                                /ons-team.html                           301
+/ons-team/                               /ons-team.html                           301
+/team                                    /ons-team.html                           301
+/team/                                   /ons-team.html                           301
+/blijf-op-koers                          /blijf-op-koers.html                     301
+/blijf-op-koers/                         /blijf-op-koers.html                     301
+/nieuws                                  /blijf-op-koers.html                     301
+/nieuws/                                 /blijf-op-koers.html                     301
+/privacyverklaring                       /privacyverklaring.html                  301
+/privacy                                 /privacyverklaring.html                  301
+/algemene-voorwaarden                    /algemene-voorwaarden.html               301
+/Contact                                 /contact.html                            301

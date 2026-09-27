@@ -22,6 +22,7 @@ hij is gebruikt, en snijdt de CSS hem bij.
 
 from __future__ import annotations
 
+import hashlib
 import html
 import json
 import re
@@ -96,23 +97,35 @@ def portret(m: dict, schrijf: bool) -> str:
     return str(doel.relative_to(ROOT))
 
 
+def versie(pad: str) -> str:
+    """Het pad met een korte hash van de inhoud erachter. Een nieuw portret met
+    dezelfde naam krijgt zo een ander adres, en de browser haalt het meteen
+    opnieuw in plaats van de oude foto uit zijn cache te tonen."""
+    bestand = ROOT / pad
+    if not bestand.exists():
+        return pad
+    return f"{pad}?v={hashlib.sha1(bestand.read_bytes()).hexdigest()[:8]}"
+
+
 def lid(m: dict, schrijf: bool) -> str:
     if m["foto"]:
-        foto = (f'            <div class="lid__foto"><img src="{e(portret(m, schrijf))}" alt="{e(m["naam"])}" '
+        foto = (f'            <div class="lid__foto"><img src="{e(versie(portret(m, schrijf)))}" alt="{e(m["naam"])}" '
                 f'width="{MAAT[0]}" height="{MAAT[1]}" loading="lazy" decoding="async"></div>\n')
     else:
         foto = (f'            <div class="lid__foto lid__foto--leeg" role="img" '
                 f'aria-label="Nog geen portret van {e(m["naam"])}">{STER}</div>\n')
     regels = [
         '          <li class="lid">\n', foto, '            <div>\n',
-        f'              <p class="lid__naam">{e(m["naam"])}</p>\n',
+        f'              <h3 class="lid__naam">{e(m["naam"])}</h3>\n',
         '              <p class="lid__rol">' + "".join(f"<span>{e(r)}</span>" for r in m["rollen"]) + "</p>\n",
     ]
     if m["email"]:
-        regels.append(f'              <p><a class="lid__mail" href="mailto:{e(m["email"])}">{e(m["email"])}</a></p>\n')
+        # na de @ mag het adres breken, en alleen daar
+        lokaal, domein = m["email"].split("@")
+        regels.append(f'              <p><a class="lid__mail" href="mailto:{e(m["email"])}">{e(lokaal)}@<wbr>{e(domein)}</a></p>\n')
     if m["linkedin"]:
         regels.append(f'              <a class="lid__linkedin" href="{e(m["linkedin"])}" target="_blank" '
-                      f'rel="noopener noreferrer">LinkedIn {PIJL}</a>\n')
+                      f'rel="noopener noreferrer" aria-label="LinkedIn van {e(m["naam"])} (opent in een nieuw tabblad)">LinkedIn {PIJL}</a>\n')
     regels += ['            </div>\n', '          </li>\n']
     return "".join(regels)
 

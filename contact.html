@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="nl-BE">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Contact: een gesprek met Polares | Aalst</title>
-  <meta name="description" content="Neem contact op met Polares: Dirk Martensstraat 41, 9300 Aalst, op zeven minuten wandelen van het station. Bel +32 54 23 50 50, mail info@polares.be of laat uw gegevens achter.">
+  <meta name="description" content="Polares, Dirk Martensstraat 41 in Aalst, op zeven minuten van het station. Bel +32 54 23 50 50, mail info@polares.be of laat uw gegevens achter.">
   <link rel="canonical" href="https://polares.be/contact.html">
   <meta name="theme-color" content="#071826">
   <meta property="og:type" content="website">
@@ -14,9 +14,14 @@
   <meta property="og:description" content="Dirk Martensstraat 41, 9300 Aalst. Bel, mail of laat uw gegevens achter: we nemen persoonlijk contact op.">
   <meta property="og:url" content="https://polares.be/contact.html">
   <meta property="og:image" content="https://polares.be/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Polares, Your Capital Guide">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
   <link rel="preload" href="assets/fonts/cantata-one-400.woff2" as="font" type="font/woff2" crossorigin>
   <script type="application/ld+json">
   {
@@ -65,12 +70,19 @@
       --container:1280px; --pad:clamp(1.5rem,5vw,5rem); --section-y:clamp(4.5rem,9vw,7rem);
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{font-size:93.75%;scroll-behavior:smooth}
+    html{font-size:93.75%;scroll-behavior:smooth;scroll-padding-top:92px}
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+    /* [hidden] wint altijd, ook van een display op de klasse */
+    [hidden]{display:none!important}
     body{font-family:var(--sans);line-height:1.7;color:var(--text);background:var(--white);-webkit-font-smoothing:antialiased}
     img,svg{display:block}
     img{max-width:100%;height:auto}
     a{color:inherit;text-decoration:none}
-    :focus-visible{outline:2px solid rgba(90,115,136,.6);outline-offset:3px}
+    :focus-visible{outline:2px solid var(--navy-600);outline-offset:2px;box-shadow:0 0 0 2px #fff}
+    /* witte binnenring plus navy rand: zichtbaar op wit én op navy, en de
+       rand blijft staan in de modus hoog contrast */
+    .skip{position:absolute;top:-100%;left:1rem;z-index:9999;background:var(--white);color:var(--navy-600);padding:.6rem 1.2rem;font-size:14px;border:1px solid var(--navy-600)}
+    .skip:focus{top:1rem}
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     .container{max-width:var(--container);margin-inline:auto;padding-inline:var(--pad)}
     .label{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-soft)}
@@ -98,6 +110,7 @@
        is een zijstap, geen bestemming: dezelfde kaartvorm als de rest van de
        site: wit, haarlijn, zachte schaduw. */
     .overlay{position:fixed;top:84px;right:var(--pad);z-index:300;
+      max-height:calc(100vh - 96px);max-height:calc(100dvh - 96px);overflow-y:auto;overscroll-behavior:contain;
       width:min(300px,calc(100vw - 2 * var(--pad)));
       background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);
       padding-block:.75rem .25rem;opacity:0;visibility:hidden;transform:translateY(-8px) scale(.98);
@@ -113,7 +126,7 @@
     .overlay__link:focus-visible{outline-offset:-2px}
     .overlay__contact{margin-top:.5rem;padding:.85rem 1.25rem .55rem;border-top:1px solid var(--line)}
     .overlay__contact p{font-family:var(--sans);font-size:12.5px;color:var(--text-soft);line-height:1.8}
-    .overlay__contact a{color:var(--text-soft);transition:color var(--dur-1) var(--ease)}
+    .overlay__contact a{display:inline-block;padding-block:3px;color:var(--text-soft);transition:color var(--dur-1) var(--ease)}
     .overlay__contact a:hover{color:var(--navy-600)}
 
     /* Hoofdstukkop */
@@ -185,14 +198,14 @@
       text-transform: uppercase;
       color: var(--text-soft);
     }
-    .cform__veld label .cform__optioneel { letter-spacing: .08em; text-transform: none; color: var(--navy-300); }
+    .cform__veld label .cform__optioneel { letter-spacing: .08em; text-transform: none; color: var(--text-soft); }
     .cform__veld input,
     .cform__veld textarea {
       font-family: var(--sans);
       font-size: 15px;
       color: var(--text);
       background: var(--white);
-      border: 1px solid var(--line);
+      border: 1px solid var(--navy-300);
       border-radius: 4px;
       padding: .7rem .85rem;
       width: 100%;
@@ -201,14 +214,15 @@
     .cform__veld textarea { resize: vertical; min-height: 130px; line-height: 1.6; }
     .cform__paar { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; }
     @media (max-width: 520px) { .cform__paar { grid-template-columns: 1fr; } }
-    .cform__hulp { font-family: var(--sans); font-size: 12.5px; color: var(--navy-300); margin-top: -.5rem; }
+    .cform__hulp { font-family: var(--sans); font-size: 12.5px; color: var(--text-soft); margin-top: -.5rem; }
     .cform__hulp[data-fout] { color: #A1443B; }
     .cform__veld[hidden] { display: none; }
     .cform__veld input:focus,
     .cform__veld textarea:focus {
-      outline: none;
-      border-color: var(--navy-400);
-      box-shadow: 0 0 0 3px rgba(90,115,136,.14);
+      outline: 2px solid var(--navy-600);
+      outline-offset: 1px;
+      border-color: var(--navy-600);
+      box-shadow: none;
     }
     .cform__veld[data-fout] input,
     .cform__veld[data-fout] textarea { border-color: #A1443B; }
@@ -230,6 +244,11 @@
       font-family: var(--serif); font-size: 1.05rem; line-height: 1.55; color: var(--navy-600); }
     /* display:flex zou het hidden-attribuut overstemmen */
     .cform__melding[hidden] { display: none; }
+    .cform__melding { scroll-margin-top: 110px; }
+    .cform__melding:focus { outline: none; }
+    .cform__melding a { color: var(--navy-600); text-decoration: underline; text-underline-offset: .2em; }
+    .cform__privacy { flex-basis: 100%; font-family: var(--sans); font-size: 12.5px; line-height: 1.6; color: var(--text-soft); }
+    .cform__privacy a { color: var(--navy-600); text-decoration: underline; text-underline-offset: .2em; }
     .cform__melding svg { flex-shrink: 0; margin-top: .3rem; color: var(--navy-400); }
 
     /* Het slot van een pagina biedt dezelfde twee wegen als het contactblok op
@@ -303,11 +322,13 @@
     .nav__rechts{display:flex;align-items:center;gap:clamp(.75rem,2vw,1.5rem)}
     .nav__portaal{display:inline-flex;align-items:center;gap:.45rem;font-family:var(--sans);font-size:13px;letter-spacing:.06em;color:var(--navy-600);padding-block:4px;border-bottom:1px solid transparent;transition:border-color var(--dur-2) var(--ease)}
     .nav__portaal:hover{border-bottom-color:currentColor}
+    a[href^="tel:"]{white-space:nowrap}
   </style>
 </head>
 <body>
+  <a class="skip" href="#main">Naar inhoud</a>
   <header class="nav">
-    <a class="brand" href="index.html" aria-label="Polares, naar de homepage">
+    <a class="brand" href="/" aria-label="Polares, naar de homepage">
       <span class="brand__logo" role="img" aria-label="Polares"></span>
     </a>
 
@@ -352,7 +373,7 @@
 
   <main class="container contact" id="main">
     <section class="c-hero" aria-labelledby="hero-h1">
-      <a class="back" href="index.html">&#8592; Terug naar polares.be</a>
+      <a class="back" href="/">&#8592; Terug naar polares.be</a>
       <div class="chapter-head"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg><span class="label">Contact</span></div>
       <h1 id="hero-h1">Vertrouwen begint met een gesprek.</h1>
       <p class="c-hero__lead">We nemen graag de tijd om uw wereld te begrijpen en te bekijken waar we kunnen begeleiden.</p>
@@ -364,7 +385,7 @@
       <section class="cform cform--pagina" id="cform" aria-labelledby="cformTitel">
         <h2 class="c-h2" id="cformTitel">Contacteer ons</h2>
         <p class="cform__sub">Laat ons weten hoe we u kunnen begeleiden. We antwoorden persoonlijk.</p>
-        <form id="cformForm" novalidate>
+        <form id="cformForm" method="post" action="/api/contact" novalidate>
         <fieldset class="cform__keuze">
           <legend>Wat wilt u doen?</legend>
           <label><input type="radio" name="wijze" value="bellen" checked> Contacteer mij</label>
@@ -374,36 +395,39 @@
         <div class="cform__velden">
           <p class="cform__veld">
             <label for="cformNaam">Naam <span class="cform__optioneel">(optioneel)</span></label>
-            <input id="cformNaam" name="naam" type="text" autocomplete="name">
+            <input id="cformNaam" name="naam" type="text" autocomplete="name" maxlength="200">
           </p>
-          <div class="cform__paar" id="cformPaar" aria-describedby="cformFoutBereik">
+          <div class="cform__paar" id="cformPaar">
             <p class="cform__veld">
               <label for="cformMail">E-mailadres</label>
-              <input id="cformMail" name="email" type="email" autocomplete="email" inputmode="email">
+              <input id="cformMail" name="email" type="email" autocomplete="email" inputmode="email" maxlength="254" aria-describedby="cformFoutBereik cformFoutMail">
               <span class="cform__fout" id="cformFoutMail" hidden>Controleer het e-mailadres.</span>
             </p>
             <p class="cform__veld">
               <label for="cformTel">Telefoonnummer</label>
-              <input id="cformTel" name="telefoon" type="tel" autocomplete="tel" inputmode="tel">
+              <input id="cformTel" name="telefoon" type="tel" autocomplete="tel" inputmode="tel" maxlength="40" aria-describedby="cformFoutBereik cformFoutTel">
               <span class="cform__fout" id="cformFoutTel" hidden>Controleer het nummer.</span>
             </p>
           </div>
-          <p class="cform__hulp" id="cformFoutBereik">Vul minstens één van beide in, dan kunnen we u bereiken.</p>
-          <p class="cform__veld" id="cformVeldBericht" hidden>
+          <p class="cform__hulp" id="cformFoutBereik" aria-live="polite">Vul minstens één van beide in, dan kunnen we u bereiken.</p>
+          <p class="cform__veld" id="cformVeldBericht">
             <label for="cformBericht">Bericht</label>
-            <textarea id="cformBericht" name="bericht" aria-describedby="cformFoutBericht"></textarea>
+            <textarea id="cformBericht" name="bericht" maxlength="5000"></textarea>
             <span class="cform__fout" id="cformFoutBericht" hidden>Schrijf hier kort waarover het gaat.</span>
           </p>
           <p class="cform__val" aria-hidden="true">
             <label for="cformVal">Dit veld niet invullen</label>
-            <input id="cformVal" name="website" type="text" tabindex="-1" autocomplete="off">
+            <input id="cformVal" name="cform_extra" type="text" tabindex="-1" autocomplete="off">
           </p>
         </div>
           <div class="cform__voet">
             <button class="cform__btn" type="submit" id="cformVerstuur">Versturen</button>
+            <p class="cform__privacy">We gebruiken uw gegevens alleen om u te antwoorden. Meer daarover in onze <a href="privacyverklaring.html">privacyverklaring</a>.</p>
           </div>
         </form>
-        <div class="cform__melding" id="cformMelding" role="status" hidden><svg aria-hidden="true" width="14" height="14" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg><p></p></div>
+        <div class="cform__melding" id="cformMelding" tabindex="-1" hidden><svg aria-hidden="true" width="14" height="14" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg><p></p></div>
+        <!-- de aankondiging voor een schermlezer: altijd in de pagina, alleen de tekst wisselt -->
+        <p class="sr-only" id="cformStatus" role="status"></p>
       </section>
 
       <aside class="c-gegevens" aria-labelledby="kantoor-h2">
@@ -414,14 +438,14 @@
           <p class="c-item"><span class="label">E-mail</span><a href="mailto:info@polares.be">info@polares.be</a></p>
         </address>
         <p class="c-noot">Op zeven minuten wandelen van station Aalst. Op de kaart hieronder staat de kortste weg.</p>
-        <a class="more-link" href="https://www.google.com/maps/dir/?api=1&amp;destination=Dirk+Martensstraat+41,+9300+Aalst" target="_blank" rel="noopener noreferrer">Plan uw route <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
+        <a class="more-link" href="https://www.google.com/maps/dir/?api=1&amp;destination=Dirk+Martensstraat+41,+9300+Aalst" target="_blank" rel="noopener noreferrer">Plan uw route<span class="sr-only"> (opent in een nieuw tabblad)</span> <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></a>
       </aside>
     </div>
 
     <figure class="c-kaart">
       <img src="assets/kaart-kantoor.svg" width="1600" height="900" loading="lazy" decoding="async"
            alt="Kaart van de buurt rond het kantoor aan de Dirk Martensstraat 41 in Aalst, met een stippellijn voor de wandelroute van station Aalst naar het kantoor.">
-      <figcaption>Kaartgegevens &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap-bijdragers</a></figcaption>
+      <figcaption>Kaartgegevens &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap-bijdragers<span class="sr-only"> (opent in een nieuw tabblad)</span></a></figcaption>
     </figure>
   </main>
 
@@ -459,7 +483,7 @@
           <a href="algemene-voorwaarden.html">Algemene voorwaarden</a> &middot;
           <a href="privacyverklaring.html">Privacyverklaring</a>
         </p>
-        <p class="footer__coords">50.94° N, 4.04° O</p>
+        <p class="footer__coords">50.94° N, 4.03° O</p>
       </div>
     </div>
   </footer>
@@ -501,24 +525,24 @@
 
     // ── Contactformulier ────────────────────────────────────────
     // Staat alleen op deze pagina; elk contactblok op de site linkt hierheen.
-    // De code kan ook een <dialog> bedienen (zo stond het vroeger op elke
-    // pagina); hier is #cform een gewone sectie en valt openen en sluiten weg.
     //
     // VERZENDPUNT is de functie die het bericht verstuurt: worker/index.js,
     // op Cloudflare. Bestaat die op dit adres niet (een lokale testserver
     // kent geen POST), dan valt het formulier terug op het mailprogramma van
     // de bezoeker, met alles al ingevuld. Leeg maken doet dat altijd.
+    //
+    // Zonder JavaScript verstuurt de browser het formulier zelf naar
+    // /api/contact (method="post"); de worker antwoordt dan met een pagina.
     (function () {
       var VERZENDPUNT = '/api/contact';
+      var WACHTTIJD = 20000;
+      var ANDERS = 'mail naar <a href="mailto:info@polares.be">info@polares.be</a> of bel <a href="tel:+3254235050">+32 54 23 50 50</a>.';
 
-      var venster  = document.getElementById('cform');
       var form     = document.getElementById('cformForm');
-      if (!venster || !form) return;
-      var inline   = venster.tagName !== 'DIALOG';
-      var sluitKn  = document.getElementById('cformSluit');
-      var annuleer = document.getElementById('cformAnnuleer');
+      if (!form) return;
       var verstuur = document.getElementById('cformVerstuur');
       var melding  = document.getElementById('cformMelding');
+      var status   = document.getElementById('cformStatus');
       var naam     = document.getElementById('cformNaam');
       var mail     = document.getElementById('cformMail');
       var tel      = document.getElementById('cformTel');
@@ -527,58 +551,73 @@
       var hulp     = document.getElementById('cformFoutBereik');
       var val      = document.getElementById('cformVal');
       var wijzen   = [].slice.call(form.querySelectorAll('input[name="wijze"]'));
-      var vanaf    = null;
+      var zacht    = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var HULP     = hulp.textContent;
 
       function wijze() {
         var aan = wijzen.filter(function (w) { return w.checked; })[0];
         return aan ? aan.value : 'bellen';
       }
-      function toonBericht() {
-        var schrijven = wijze() === 'bericht';
-        veldBericht.hidden = !schrijven;
-        if (schrijven) bericht.focus();
-      }
+      // Het veld verschijnt, de focus blijft op de keuze: wie met de pijltjes
+      // door de keuzes loopt, wordt er niet uit gehaald. Tab gaat vanzelf
+      // verder naar de velden.
+      function toonBericht() { veldBericht.hidden = wijze() !== 'bericht'; }
       wijzen.forEach(function (w) { w.addEventListener('change', toonBericht); });
+      toonBericht();
 
       function fout(el, aan, foutId) {
         el.closest('.cform__veld').toggleAttribute('data-fout', aan);
+        el.setAttribute('aria-invalid', aan ? 'true' : 'false');
         var f = document.getElementById(foutId);
         if (f) f.hidden = !aan;
+        if (el === bericht) {
+          if (aan) el.setAttribute('aria-describedby', foutId); else el.removeAttribute('aria-describedby');
+        }
       }
-      function geldigAdres(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()); }
+      // dezelfde eisen als in worker/index.js
+      function geldigAdres(v) { return /^[^\s@,;:<>()\[\]"\\?#%&]+@[^\s@,;:<>()\[\]"\\?#%&]+\.[^\s@,;:<>()\[\]"\\?#%&.]{2,}$/.test(v.trim()); }
       function geldigNummer(v) { return (v.replace(/\D/g, '').length >= 8); }
 
-      function open(knop) {
-        vanaf = knop || null;
-        // Een link mag al zeggen wat de bezoeker wil: data-cform="bellen" of
-        // "bericht". Dan hoeft hij die keuze hier niet nog eens te maken.
-        var voorkeur = knop && knop.getAttribute('data-cform');
-        if (voorkeur) {
-          wijzen.forEach(function (w) { w.checked = w.value === voorkeur; });
-          toonBericht();
-        }
-        melding.hidden = true;
-        form.hidden = false;
-        if (inline) venster.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        else if (typeof venster.showModal === 'function') venster.showModal();
-        else venster.setAttribute('open', '');
-        mail.focus({ preventScroll: inline });
+      // Welke velden kloppen er? Eén plaats, voor het versturen en om een
+      // foutmelding te laten verdwijnen zodra het veld verbeterd is.
+      function controle() {
+        var heeftMail = mail.value.trim() !== '', heeftTel = tel.value.trim() !== '';
+        var c = {
+          heeftMail: heeftMail, heeftTel: heeftTel,
+          mailOk: heeftMail && geldigAdres(mail.value),
+          telOk: heeftTel && geldigNummer(tel.value),
+          tekstOk: wijze() !== 'bericht' || bericht.value.trim().length > 1
+        };
+        c.bereikbaar = c.mailOk || c.telOk;
+        return c;
       }
-      function sluit() {
-        if (inline) return;
-        if (typeof venster.close === 'function') venster.close(); else venster.removeAttribute('open');
-        if (vanaf) vanaf.focus();
+      function toonFouten(c) {
+        fout(mail, c.heeftMail && !c.mailOk, 'cformFoutMail');
+        fout(tel, c.heeftTel && !c.telOk, 'cformFoutTel');
+        hulp.toggleAttribute('data-fout', !c.bereikbaar);
+        hulp.textContent = c.bereikbaar || !(c.heeftMail || c.heeftTel)
+          ? HULP
+          : 'Controleer het adres of het nummer: zo kunnen we u niet bereiken.';
       }
-
-      // Alleen de adressen met data-cform openen dit venster: het contactblok
-      // van de homepage en het slot van elke andere pagina. De voet en de FAQ
-      // blijven een gewone mailtolink, want daar verwacht men geen venster.
-      [].forEach.call(document.querySelectorAll('a[data-cform]'), function (aanzet) {
-        aanzet.addEventListener('click', function (e) { e.preventDefault(); open(aanzet); });
+      [mail, tel, bericht].forEach(function (el) {
+        el.addEventListener('input', function () {
+          if (!form.querySelector('[data-fout]') && !hulp.hasAttribute('data-fout')) return;
+          var c = controle();
+          if (el !== bericht) toonFouten(c);
+          else if (c.tekstOk) fout(bericht, false, 'cformFoutBericht');
+        });
       });
-      if (sluitKn) sluitKn.addEventListener('click', sluit);
-      if (annuleer) annuleer.addEventListener('click', sluit);
-      if (!inline) venster.addEventListener('click', function (e) { if (e.target === venster) sluit(); });
+
+      function meld(html, focus) {
+        melding.querySelector('p').innerHTML = html;
+        melding.hidden = false;
+        status.textContent = melding.textContent.trim();
+        if (focus) {
+          melding.focus({ preventScroll: true });
+          melding.scrollIntoView({ behavior: zacht ? 'smooth' : 'auto', block: 'center' });
+        }
+      }
+      function klaar() { verstuur.disabled = false; verstuur.textContent = 'Versturen'; }
 
       function regels() {
         var r = [];
@@ -593,75 +632,67 @@
         location.href = 'mailto:info@polares.be'
           + '?subject=' + encodeURIComponent(wijze() === 'bericht' ? 'Bericht via polares.be' : 'Contactverzoek via polares.be')
           + '&body=' + encodeURIComponent(regels().join('\n'));
+        meld('Uw mailprogramma opent met alles al ingevuld. Verstuur het bericht daar en we nemen persoonlijk contact op. Opent er niets? Dan kunt u ook rechtstreeks ' + ANDERS, true);
       }
 
       form.addEventListener('submit', function (e) {
         e.preventDefault();
-        if (val.value) return;                       // ingevuld door een robot
+        melding.hidden = true;
+        // Het onzichtbare veld: een mens laat het leeg. Vult iets het toch
+        // in (een wachtwoordbeheerder, bijvoorbeeld), dan de gewone weg.
+        if (val.value) { meld('Het versturen lukte niet. U kunt ons ook rechtstreeks bereiken: ' + ANDERS, true); return; }
 
-        // minstens één manier om te antwoorden, en wat ingevuld is moet kloppen
-        var heeftMail = mail.value.trim() !== '', heeftTel = tel.value.trim() !== '';
-        var mailOk = heeftMail && geldigAdres(mail.value);
-        var telOk  = heeftTel && geldigNummer(tel.value);
-        var bereikbaar = mailOk || telOk;
-        fout(mail, heeftMail && !mailOk, 'cformFoutMail');
-        fout(tel, heeftTel && !telOk, 'cformFoutTel');
-        hulp.toggleAttribute('data-fout', !bereikbaar);
-        hulp.textContent = bereikbaar
-          ? 'Vul minstens één van beide in, dan kunnen we u bereiken.'
-          : (heeftMail || heeftTel
-              ? 'Controleer het adres of het nummer: zo kunnen we u niet bereiken.'
-              : 'Vul minstens één van beide in, dan kunnen we u bereiken.');
-        if (!bereikbaar) { (heeftTel && !heeftMail ? tel : mail).focus(); return; }
+        // minstens één manier om te antwoorden, en wat ingevuld is moet
+        // kloppen: ook een fout tweede veld houdt het versturen tegen
+        var c = controle();
+        toonFouten(c);
+        fout(bericht, !c.tekstOk, 'cformFoutBericht');
+        var eerste = !c.bereikbaar ? (c.heeftTel && !c.heeftMail ? tel : mail)
+          : (c.heeftMail && !c.mailOk) ? mail
+          : (c.heeftTel && !c.telOk) ? tel
+          : !c.tekstOk ? bericht : null;
+        if (eerste) { eerste.focus(); return; }
 
-        var tekstOk = wijze() !== 'bericht' || bericht.value.trim().length > 1;
-        fout(bericht, !tekstOk, 'cformFoutBericht');
-        if (!tekstOk) { bericht.focus(); return; }
-
-        if (!VERZENDPUNT) {
-          viaMailprogramma();
-          // Op de pagina zelf blijft het formulier staan; zeg dan wat er gebeurt.
-          if (inline) {
-            melding.querySelector('p').textContent = 'Uw mailprogramma opent met alles al ingevuld. Verstuur het bericht daar en we nemen persoonlijk contact op.';
-            melding.hidden = false;
-          } else sluit();
-          return;
-        }
+        if (!VERZENDPUNT) { viaMailprogramma(); return; }
 
         verstuur.disabled = true;
         verstuur.textContent = 'Versturen…';
+        status.textContent = 'Uw bericht wordt verstuurd.';
+        var rem = window.AbortController ? new AbortController() : null;
+        var klok = rem && setTimeout(function () { rem.abort(); }, WACHTTIJD);
+        var bellen = wijze() !== 'bericht';
         fetch(VERZENDPUNT, {
           method: 'POST',
+          signal: rem ? rem.signal : undefined,
           headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
           body: JSON.stringify({
             naam: naam.value.trim(),
             email: mail.value.trim(),
             telefoon: tel.value.trim(),
             wijze: wijze(),
-            bericht: wijze() === 'bericht' ? bericht.value.trim() : ''
+            bericht: bellen ? '' : bericht.value.trim(),
+            cform_extra: val.value
           })
         }).then(function (r) {
           // geen functie op dit adres: dan toch nog via het mailprogramma
-          if (r.status === 404 || r.status === 405 || r.status === 501) {
-            verstuur.disabled = false;
-            verstuur.textContent = 'Versturen';
-            viaMailprogramma();
-            if (inline) {
-              melding.querySelector('p').textContent = 'Uw mailprogramma opent met alles al ingevuld. Verstuur het bericht daar en we nemen persoonlijk contact op.';
-              melding.hidden = false;
-            } else sluit();
-            return;
-          }
-          if (!r.ok) throw new Error(r.status);
-          form.hidden = true;
-          melding.querySelector('p').textContent = 'Bedankt, uw bericht is verstuurd. We nemen persoonlijk contact op.';
-          melding.hidden = false;
+          if (r.status === 404 || r.status === 405 || r.status === 501) { klaar(); viaMailprogramma(); return; }
+          return r.json().catch(function () { return {}; }).then(function (d) {
+            if (r.ok && d.ok === true) {
+              form.hidden = true;
+              meld(bellen
+                ? 'Bedankt, we hebben uw vraag goed ontvangen. We nemen persoonlijk contact met u op.'
+                : 'Bedankt, uw bericht is verstuurd. We nemen persoonlijk contact met u op.', true);
+              return;
+            }
+            klaar();
+            if (r.status === 413) meld('Uw bericht is te lang: hoogstens 5000 tekens. Maak het wat korter. U kunt ook rechtstreeks ' + ANDERS, true);
+            else if (r.status === 400) meld('Controleer het e-mailadres of het telefoonnummer. Lukt het niet? Dan kunt u ook rechtstreeks ' + ANDERS, true);
+            else meld('Het versturen lukte niet. Probeer het straks opnieuw. U kunt ook rechtstreeks ' + ANDERS, true);
+          });
         }).catch(function () {
-          verstuur.disabled = false;
-          verstuur.textContent = 'Versturen';
-          melding.querySelector('p').textContent = 'Het versturen lukte niet. Probeer het opnieuw of mail rechtstreeks naar info@polares.be.';
-          melding.hidden = false;
-        });
+          klaar();
+          meld('Het versturen lukte niet. Probeer het straks opnieuw. U kunt ook rechtstreeks ' + ANDERS, true);
+        }).then(function () { if (klok) clearTimeout(klok); });
       });
     })();
   </script>

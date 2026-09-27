@@ -1,23 +1,28 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="nl-BE">
 <head>
   <meta charset="UTF-8">
   <script>document.documentElement.classList.add('js');</script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Blijf op koers: nieuws, evenementen en inzichten | Polares</title>
-  <meta name="description" content="Nieuws, evenementen en inzichten van Polares, family office in Aalst.">
+  <meta name="description" content="Nieuws, evenementen en inzichten over vermogen, familie en onderneming van Polares, family office in Aalst.">
   <link rel="canonical" href="https://polares.be/blijf-op-koers.html">
   <meta name="theme-color" content="#071826">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="nl_BE">
   <meta property="og:site_name" content="Polares">
   <meta property="og:title" content="Blijf op koers: nieuws, evenementen en inzichten | Polares">
-  <meta property="og:description" content="Nieuws, evenementen en inzichten van Polares, family office in Aalst.">
+  <meta property="og:description" content="Nieuws, evenementen en inzichten over vermogen, familie en onderneming van Polares, family office in Aalst.">
   <meta property="og:url" content="https://polares.be/blijf-op-koers.html">
   <meta property="og:image" content="https://polares.be/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Polares, Your Capital Guide">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
   <link rel="preload" href="assets/fonts/cantata-one-400.woff2" as="font" type="font/woff2" crossorigin>
   <!-- BEGIN_LIJSTDATA (geschreven door tools/berichten.py) -->
   <script type="application/ld+json">
@@ -29,14 +34,14 @@
       {
         "@type": "ListItem",
         "position": 1,
-        "url": "https://polares.be/blijf-op-koers/koffiesessie-vermogensarchitectuur.html",
-        "name": "Inspiratiesessie: Van versnipperd vermogen naar één helder overzicht"
+        "url": "https://polares.be/blijf-op-koers/rondetafel-bedrijfsoverdracht-2026.html",
+        "name": "Exclusieve Rondetafel: De overdracht van familiebedrijf naar de volgende generatie"
       },
       {
         "@type": "ListItem",
         "position": 2,
-        "url": "https://polares.be/blijf-op-koers/rondetafel-bedrijfsoverdracht-2026.html",
-        "name": "Exclusieve Rondetafel: De overdracht van familiebedrijf naar de volgende generatie"
+        "url": "https://polares.be/blijf-op-koers/koffiesessie-vermogensarchitectuur.html",
+        "name": "Inspiratiesessie: Van versnipperd vermogen naar één helder overzicht"
       },
       {
         "@type": "ListItem",
@@ -95,12 +100,19 @@
       --container:1280px; --pad:clamp(1.5rem,5vw,5rem); --section-y:clamp(4.5rem,9vw,7rem);
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{font-size:93.75%;scroll-behavior:smooth}
+    html{font-size:93.75%;scroll-behavior:smooth;scroll-padding-top:92px}
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+    /* [hidden] wint altijd, ook van een display op de klasse */
+    [hidden]{display:none!important}
     body{font-family:var(--sans);line-height:1.7;color:var(--text);background:var(--white);-webkit-font-smoothing:antialiased}
     img,svg{display:block}
     img{max-width:100%;height:auto}
     a{color:inherit;text-decoration:none}
-    :focus-visible{outline:2px solid rgba(90,115,136,.6);outline-offset:3px}
+    :focus-visible{outline:2px solid var(--navy-600);outline-offset:2px;box-shadow:0 0 0 2px #fff}
+    /* witte binnenring plus navy rand: zichtbaar op wit én op navy, en de
+       rand blijft staan in de modus hoog contrast */
+    .skip{position:absolute;top:-100%;left:1rem;z-index:9999;background:var(--white);color:var(--navy-600);padding:.6rem 1.2rem;font-size:14px;border:1px solid var(--navy-600)}
+    .skip:focus{top:1rem}
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     .container{max-width:var(--container);margin-inline:auto;padding-inline:var(--pad)}
     .label{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-soft)}
@@ -128,6 +140,7 @@
        is een zijstap, geen bestemming: dezelfde kaartvorm als de rest van de
        site: wit, haarlijn, zachte schaduw. */
     .overlay{position:fixed;top:84px;right:var(--pad);z-index:300;
+      max-height:calc(100vh - 96px);max-height:calc(100dvh - 96px);overflow-y:auto;overscroll-behavior:contain;
       width:min(300px,calc(100vw - 2 * var(--pad)));
       background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);
       padding-block:.75rem .25rem;opacity:0;visibility:hidden;transform:translateY(-8px) scale(.98);
@@ -143,7 +156,7 @@
     .overlay__link:focus-visible{outline-offset:-2px}
     .overlay__contact{margin-top:.5rem;padding:.85rem 1.25rem .55rem;border-top:1px solid var(--line)}
     .overlay__contact p{font-family:var(--sans);font-size:12.5px;color:var(--text-soft);line-height:1.8}
-    .overlay__contact a{color:var(--text-soft);transition:color var(--dur-1) var(--ease)}
+    .overlay__contact a{display:inline-block;padding-block:3px;color:var(--text-soft);transition:color var(--dur-1) var(--ease)}
     .overlay__contact a:hover{color:var(--navy-600)}
 
     /* Hoofdstukkop */
@@ -218,7 +231,7 @@
       transition:color var(--dur-1) var(--ease),border-color var(--dur-1) var(--ease)}
     .filter:hover{color:var(--navy-600)}
     .filter.is-actief{color:var(--navy-600);border-bottom-color:var(--navy-600)}
-    .filter__aantal{font-size:11px;color:var(--navy-300);margin-left:.2rem}
+    .filter__aantal{font-size:11px;color:var(--text-soft);margin-left:.2rem}
 
     .badge{display:inline-block;font-family:var(--sans);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
       padding:.3rem .65rem;border:1px solid var(--navy-200);color:var(--navy-600);background:var(--white)}
@@ -228,7 +241,7 @@
     .uitgelicht{display:grid;grid-template-columns:1.4fr .6fr;margin-top:clamp(2.5rem,5vw,3.5rem);
       border:1px solid var(--line);background:var(--white);box-shadow:var(--shadow-lg)}
     .uitgelicht__tekst{padding:clamp(1.75rem,3.5vw,3rem);display:flex;flex-direction:column;gap:1.15rem;align-items:flex-start}
-    .uitgelicht__titel{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,2.8vw,2.2rem);line-height:1.2}
+    .uitgelicht__titel{font-family:var(--serif);font-weight:400;font-size:clamp(1.5rem,2.8vw,2.2rem);line-height:1.2;text-wrap:balance;overflow-wrap:break-word}
     .uitgelicht__inleiding{font-size:15px;color:var(--text-soft);line-height:1.7;max-width:52ch}
     .uitgelicht__meta{position:relative;overflow:hidden;background:var(--navy-900);
       padding:clamp(1.75rem,3.5vw,3rem);display:flex;flex-direction:column;justify-content:space-between;gap:2rem}
@@ -250,13 +263,13 @@
     .bericht:has(.bericht__opener:focus-visible){border-color:var(--navy-400)}
     .bericht__kop{display:flex;align-items:center;justify-content:space-between;gap:.75rem;flex-wrap:wrap}
     .bericht__datum{font-family:var(--sans);font-size:12px;color:var(--text-soft)}
-    .bericht__titel{font-family:var(--serif);font-weight:400;font-size:clamp(1.15rem,1.7vw,1.35rem);line-height:1.3}
+    .bericht__titel{font-family:var(--serif);font-weight:400;font-size:clamp(1.15rem,1.7vw,1.35rem);line-height:1.3;text-wrap:balance;overflow-wrap:break-word}
     /* de hele kaart is klikbaar, met de titellink als echte bediening */
     .bericht .bericht__titel .bericht__opener::after{content:"";position:absolute;inset:0}
     .bericht__inleiding{font-size:14px;color:var(--text-soft);line-height:1.65}
     .bericht__voet{margin-top:auto;padding-top:1rem;border-top:1px solid var(--line);
       display:flex;align-items:center;justify-content:space-between;gap:1rem}
-    .bericht__extra{font-family:var(--sans);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--navy-300)}
+    .bericht__extra{font-family:var(--sans);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-soft)}
     .bericht__lees{display:inline-flex;align-items:center;gap:.5rem;font-family:var(--sans);font-size:11px;
       letter-spacing:.14em;text-transform:uppercase;color:var(--navy-600);white-space:nowrap}
     .bericht__lees svg{transition:transform var(--dur-2) var(--ease)}
@@ -269,6 +282,7 @@
       background:var(--navy-600);color:var(--white);cursor:pointer;
       transition:background var(--dur-2) var(--ease),color var(--dur-2) var(--ease),border-color var(--dur-2) var(--ease)}
     .btn:hover{background:var(--navy-800);border-color:var(--navy-800)}
+    @media (max-width:360px){.btn{padding-inline:1rem;letter-spacing:.08em}}
 
     /* Het slot stond met zijn onderkant tegen de voet aan; de andere
        pagina's hebben die ademruimte via .flow, die hier niet bestaat. */
@@ -291,11 +305,13 @@
     .nav__rechts{display:flex;align-items:center;gap:clamp(.75rem,2vw,1.5rem)}
     .nav__portaal{display:inline-flex;align-items:center;gap:.45rem;font-family:var(--sans);font-size:13px;letter-spacing:.06em;color:var(--navy-600);padding-block:4px;border-bottom:1px solid transparent;transition:border-color var(--dur-2) var(--ease)}
     .nav__portaal:hover{border-bottom-color:currentColor}
+    a[href^="tel:"]{white-space:nowrap}
   </style>
 </head>
 <body>
+  <a class="skip" href="#main">Naar inhoud</a>
   <header class="nav">
-    <a class="brand" href="index.html" aria-label="Polares, naar de homepage">
+    <a class="brand" href="/" aria-label="Polares, naar de homepage">
       <span class="brand__logo" role="img" aria-label="Polares"></span>
     </a>
 
@@ -341,18 +357,18 @@
   <main class="container" id="main">
 
     <section class="koers-hero" aria-labelledby="hero-h1">
-      <a class="back" href="index.html">&#8592; Terug naar polares.be</a>
+      <a class="back" href="/">&#8592; Terug naar polares.be</a>
       <div class="chapter-head" aria-hidden="true"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg></div>
       <h1 id="hero-h1">Blijf op koers</h1>
       <p class="koers-hero__lead">Nieuws, evenementen en inzichten van Polares.</p>
     </section>
 
-    <div class="filters" role="tablist" aria-label="Filter op soort">
+    <div class="filters" role="group" aria-label="Filter op soort">
       <!-- BEGIN_FILTERS (geschreven door tools/berichten.py) -->
-          <button type="button" role="tab" data-soort="alles" aria-selected="true" class="filter is-actief">Alles <span class="filter__aantal">6</span></button>
-          <button type="button" role="tab" data-soort="evenement" aria-selected="false" class="filter">Evenementen <span class="filter__aantal">2</span></button>
-          <button type="button" role="tab" data-soort="nieuws" aria-selected="false" class="filter">Nieuws <span class="filter__aantal">2</span></button>
-          <button type="button" role="tab" data-soort="inzicht" aria-selected="false" class="filter">Inzichten <span class="filter__aantal">2</span></button>
+          <button type="button" data-soort="alles" aria-pressed="true" class="filter is-actief">Alles <span class="filter__aantal">6</span></button>
+          <button type="button" data-soort="evenement" aria-pressed="false" class="filter">Evenementen <span class="filter__aantal">2</span></button>
+          <button type="button" data-soort="nieuws" aria-pressed="false" class="filter">Nieuws <span class="filter__aantal">2</span></button>
+          <button type="button" data-soort="inzicht" aria-pressed="false" class="filter">Inzichten <span class="filter__aantal">2</span></button>
       <!-- EIND_FILTERS -->
     </div>
 
@@ -370,12 +386,14 @@
             <div class="uitgelicht__rij"><dt>Wanneer</dt><dd>Donderdag 22 oktober 2026 · 18:30 tot 21:30</dd></div>
             <div class="uitgelicht__rij"><dt>Waar</dt><dd>Kantoor Polares, Dirk Martensstraat 41, Aalst</dd></div>
             <div class="uitgelicht__rij"><dt>Deelname</dt><dd>Exclusief voor ondernemers · Max. 10 families</dd></div>
+            <div class="uitgelicht__rij"><dt>Aanmelden</dt><dd>Tot 15 oktober</dd></div>
           </dl>
           <p class="uitgelicht__deadline">Aanmelden voor 15 oktober</p>
         </div>
       </article>
     <!-- EIND_UITGELICHT -->
 
+    <h2 class="sr-only">Alle berichten</h2>
     <div class="berichten" id="berichten">
       <!-- BEGIN_BERICHTEN (geschreven door tools/berichten.py) -->
       <article class="bericht" data-soort="evenement">
@@ -399,7 +417,7 @@
         <h3 class="bericht__titel"><a class="bericht__opener" href="blijf-op-koers/zorgvolmacht-het-startpunt.html">Waarom een zorgvolmacht het onmisbare vertrekpunt is van elk vermogenskompas</a></h3>
         <p class="bericht__inleiding">Veel ondernemers focussen op successierechten bij overlijden, maar staan zelden stil bij onverwachte wilsonbekwaamheid. Hoe beschermt u uw onderneming en familie tijdig?</p>
         <p class="bericht__voet">
-          <span class="bericht__extra">4 min leestijd</span>
+          <span class="bericht__extra">1 min leestijd</span>
           <span class="bericht__lees" aria-hidden="true">Lees meer <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></span>
         </p>
       </article>
@@ -412,7 +430,7 @@
         <h3 class="bericht__titel"><a class="bericht__opener" href="blijf-op-koers/versterking-vermogensmonitoring.html">Polares breidt expertise uit met versterking in vermogensmonitoring en familierecht</a></h3>
         <p class="bericht__inleiding">Om families met complexe vermogensstructuren en vastgoedportefeuilles nog gerichter te begeleiden, versterken wij onze adviespraktijk in Aalst.</p>
         <p class="bericht__voet">
-          <span class="bericht__extra">3 min leestijd</span>
+          <span class="bericht__extra">1 min leestijd</span>
           <span class="bericht__lees" aria-hidden="true">Lees meer <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></span>
         </p>
       </article>
@@ -425,7 +443,7 @@
         <h3 class="bericht__titel"><a class="bericht__opener" href="blijf-op-koers/vastgoed-vennootschap-of-prive.html">Vastgoed in de vennootschap of privé: de bakens heruitzetten voor 2027</a></h3>
         <p class="bericht__inleiding">Door verschuivingen in rentevoeten, meerwaardebelastingen en fiscale hervormingen herbekijken veel ondernemers hun vastgoedstrategie. Een heldere analyse.</p>
         <p class="bericht__voet">
-          <span class="bericht__extra">5 min leestijd</span>
+          <span class="bericht__extra">1 min leestijd</span>
           <span class="bericht__lees" aria-hidden="true">Lees meer <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></span>
         </p>
       </article>
@@ -438,7 +456,7 @@
         <h3 class="bericht__titel"><a class="bericht__opener" href="blijf-op-koers/terugblik-partnermeeting-2026.html">Terugblik: Jaarlijkse partnermeeting over geopolitieke stabiliteit en vermogensbescherming</a></h3>
         <p class="bericht__inleiding">Samen met onze juridische en fiscale netwerkpartners stonden we stil bij de economische vooruitzichten en de betekenis daarvan voor onze cliënten.</p>
         <p class="bericht__voet">
-          <span class="bericht__extra">2 min leestijd</span>
+          <span class="bericht__extra">1 min leestijd</span>
           <span class="bericht__lees" aria-hidden="true">Lees meer <svg aria-hidden="true" viewBox="0 0 37 12" fill="none" stroke="currentColor" stroke-width="1" width="26" height="9"><line x1="0" y1="6" x2="35" y2="6"/><polyline points="30,1 36,6 30,11" fill="none"/></svg></span>
         </p>
       </article>
@@ -446,6 +464,7 @@
     </div>
 
     <p class="berichten__niets" id="berichtenNiets" hidden>Geen berichten in deze categorie.</p>
+    <p class="sr-only" id="berichtenAantal" aria-live="polite"></p>
 
     <section class="koers-slot" aria-labelledby="slot-h2">
       <h2 id="slot-h2">Vertrouwen begint met een gesprek.</h2>
@@ -492,7 +511,7 @@
           <a href="algemene-voorwaarden.html">Algemene voorwaarden</a> &middot;
           <a href="privacyverklaring.html">Privacyverklaring</a>
         </p>
-        <p class="footer__coords">50.94° N, 4.04° O</p>
+        <p class="footer__coords">50.94° N, 4.03° O</p>
       </div>
     </div>
   </footer>
@@ -536,6 +555,7 @@
     (function () {
       var raster   = document.getElementById('berichten');
       var niets    = document.getElementById('berichtenNiets');
+      var aantal   = document.getElementById('berichtenAantal');
       var uitgel   = document.querySelector('.uitgelicht');
       if (!raster) return;
       var kaarten  = [].slice.call(document.querySelectorAll('.bericht'));
@@ -546,7 +566,7 @@
         knoppen.forEach(function (k) {
           var aan = k.getAttribute('data-soort') === soort;
           k.classList.toggle('is-actief', aan);
-          k.setAttribute('aria-selected', aan ? 'true' : 'false');
+          k.setAttribute('aria-pressed', aan ? 'true' : 'false');
         });
         var zichtbaar = 0;
         kaarten.forEach(function (kaart) {
@@ -560,6 +580,10 @@
           if (toonU) zichtbaar++;
         }
         if (niets) niets.hidden = zichtbaar > 0;
+        // voor een schermlezer: wat de filter nu toont
+        var knop = knoppen.filter(function (k) { return k.getAttribute('data-soort') === soort; })[0];
+        var naam = knop ? knop.firstChild.textContent.trim() : '';
+        if (aantal) aantal.textContent = zichtbaar + (zichtbaar === 1 ? ' bericht' : ' berichten') + (soort === 'alles' ? '' : ': ' + naam);
       }
       knoppen.forEach(function (k) {
         k.addEventListener('click', function () { filter(k.getAttribute('data-soort')); });

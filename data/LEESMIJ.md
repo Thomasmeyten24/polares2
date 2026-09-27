@@ -33,14 +33,21 @@ met de naam van het bericht of de medewerker erin.
 | Datum | bij een evenement de dag zelf; de nieuwste staan bovenaan |
 | Inleiding | twee zinnen voor de kaart, Google en het voorbeeld van een gedeelde link |
 | Tekst | de volledige tekst |
-| Uur, Plaats, Deelname | bij een evenement; het uur als `08:30 tot 10:30` |
-| Onder de titel | `4 min leestijd`, of `Aanmelden voor 12 november` |
+| Uur, Plaats, Deelname | bij een evenement; het uur als `08:30 tot 10:30` of alleen `08:30` |
+| Aanmelden tot | bij een evenement: de laatste dag om aan te melden |
 | Korte titel | alleen als de titel lang is; Google toont ongeveer zestig tekens |
 | Groot bovenaan | bij hoogstens één bericht |
 | Webadres | kleine letters, cijfers en koppeltekens, bijvoorbeeld `ontbijtsessie-mei-2027`. **Niet meer wijzigen als het bericht gedeeld is**: een gedeelde link wijst naar dit adres. |
 
-De categorie ("Inzichten & Advies") en de datum voluit ("Donderdag 19 november
-2026") hoeven niet ingevuld te worden: `tools/berichten.py` leidt ze af.
+De categorie ("Inzichten & Advies"), de datum voluit ("Donderdag 19 november
+2026") en de leestijd van een artikel hoeven niet ingevuld te worden:
+`tools/berichten.py` leidt ze af.
+
+Een evenement houdt zichzelf bij. Tot de aanmeldtermijn staat er "Aanmelden
+voor 12 november" en een aanmeldknop; daarna "Aanmelden afgesloten"; na de dag
+zelf "Afgelopen", zonder knop, en dan staat het ook niet meer groot bovenaan.
+Elke nacht kijkt de site dat na (`.github/workflows/dagelijks.yml`). Komende
+evenementen staan bovenaan, het eerstvolgende eerst.
 
 ## Een medewerker
 

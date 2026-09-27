@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="nl-BE">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,9 +14,14 @@
   <meta property="og:description" content="Financiële analyse en planning, fusies en overnames en bedrijfsoverdracht voor ondernemers. Polares, Aalst.">
   <meta property="og:url" content="https://polares.be/uw-bedrijf.html">
   <meta property="og:image" content="https://polares.be/assets/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Polares, Your Capital Guide">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="icon" href="/favicon.ico" sizes="48x48">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
   <link rel="preload" href="assets/fonts/cantata-one-400.woff2" as="font" type="font/woff2" crossorigin>
   <!-- Inhoud: de drie begeleidingen voor ondernemers, aangeleverd door Polares.
        Opbouw, stijl en scrollmodel zijn gelijk aan uw-familie.html. -->
@@ -43,12 +48,19 @@
       --container:1280px; --pad:clamp(1.5rem,5vw,5rem); --section-y:clamp(4.5rem,9vw,7rem);
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{font-size:93.75%;scroll-behavior:smooth}
+    html{font-size:93.75%;scroll-behavior:smooth;scroll-padding-top:92px}
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+    /* [hidden] wint altijd, ook van een display op de klasse */
+    [hidden]{display:none!important}
     body{font-family:var(--sans);line-height:1.7;color:var(--text);background:var(--white);-webkit-font-smoothing:antialiased}
     img,svg{display:block}
     img{max-width:100%;height:auto}
     a{color:inherit;text-decoration:none}
-    :focus-visible{outline:2px solid rgba(90,115,136,.6);outline-offset:3px}
+    :focus-visible{outline:2px solid var(--navy-600);outline-offset:2px;box-shadow:0 0 0 2px #fff}
+    /* witte binnenring plus navy rand: zichtbaar op wit én op navy, en de
+       rand blijft staan in de modus hoog contrast */
+    .skip{position:absolute;top:-100%;left:1rem;z-index:9999;background:var(--white);color:var(--navy-600);padding:.6rem 1.2rem;font-size:14px;border:1px solid var(--navy-600)}
+    .skip:focus{top:1rem}
     .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
     .container{max-width:var(--container);margin-inline:auto;padding-inline:var(--pad)}
     .label{font-family:var(--sans);font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--text-soft)}
@@ -76,6 +88,7 @@
        is een zijstap, geen bestemming: dezelfde kaartvorm als de rest van de
        site: wit, haarlijn, zachte schaduw. */
     .overlay{position:fixed;top:84px;right:var(--pad);z-index:300;
+      max-height:calc(100vh - 96px);max-height:calc(100dvh - 96px);overflow-y:auto;overscroll-behavior:contain;
       width:min(300px,calc(100vw - 2 * var(--pad)));
       background:var(--paper);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow-lg);
       padding-block:.75rem .25rem;opacity:0;visibility:hidden;transform:translateY(-8px) scale(.98);
@@ -91,7 +104,7 @@
     .overlay__link:focus-visible{outline-offset:-2px}
     .overlay__contact{margin-top:.5rem;padding:.85rem 1.25rem .55rem;border-top:1px solid var(--line)}
     .overlay__contact p{font-family:var(--sans);font-size:12.5px;color:var(--text-soft);line-height:1.8}
-    .overlay__contact a{color:var(--text-soft);transition:color var(--dur-1) var(--ease)}
+    .overlay__contact a{display:inline-block;padding-block:3px;color:var(--text-soft);transition:color var(--dur-1) var(--ease)}
     .overlay__contact a:hover{color:var(--navy-600)}
 
     /* Hoofdstukkop */
@@ -119,7 +132,7 @@
 
     /* Haltes langs de lijn */
     .stations{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:clamp(1rem,2.5vw,2rem);row-gap:clamp(5rem,11vw,9rem);margin-top:clamp(5rem,10vw,8rem)}
-    .station{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr);column-gap:clamp(1.25rem,2.5vw,2.25rem);scroll-margin-top:110px}
+    .station{position:relative;display:grid;grid-template-columns:44px minmax(0,1fr);column-gap:clamp(1.25rem,2.5vw,2.25rem);scroll-margin-top:18px}
     .station--l{grid-column:1 / span 7}
     .station--r{grid-column:6 / -1}
     .station--wide{grid-column:1 / span 10}
@@ -197,11 +210,13 @@
     .nav__rechts{display:flex;align-items:center;gap:clamp(.75rem,2vw,1.5rem)}
     .nav__portaal{display:inline-flex;align-items:center;gap:.45rem;font-family:var(--sans);font-size:13px;letter-spacing:.06em;color:var(--navy-600);padding-block:4px;border-bottom:1px solid transparent;transition:border-color var(--dur-2) var(--ease)}
     .nav__portaal:hover{border-bottom-color:currentColor}
+    a[href^="tel:"]{white-space:nowrap}
   </style>
 </head>
 <body>
+  <a class="skip" href="#flow">Naar inhoud</a>
   <header class="nav">
-    <a class="brand" href="index.html" aria-label="Polares, naar de homepage">
+    <a class="brand" href="/" aria-label="Polares, naar de homepage">
       <span class="brand__logo" role="img" aria-label="Polares"></span>
     </a>
 
@@ -256,7 +271,7 @@
     </svg>
 
     <section class="hero" aria-labelledby="hero-h1">
-      <a class="back" href="index.html#advies">&#8592; Terug naar polares.be</a>
+      <a class="back" href="/#advies">&#8592; Terug naar polares.be</a>
       <div class="hero__grid">
         <div class="hero__copy">
           <div class="chapter-head"><svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg><span class="label">Uw bedrijf</span></div>
@@ -344,7 +359,7 @@
           <a href="algemene-voorwaarden.html">Algemene voorwaarden</a> &middot;
           <a href="privacyverklaring.html">Privacyverklaring</a>
         </p>
-        <p class="footer__coords">50.94° N, 4.04° O</p>
+        <p class="footer__coords">50.94° N, 4.03° O</p>
       </div>
     </div>
   </footer>

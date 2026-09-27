@@ -155,11 +155,11 @@ for bestand, inhoud in (
     ("ons-team.html", team),
     ("contact.html", contact),
 ):
-    for href in set(re.findall(r'href="index\.html#([^"]+)"', inhoud)):
+    for href in set(re.findall(r'href="(?:index\.html|/)#([^"]+)"', inhoud)):
         controleer(f"anker index.html#{href} (vanuit {bestand}) bestaat", href in ankers)
     for href in set(re.findall(r'href="([a-z0-9-]+\.html)', inhoud)):
         controleer(f"pagina {href} (vanuit {bestand}) bestaat", (ROOT / href).exists())
-    for pad in set(re.findall(r'(?:src|href)="(assets/[^"]+)"', inhoud)):
+    for pad in set(re.findall(r'(?:src|href)="(assets/[^"?#]+)', inhoud)):
         controleer(f"bestand {pad} (vanuit {bestand}) aanwezig", (ROOT / pad).exists())
 
 # Footer-links naar diensten moeten op de dienstpagina's een anker hebben
@@ -208,7 +208,7 @@ for href in sorted(set(re.findall(r'href="([a-z0-9-]+\.html)"', index))):
     controleer(f"{href} staat in de sitemap", f"/{href}<" in sitemap)
 
 # ── 5. Verwezen bestanden moeten op schijf staan ─────────────────────────────
-verwijzingen = set(re.findall(r'(?:src|href)="(assets/[^"]+)"', index))
+verwijzingen = set(re.findall(r'(?:src|href)="(assets/[^"?#]+)', index))
 verwijzingen |= {
     "assets/" + m for m in re.findall(r'href="assets/([^"]+)"', index)
 }
@@ -237,7 +237,7 @@ for sectie in secties:
 # De adressen volgen voornaam@polares.be (Nathalie Van de Velde uitgezonderd,
 # want nathalie@ is al van Nathalie Barbieur). Een tikfout in het domein valt
 # niet op tot er een mail bouncet.
-leden = re.findall(r'<p class="lid__naam">([^<]+)</p>', team)
+leden = re.findall(r'<h3 class="lid__naam">([^<]+)</h3>', team)
 mails = re.findall(r'class="lid__mail" href="mailto:([^"]+)"', team)
 controleer(
     "elke medewerker heeft een e-mailadres",
@@ -293,7 +293,7 @@ for b in berichten:
     # relatieve links vanuit blijf-op-koers/ wijzen een map omhoog
     for href in sorted(set(re.findall(r'(?:src|href)="\.\./([^"#?]+)"', blad))):
         controleer(f"{href} (vanuit {pad}) bestaat", (ROOT / href).exists())
-    for href in sorted(set(re.findall(r'href="\.\./index\.html#([^"]+)"', blad))):
+    for href in sorted(set(re.findall(r'href="(?:\.\./index\.html|/)#([^"]+)"', blad))):
         controleer(f"anker index.html#{href} (vanuit {pad}) bestaat", href in ankers)
     for href in sorted(set(re.findall(r'href="([a-z0-9-]+\.html)"', blad))):
         controleer(f"{href} (vanuit {pad}) bestaat", (ROOT / "blijf-op-koers" / href).exists())

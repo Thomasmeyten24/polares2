@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Polares: uw vertrouwenspersoon voor familie en bedrijf | Aalst</title>
+  <title>Polares: vertrouwenspersoon voor familie en bedrijf | Aalst</title>
   <meta name="description" content="Polares is uw onafhankelijke vertrouwenspersoon voor familie en bedrijf. Zoals de noordpoolster: helder en richtinggevend voor uw vermogen.">
   <link rel="canonical" href="https://polares.be/">
   <meta name="theme-color" content="#071826">
@@ -48,7 +48,7 @@
         "name": "Polares",
         "legalName": "Polares BV",
         "url": "https://polares.be/",
-        "logo": "https://polares.be/assets/POLARES_LOGO_WIT.png",
+        "logo": "https://polares.be/assets/POLARES_LOGO_NAVY.png",
         "image": "https://polares.be/assets/og-image.png",
         "slogan": "Your Capital Guide",
         "description": "Polares is uw onafhankelijke vertrouwenspersoon voor familie en bedrijf. Zoals de noordpoolster: helder en richtinggevend voor uw vermogen.",
@@ -79,7 +79,7 @@
         "knowsAbout": [
           "Vermogensarchitectuur",
           "Vermogensmonitoring",
-          "Successieplanning",
+          "Successie- en generatieplanning",
           "Vastgoedplanning",
           "Financiële planning",
           "Fiscaliteit",
@@ -100,7 +100,7 @@
               "itemListElement": [
                 { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Vermogensarchitectuur" } },
                 { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Vermogensmonitoring" } },
-                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Successieplanning" } },
+                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Successie- en generatieplanning" } },
                 { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Vastgoedplanning" } }
               ]
             },
@@ -108,7 +108,7 @@
               "@type": "OfferCatalog",
               "name": "Uw bedrijf",
               "itemListElement": [
-                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Financiële analyse" } },
+                { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Financiële analyse en planning" } },
                 { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Fusies en overnames" } },
                 { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Bedrijfsoverdracht" } }
               ]
@@ -227,7 +227,6 @@
       --shadow-sm:0 2px 8px rgba(16,50,78,.07);
       --shadow-md:0 6px 20px rgba(16,50,78,.09);
       --shadow-lg:0 16px 40px rgba(16,50,78,.12);
-      --focus-ring:0 0 0 3px rgba(90,115,136,.35);
       /* type */
       --serif:'Cantata One', Georgia, 'Times New Roman', serif;
       --sans:'Source Sans Pro', system-ui, -apple-system, 'Segoe UI', sans-serif;
@@ -244,12 +243,14 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     /* 93.75% van de browserstandaard (16px) = 15px, maar respecteert de
        lettergroottevoorkeur van de gebruiker */
-    html { font-size: 93.75%; }
+    html { font-size: 93.75%; scroll-padding-top: 84px; }
     /* smooth scrollen pas ná het laden (JS zet .js-smooth): voorkomt dat de
        browser het scrollherstel bij herladen zichtbaar animeert */
     html.js-smooth { scroll-behavior: smooth; }
-    /* ankersecties niet onder de vaste nav laten schuiven */
-    main section[id] { scroll-margin-top: 76px; }
+    /* ankers en toetsenbordfocus niet onder de vaste nav laten schuiven:
+       scroll-padding-top op html hierboven geldt voor elk doel */
+    /* [hidden] wint altijd, ook van een display op de klasse */
+    [hidden] { display: none !important; }
     /* programmatisch gefocuste secties krijgen geen focusring */
     [tabindex="-1"]:focus-visible { box-shadow: none; outline: none; }
     body {
@@ -267,7 +268,9 @@
     h1, h2, h3 { font-family: var(--serif); font-weight: 400; }
 
     /* ── Focus ───────────────────────────────────────────────── */
-    :focus-visible { box-shadow: var(--focus-ring); outline: none; border-radius: 2px; }
+    /* witte binnenring plus navy rand: zichtbaar op wit én op navy, en de
+       rand blijft staan in de modus hoog contrast */
+    :focus-visible { outline: 2px solid var(--navy-600); outline-offset: 2px; box-shadow: 0 0 0 2px #fff; }
 
     /* ── Utilities ───────────────────────────────────────────── */
     .sr-only {
@@ -398,6 +401,12 @@
       transition: opacity var(--dur-2) var(--ease),
                   transform var(--dur-2) var(--ease),
                   visibility 0s var(--dur-2);
+      /* in een laag venster (telefoon in landschap, sterk ingezoomd) scrolt
+         het paneel zelf, anders vallen Contact en het nummer buiten beeld */
+      max-height: calc(100vh - 96px);
+      max-height: calc(100dvh - 96px);
+      overflow-y: auto;
+      overscroll-behavior: contain;
     }
     .overlay.is-open { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
 
@@ -424,7 +433,7 @@
       border-top: 1px solid var(--line);
     }
     .overlay__contact p { font-family: var(--sans); font-size: 12.5px; color: var(--text-soft); line-height: 1.8; }
-    .overlay__contact a { color: var(--text-soft); transition: color var(--dur-1) var(--ease); }
+    .overlay__contact a { display: inline-block; padding-block: 3px; color: var(--text-soft); transition: color var(--dur-1) var(--ease); }
     .overlay__contact a:hover { color: var(--navy-600); }
 
     /* ── Meridiaan ───────────────────────────────────────────── */
@@ -463,7 +472,7 @@
       font-size: 11px;
       letter-spacing: .12em;
       text-transform: uppercase;
-      color: var(--text-faint);
+      color: var(--text-soft);
       writing-mode: vertical-rl;
       transform: rotate(180deg);
       margin-top: .5rem;
@@ -626,6 +635,16 @@
     }
     .missie__triade-item { font-family: var(--serif); font-size: 1.15rem; color: var(--navy-500); }
     .missie__triade-sep { color: var(--navy-400); flex-shrink: 0; }
+    /* Past een rij niet op één regel, ook niet met de korte woorden, dan
+       staan de woorden onder elkaar, met het sterretje ertussen, in een
+       leesbare letter. Zo staat er nooit een sterretje aan het einde van een
+       regel en wordt niets te klein om te lezen. */
+    .missie__triade.is-meten { flex-wrap: nowrap; justify-content: flex-start; }
+    .missie__triade.is-meten, .missie__triade.is-meten * { transition-property: none !important; }
+    .missie__triade.is-meten .missie__triade-item { white-space: nowrap; flex-shrink: 0; }
+    .missie__triade.is-gestapeld { flex-direction: column; flex-wrap: nowrap; gap: .45rem; text-align: center; }
+    .missie__triade.is-gestapeld .missie__triade-item { white-space: normal; }
+    .missie__triade.is-gestapeld .missie__triade-sep svg { width: 10px; height: 10px; }
 
     /* ── II · Visie ──────────────────────────────────────────── */
     /* Volledig wit paneel met volle ademruimte: de fijne lijnen van de
@@ -1171,11 +1190,12 @@
       color: var(--text);
       margin-bottom: 1rem;
     }
-    .waarden__intro { font-size: 15px; color: var(--text-soft); max-width: 560px; margin-bottom: 3rem; }
+    /* donkerder dan elders: de tekst staat op de zachte teamfoto */
+    .waarden__intro { font-size: 15px; color: var(--text); max-width: 560px; margin-bottom: 3rem; }
     .waarden__grid { display: grid; grid-template-columns: repeat(4, 1fr); }
     .waarden__item { padding-right: 2rem; }
     .waarden__name { font-family: var(--serif); font-size: 1.4rem; color: var(--navy-600); margin-bottom: .6rem; }
-    .waarden__desc { font-size: 13.5px; color: var(--text-soft); line-height: 1.65; }
+    .waarden__desc { font-size: 13.5px; color: var(--text); line-height: 1.65; }
 
     /* ── VI · Team ───────────────────────────────────────────── */
     /* hairline zoals bij #advies: wit-op-papier is anders te zwak als scheiding */
@@ -1293,6 +1313,8 @@
       margin-bottom: .5rem;
     }
     .faq__a { font-size: 15px; color: var(--text-soft); }
+    .faq__a a { color: var(--navy-600); text-decoration: underline; text-underline-offset: .2em; text-decoration-thickness: 1px; }
+    a[href^="tel:"] { white-space: nowrap; }
 
     /* ── VI · Contact ────────────────────────────────────────── */
     #contact {
@@ -1375,6 +1397,7 @@
       z-index: 1;
       margin: clamp(3rem, 6vw, 5rem) 0 0;
       padding-block: 0;
+      padding-inline: var(--pad);
     }
     .btn {
       display: inline-flex;
@@ -1531,6 +1554,8 @@
     }
     .visie-tip.is-open { display: block; }
     .visie-tip--float { position: absolute; width: 320px; max-width: 78vw; z-index: 20; }
+    /* de muis mag naar de uitleg toe gaan zonder dat ze verdwijnt */
+    .visie-tip--float.is-open { pointer-events: auto; }
     .visie-tip--panel { position: static; width: 100%; margin-top: 1.5rem; min-height: 108px; }
     .visie-tip__head { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
     .visie-tip__title { font-family: var(--serif); font-size: 17px; line-height: 1.2; color: var(--navy-700); }
@@ -1566,7 +1591,7 @@
       .footer__grid { grid-template-columns: 1fr 1fr; }
     }
 
-    @media (max-width: 768px) {
+    @media (max-width: 767px) {
       .team__grid { grid-template-columns: 1fr; min-height: 0; padding-top: 300px; }
       .team__content { grid-column: 1; }
       .team__photo-wrap { width: 100%; bottom: auto; height: 420px; }
@@ -1620,11 +1645,6 @@
          een natuurlijke breedte die te klein is */
       .missie__triade-item { font-size: 1em; white-space: nowrap; flex-shrink: 0; }
       .missie__triade-sep svg { width: .62em; height: .62em; }
-      /* Laatste redmiddel op een heel smal toestel: past de rij zelfs met de
-         kleinste letter en de korte woorden niet, dan mag ze afbreken. Buiten
-         het scherm lopen is erger dan twee regels. */
-      .missie__triade.is-gewikkeld { flex-wrap: wrap; justify-content: center; }
-      .missie__triade.is-gewikkeld .missie__triade-item { white-space: normal; }
 
       /* De hero stond bijna een half scherm laag; op een telefoon is dat net
          het scherm waarop alles moet gebeuren. */
@@ -1748,7 +1768,7 @@
     <h1 class="sr-only">Polares: uw vertrouwenspersoon voor familie en bedrijf</h1>
 
     <!-- ── Hero ─────────────────────────────────────────────── -->
-    <section class="hero" aria-label="Hero">
+    <section class="hero">
       <canvas id="sky" aria-hidden="true"></canvas>
 
       <div class="hero__inner">
@@ -1761,7 +1781,7 @@
         <p class="hero__sub label label--on-navy">Zoals de noordpoolster<br>helder en richtinggevend voor uw vermogen</p>
       </div>
 
-      <p class="hero__coords" aria-hidden="true">50.94° N, 4.04° O · AALST</p>
+      <p class="hero__coords" aria-hidden="true">50.94° N, 4.03° O · AALST</p>
 
       <a class="hero__scroll-cue" href="#missie">
         <span class="hero__scroll-line" aria-hidden="true"></span>
@@ -2079,7 +2099,7 @@
             <h3 class="koers__title">Helder overzicht.</h3>
             <div class="koers__row">
               <span class="koers__icon koers__icon--overzicht" aria-hidden="true"><img src="assets/uv/leefwereld.svg" alt="" width="66" height="66" loading="lazy" decoding="async"></span>
-              <p class="koers__text">We brengen uw volledig vermogen en situatie in kaart zodat alles transparant is.</p>
+              <p class="koers__text">We brengen uw volledige vermogen en uw situatie in kaart, zodat alles transparant is.</p>
             </div>
           </li>
           <li class="koers__step">
@@ -2093,7 +2113,7 @@
             <span class="koers__icon koers__icon--richting" aria-hidden="true"><img src="assets/uv/kompas.svg" alt="" width="46" height="46" loading="lazy" decoding="async"></span>
             <div class="koers__copy">
               <h3 class="koers__title">Duidelijke richting.</h3>
-              <p class="koers__text">Samen bepalen we uw doel, dit is richtinggevend voor onze dienstverlening.</p>
+              <p class="koers__text">Samen bepalen we uw doel. Dat doel geeft richting aan onze dienstverlening.</p>
             </div>
           </li>
           <li class="koers__step">
@@ -2205,42 +2225,42 @@
           <div class="expertise__item">
             <div class="expertise__item-head">
               <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-              <span class="expertise__item-title">Vermogensplanning</span>
+              <h3 class="expertise__item-title">Vermogensplanning</h3>
             </div>
             <p class="expertise__item-desc">Overzicht en structuren die beschermen, optimaliseren en groeien</p>
           </div>
           <div class="expertise__item">
             <div class="expertise__item-head">
               <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-              <span class="expertise__item-title">Beleggen</span>
+              <h3 class="expertise__item-title">Beleggen</h3>
             </div>
             <p class="expertise__item-desc">Opportuniteiten gesignaleerd, afgestemd op de lange termijn</p>
           </div>
           <div class="expertise__item">
             <div class="expertise__item-head">
               <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-              <span class="expertise__item-title">Investeren</span>
+              <h3 class="expertise__item-title">Investeren</h3>
             </div>
             <p class="expertise__item-desc">Rendement, risico en levensdoelen in evenwicht</p>
           </div>
           <div class="expertise__item">
             <div class="expertise__item-head">
               <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-              <span class="expertise__item-title">Overdracht &amp; successie</span>
+              <h3 class="expertise__item-title">Overdracht &amp; successie</h3>
             </div>
             <p class="expertise__item-desc">Helder, correct en gedragen voor alle betrokkenen</p>
           </div>
           <div class="expertise__item">
             <div class="expertise__item-head">
               <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-              <span class="expertise__item-title">Ondernemingsstrategie</span>
+              <h3 class="expertise__item-title">Ondernemingsstrategie</h3>
             </div>
             <p class="expertise__item-desc">Samenhang tussen bedrijfsbeslissingen en privévermogen</p>
           </div>
           <div class="expertise__item">
             <div class="expertise__item-head">
               <svg aria-hidden="true" width="12" height="12" viewBox="0 0 100 100" fill="currentColor"><path d="M42 0 L58 0 L58 17.8 A24.2 24.2 0 0 0 82.2 42 L100 42 L100 58 L82.2 58 A24.2 24.2 0 0 0 58 82.2 L58 100 L42 100 L42 82.2 A24.2 24.2 0 0 0 17.8 58 L0 58 L0 42 L17.8 42 A24.2 24.2 0 0 0 42 17.8 Z"/></svg>
-              <span class="expertise__item-title">Fiscaliteit</span>
+              <h3 class="expertise__item-title">Fiscaliteit</h3>
             </div>
             <p class="expertise__item-desc">Vroeg detecteren, tijdig bijsturen</p>
           </div>
@@ -2288,19 +2308,19 @@
         <p class="waarden__intro">Onze begeleiding vertrekt vanuit duidelijke waarden die bepalen hoe we luisteren, denken en handelen: in elk gesprek, elke analyse en elke beslissing.</p>
         <div class="waarden__grid">
           <div class="waarden__item">
-            <p class="waarden__name">Warmte</p>
+            <h3 class="waarden__name">Warmte</h3>
             <p class="waarden__desc">We luisteren eerst, adviseren daarna.</p>
           </div>
           <div class="waarden__item">
-            <p class="waarden__name">Vakmanschap</p>
+            <h3 class="waarden__name">Vakmanschap</h3>
             <p class="waarden__desc">We streven naar uitmuntendheid in elk detail.</p>
           </div>
           <div class="waarden__item">
-            <p class="waarden__name">Eenvoud</p>
+            <h3 class="waarden__name">Eenvoud</h3>
             <p class="waarden__desc">We maken complexe materie helder en hanteerbaar.</p>
           </div>
           <div class="waarden__item">
-            <p class="waarden__name">Integriteit</p>
+            <h3 class="waarden__name">Integriteit</h3>
             <p class="waarden__desc">We doen wat juist is voor u, ook als niemand kijkt.</p>
           </div>
         </div>
@@ -2469,7 +2489,7 @@
           <a href="algemene-voorwaarden.html">Algemene voorwaarden</a> &middot;
           <a href="privacyverklaring.html">Privacyverklaring</a>
         </p>
-        <p class="footer__coords">50.94° N, 4.04° O</p>
+        <p class="footer__coords">50.94° N, 4.03° O</p>
       </div>
     </div>
   </footer>
@@ -2890,8 +2910,8 @@
       var rijen = [].slice.call(document.querySelectorAll('.missie__triade'));
       if (!rijen.length) return;
       var smal = matchMedia('(max-width: 600px)');
-      var MAX = 18.4, MIN = 9;          // px; MAX is de 1.15rem van een breed scherm
-      var DREMPEL = 12;                 // hieronder wordt het te klein om te lezen
+      var MAX = 18.4;                   // px; de 1.15rem van een breed scherm
+      var DREMPEL = 12;                 // px; kleiner is niet leesbaar: dan onder elkaar
 
       // Sommige zinnen hebben een kortere vorm in data-kort. Die komt er pas aan
       // te pas als de volle tekst niet meer leesbaar op de regel past; op een
@@ -2907,41 +2927,68 @@
         });
       }
 
-      // De lettergrootte waarop de rij precies past.
-      function meet(rij) {
-        var ruimte = rij.clientWidth;
+      // De breedte die de rij op één regel nodig heeft, bij de letter die ze
+      // nu heeft. Tijdens het meten geen overgangen: met 'beperkte beweging'
+      // duurt een overgang 0,01 ms, en dan meet je nog de oude letter.
+      function breedte(rij) {
         var kind = rij.children;
-        if (!ruimte || !kind.length) return null;
-        rij.style.fontSize = MAX + 'px';
-        // Niet scrollWidth: dat kapt af bij zichtbare overloop en gaf hier een
-        // kwart te weinig, waardoor de rij alsnog buiten het scherm liep. De
-        // afstand van de linkerrand van het eerste woord tot de rechterrand
-        // van het laatste is wel de echte breedte.
+        if (!kind.length) return 0;
+        rij.classList.add('is-meten');
+        // Niet scrollWidth: dat kapt af bij zichtbare overloop. De afstand
+        // van de linkerrand van het eerste woord tot de rechterrand van het
+        // laatste is wel de echte breedte.
         var nodig = kind[kind.length - 1].getBoundingClientRect().right
                   - kind[0].getBoundingClientRect().left;
+        rij.classList.remove('is-meten');
+        return nodig;
+      }
+      // de ruimte binnen de rij, zonder haar zijmarges
+      function ruimte(rij) {
+        var s = getComputedStyle(rij);
+        return rij.clientWidth - parseFloat(s.paddingLeft) - parseFloat(s.paddingRight);
+      }
+      // De lettergrootte waarop de rij precies past, op een telefoon.
+      function meet(rij) {
+        var plaats = ruimte(rij);
+        if (plaats <= 0) return null;
+        rij.style.fontSize = MAX + 'px';
+        var nodig = breedte(rij);
         if (nodig <= 0) return null;
         // een half procent speling: een afronding naar boven laat de laatste
         // letter anders net buiten de rij vallen
-        return MAX * ruimte / nodig * .995;
+        return MAX * plaats / nodig * .995;
       }
+      // Past de rij op een breder scherm op één regel, bij haar gewone letter?
+      function pastBreed(rij) { return breedte(rij) <= ruimte(rij) + 1; }
 
       function pas() {
         rijen.forEach(function (rij) {
           zet(rij, false);
-          rij.classList.remove('is-gewikkeld');
+          rij.classList.remove('is-gestapeld');
           rij.style.fontSize = '';
-          if (!smal.matches) return;
+          if (!smal.matches) {
+            if (pastBreed(rij)) return;
+            if (rij.querySelector('[data-kort]')) { zet(rij, true); if (pastBreed(rij)) return; }
+            rij.classList.add('is-gestapeld');
+            zet(rij, false);
+            return;
+          }
           var fs = meet(rij);
           if (fs === null) { rij.style.fontSize = ''; return; }
           if (fs < DREMPEL && rij.querySelector('[data-kort]')) {
             zet(rij, true);
             fs = meet(rij) || fs;
           }
-          rij.classList.toggle('is-gewikkeld', fs < MIN);
-          rij.style.fontSize = Math.max(MIN, Math.min(MAX, fs)).toFixed(2) + 'px';
+          if (fs < DREMPEL) {
+            // ook kort niet leesbaar op één regel: onder elkaar, en met de
+            // korte vorm, zodat elk kernwoord op één regel blijft
+            rij.style.fontSize = '';
+            rij.classList.add('is-gestapeld');
+            return;
+          }
+          rij.style.fontSize = Math.min(MAX, fs).toFixed(2) + 'px';
         });
       }
-
       var t;
       function later() { clearTimeout(t); t = setTimeout(pas, 100); }
       window.addEventListener('resize', later, { passive: true });
@@ -3069,23 +3116,51 @@
         }, { passive: true });
       }
 
+      // Met de muis: de uitleg sluit pas even na het weggaan, en blijft open
+      // zolang de muis op het hemellichaam of op de uitleg zelf staat. Na een
+      // klik blijft ze staan tot Escape of een klik ernaast.
+      var sluitKlok = null, vast = false;
+      function blijf() { clearTimeout(sluitKlok); }
+      function straks() {
+        blijf();
+        if (vast) return;
+        sluitKlok = setTimeout(function () { if (!isPanel() && !vast) setActive(null); }, 300);
+      }
+      tip.addEventListener('mouseenter', blijf);
+      tip.addEventListener('mouseleave', straks);
+      tip.addEventListener('click', function (e) { e.stopPropagation(); });
+
       nodes.forEach(function (node) {
         var k = node.getAttribute('data-key');
-        node.addEventListener('mouseenter', function () { if (!isPanel()) setActive(k); });
-        node.addEventListener('mouseleave', function () { if (!isPanel()) setActive(null); });
-        node.addEventListener('focus', function () { setActive(k); });
-        node.addEventListener('blur', function () { if (!isPanel()) setActive(null); });
-        node.addEventListener('click', function (e) { e.stopPropagation(); setActive(k); });
+        node.addEventListener('mouseenter', function () {
+          if (isPanel()) return;
+          blijf();
+          if (vast && active !== k) vast = false;
+          if (!vast) setActive(k);
+        });
+        node.addEventListener('mouseleave', function () { if (!isPanel()) straks(); });
+        node.addEventListener('focus', function () {
+          setActive(k);
+          // op een telefoon schuift de kaart mee, zodat het gekozen
+          // hemellichaam en zijn focusrand volledig in beeld staan
+          if (scroller && isPanel() && scroller.scrollWidth > scroller.clientWidth) {
+            var sr = scroller.getBoundingClientRect(), nr = node.getBoundingClientRect();
+            scroller.scrollTo({ left: scroller.scrollLeft + nr.left - sr.left - (sr.width - nr.width) / 2,
+                                behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+          }
+        });
+        node.addEventListener('blur', function () { if (!isPanel() && !vast) setActive(null); });
+        node.addEventListener('click', function (e) { e.stopPropagation(); blijf(); vast = true; setActive(k); });
         node.addEventListener('keydown', function (e) {
           if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setActive(k); }
         });
       });
 
-      document.addEventListener('click', function () { setActive(null); });
+      document.addEventListener('click', function () { vast = false; setActive(null); });
       // De zoom (hieronder) sluit een open tooltip zodra hij begint
       scene.addEventListener('uv:reset', function () { if (active) setActive(null); });
       document.addEventListener('keydown', function (e) {
-        if (e.key === 'Escape') setActive(null);
+        if (e.key === 'Escape') { vast = false; setActive(null); }
       });
       if (mq.addEventListener) {
         mq.addEventListener('change', function () { setActive(null); syncCaption(); centerScene(); });
@@ -3501,8 +3576,24 @@
       // marge zou de ster op een laag scherm tegen de onderrand duwen.
       function voor() { return Math.min(220, window.innerHeight * .2); }
 
+      // Aflossing. Elk hoofdstuk heeft een eigen lijn met een eigen ster; waar
+      // de ene eindigt, begint de volgende. De volgende ster vertrekt pas als
+      // de vorige aangekomen is: anders staan er even twee sterren op het
+      // scherm, en is de nieuwe lijn al getekend terwijl de vorige nog loopt.
+      // Een lijn meldt of haar ster onderweg is; wie volgt, wacht zolang dat zo
+      // is, en krijgt een seintje zodra ze aankomt.
+      var onderweg = {}, na = {};
+      function meld(naam, bezig) {
+        if (onderweg[naam] === bezig) return;
+        onderweg[naam] = bezig;
+        (na[naam] || []).forEach(function (fn) { fn(); });
+      }
+      function wacht(naam) { return onderweg[naam] === true; }
+      function volgOp(naam, fn) { (na[naam] = na[naam] || []).push(fn); }
+
       return { tabel: tabel, plan: plan, zoek: zoek, anker: anker, sBij: sBij,
-               volger: volger, ANKER: ANKER, voor: voor };
+               volger: volger, ANKER: ANKER, voor: voor,
+               meld: meld, wacht: wacht, volgOp: volgOp };
     })();
 
     // ── Hoofdstuk I: lijn van de kernwoorden naar satelliet en doelgroepen ──
@@ -3700,16 +3791,20 @@
       function draw() {
         live = mq.matches;
         sec.classList.toggle('team--live', live);
-        if (!live) return;
+        if (!live) { Reis.meld('team', false); return; }
         var w = wrap.getBoundingClientRect();
         var xR = koersList.getBoundingClientRect().right - w.left;
         var secR = sec.getBoundingClientRect();
         var top = secR.top - w.top, bottom = secR.bottom - w.top;
         var lr = lamp.getBoundingClientRect(), lampTy = shift(expHeader);
         var lampX = lr.left - w.left + lr.width / 2, lampTop = lr.top - w.top - lampTy;
-        // offsets: niet beïnvloed door de onthul-animaties
-        var xL = content.offsetLeft - 32;
-        var yT = h2.offsetTop - 36;
+        // Ten opzichte van de wrap, zoals de andere lijnen, en zonder de
+        // verschuiving van het raster zolang het nog moet opkomen: offsetTop
+        // zou meten vanaf het raster zelf, omdat een transform er de
+        // offsetParent van maakt.
+        var gridTy = shift(grid);
+        var xL = content.getBoundingClientRect().left - w.left - 32;
+        var yT = h2.getBoundingClientRect().top - w.top - gridTy - 36;
         var d = 'M' + xR + ',' + top + ' V' + yT + ' H' + xL +
                 ' V' + ((bottom + lampTop) / 2) + ' H' + lampX + ' V' + (lampTop - 12);
         dots.setAttribute('d', d); light.setAttribute('d', d); reveal.setAttribute('d', d);
@@ -3725,6 +3820,7 @@
       function doel() {
         if (!live || !total || !tb) return null;
         mik = Reis.zoek(tb, Reis.anker(wrap));
+        if (Reis.wacht('koers')) return 0;
         // de kop loopt de voorsprong vooruit, zodat hij aankomt op het moment
         // dat de tekst verschijnt in plaats van erna
         return Reis.zoek(tb, Reis.anker(wrap) + Reis.voor()).len;
@@ -3735,11 +3831,13 @@
         var pt = dots.getPointAtLength(Math.max(0, Math.min(total, len)));
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
+        Reis.meld('team', len > 2 && len < total - 2);
         head.style.fill = pt.y > geo.bottom ? '#fff' : '';
         grid.classList.toggle('is-reached', mik.y + Reis.voor() >= geo.yT - 2 || doelLen >= total - 2);
       }
 
       var volg = Reis.volger(doel, teken);
+      Reis.volgOp('koers', volg.duw);
       function onScroll() { volg.duw(); }
       var tm;
       function later() { clearTimeout(tm); tm = setTimeout(draw, 80); }
@@ -3789,7 +3887,7 @@
       function draw() {
         live = mq.matches;
         sec.classList.toggle('expertise--live', live);
-        if (!live) return;
+        if (!live) { Reis.meld('expertise', false); return; }
         var L = rel(lamp, shift(header)), G = rel(grid), E = rel(slot);
         var stars = items.map(function (it) { return rel(it.querySelector('.expertise__item-head svg')); });
         // sterretjes per kolom groeperen
@@ -3849,6 +3947,7 @@
 
       function doel() {
         if (!live || !total || !tb) return null;
+        if (Reis.wacht('team')) return 0;
         // de ankerstand is hier alleen nog nodig om de plek op de lijn te vinden
         return Reis.zoek(tb, Reis.anker(wrap)).len;
       }
@@ -3858,6 +3957,7 @@
         var pt = dots.getPointAtLength(Math.max(0, Math.min(total, len)));
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
+        Reis.meld('expertise', len > 2 && len < total - 2);
         // onthullen gebeurt hier uitsluitend op de lijn: de ster is de aanleiding.
         // VOORBOOG is een kleine voorsprong in booglengte, zodat de tekst net
         // vóór de ster opkomt in plaats van erachteraan te hobbelen.
@@ -3866,6 +3966,7 @@
       }
 
       var volg = Reis.volger(doel, teken);
+      Reis.volgOp('team', volg.duw);
       function onScroll() { volg.duw(); }
       var tm;
       function later() { clearTimeout(tm); tm = setTimeout(draw, 80); }
@@ -3910,7 +4011,7 @@
       function draw() {
         live = mq.matches;
         sec.classList.toggle('waarden--live', live);
-        if (!live) return;
+        if (!live) { Reis.meld('waarden', false); return; }
         var w = wrap.getBoundingClientRect();
         var secR = sec.getBoundingClientRect();
         var top = secR.top - w.top, bottom = secR.bottom - w.top;
@@ -3953,6 +4054,7 @@
       function doel() {
         if (!live || !total || !tb) return null;
         mikS = Reis.anker(wrap);
+        if (Reis.wacht('expertise')) return 0;
         return Reis.zoek(tb, mikS + Reis.voor()).len;
       }
 
@@ -3961,10 +4063,12 @@
         var pt = dots.getPointAtLength(Math.max(0, Math.min(total, len)));
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
+        Reis.meld('waarden', len > 2 && len < total - 2);
         items.forEach(function (it, i) { it.classList.toggle('is-reached', mikS + Reis.voor() >= hitS[i]); });
       }
 
       var volg = Reis.volger(doel, teken);
+      Reis.volgOp('expertise', volg.duw);
       function onScroll() { volg.duw(); }
       var tm;
       function later() { clearTimeout(tm); tm = setTimeout(draw, 80); }
@@ -4016,6 +4120,7 @@
 
       function doel() {
         if (!live || !total || !tb) return null;
+        if (Reis.wacht('waarden')) return 0;
         return Reis.zoek(tb, Reis.anker(sec)).len;
       }
 
@@ -4029,6 +4134,7 @@
       }
 
       var volg = Reis.volger(doel, teken);
+      Reis.volgOp('waarden', volg.duw);
       function onScroll() { volg.duw(); }
       var tm;
       function later() { clearTimeout(tm); tm = setTimeout(draw, 80); }
@@ -4109,6 +4215,7 @@
         reveal.style.strokeDashoffset = (total - len).toFixed(1);
         head.setAttribute('transform', 'translate(' + (pt.x - 7).toFixed(1) + ',' + (pt.y - 7).toFixed(1) + ') scale(.14)');
         head.style.opacity = len > 2 && len < total - 2 ? '' : '0';
+        Reis.meld('koers', len > 2 && len < total - 2);
         var dy = mik.y + Reis.voor();
         steps.forEach(function (st, i) {
           // stap 1 verschijnt al terwijl de wereldbol erin landt
