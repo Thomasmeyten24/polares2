@@ -22,6 +22,16 @@
   // bij Resend geverifieerd is. Voorlopig tijdens het testen; later
   // info@polares.be en een afzender op polares.be.
   // De sleutel staat niet hier maar als geheim in Cloudflare: RESEND_API_KEY.
+  // De adressen van de site. Cloudflare koppelt ze bij elke deploy en maakt
+  // zelf het certificaat; er mag voor die namen geen A-, AAAA- of CNAME-record
+  // in de DNS staan. www gaat met de Redirect Rule "WWW to root" naar
+  // polares.be. Een adres dat hier ontbreekt, kan bij een deploy loskomen:
+  // voeg ze dus hier toe en niet in het dashboard.
+  "routes": [
+    { "pattern": "polares.be", "custom_domain": true },
+    { "pattern": "www.polares.be", "custom_domain": true },
+    { "pattern": "polares.meyten.com", "custom_domain": true }
+  ],
   "vars": {
     "AFZENDER": "polares@meyten.com",
     "ONTVANGER": "thomas@meyten.com"
