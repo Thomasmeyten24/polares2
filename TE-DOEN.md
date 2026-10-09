@@ -85,15 +85,18 @@ als custom domain aan de Worker (`routes` in `wrangler.jsonc`). www gaat met de
 Redirect Rule "Redirect from WWW to root" naar polares.be; Always Use HTTPS
 staat aan. De mailrecords zijn ongewijzigd overgenomen.
 
+De oude hosting (`linweb424.webhosting.be`) zegt de vorige beheerder op. De
+records die er nog naartoe wezen (`ftp`, `staging`, `ssh`) zijn op 9 oktober
+verwijderd, en de SPF-record is ingekort; de oude waarden staan in
+`DNS-BACKUP.md`.
+
 Nog te doen:
 
-1. Rond 16 oktober de oude hosting opzeggen (`5.134.4.194`). Eerst nagaan dat
-   `ftp`, `ssh` en `staging` er niet meer nodig zijn; hun records wijzen er nog
-   naartoe en mogen dan weg.
-2. De SPF-record noemt nog de IP-adressen van de oude hosting
-   (`ip4:78.23.80.15 ip4:188.93.84.76/32 ip4:188.93.85.86/32`) en `a`. Na het
-   opzeggen inkorten tot `v=spf1 include:spf.protection.outlook.com -all`.
-3. `polares.meyten.com` loskoppelen zodra het niet meer nodig is als testadres:
+1. De SPF-record laat nog `ip4:78.23.80.15` toe, een Telenet-aansluiting,
+   vermoedelijk het kantoor. Nagaan bij Polares of iets daar rechtstreeks
+   mail als @polares.be verstuurt (NAS, scanner, boekhoudpakket). Zo niet, dan
+   de SPF terugbrengen tot `v=spf1 include:spf.protection.outlook.com -all`.
+2. `polares.meyten.com` loskoppelen zodra het niet meer nodig is als testadres:
    uit `routes` in `wrangler.jsonc` halen en pushen.
 
 ## Voor de site live gaat
