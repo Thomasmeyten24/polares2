@@ -41,8 +41,9 @@ Nog te doen:
    Instellingen → Gebruikers en rechten, het persoonlijke account weghalen,
    en daarna het TXT-record hierboven uit Cloudflare verwijderen. Eerst
    nagaan dat het nieuwe account een eigen verificatie heeft.
-2. Bing Webmaster Tools: "Import from GSC" neemt de verificatie en de sitemap
-   over. Telt mee voor de antwoorden van Copilot.
+2. Bing Webmaster Tools (sinds 9 oktober, geïmporteerd uit Search Console,
+   sitemap zelf ingediend) staat ook op het persoonlijke account: mee
+   overzetten naar `it@polares.be`, via Settings → User management.
 
 ### Cookiebanner
 
