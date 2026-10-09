@@ -99,10 +99,12 @@ De site draait op Cloudflare, voorlopig op `polares.meyten.com`. Om ze op
 
 ## Voor de site live gaat
 
-- **De zes berichten op Blijf op koers zijn voorbeelden.** Ze staan met datum en
-  plaats in `sitemap.xml` en in de structured data, dus zodra het domein hierop
-  draait kan Google verzonnen evenementen indexeren. Vervangen of verwijderen
-  in het CMS, onder Blijf op koers.
+- **Blijf op koers staat voorlopig niet online** (sinds 9 oktober): de zes
+  berichten zijn nog voorbeelden. `BLIJF_OP_KOERS = False` in
+  `tools/bouw-site.py` laat de pagina's, hun deelafbeeldingen, de links in menu,
+  voet en 404 en de adressen in de sitemap weg uit `dist/`; oude adressen gaan
+  tijdelijk (302) naar de homepage. In de repo en het CMS blijft alles werken.
+  Weer online: echte berichten in het CMS, dan de schakelaar op `True`.
 - **Het formulier verstuurt via Resend** (`worker/index.js`, op
   `/api/contact`, gratis plan: 3.000 mails per maand, 100 per dag). Tijdens het
   testen van `polares@meyten.com` naar `thomas@meyten.com`. Voor de lancering:

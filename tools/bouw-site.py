@@ -51,6 +51,12 @@ BESTANDEN = [
 # mappen die in hun geheel meegaan
 MAPPEN = ["assets", "blijf-op-koers"]
 
+# Blijf op koers staat voorlopig niet online: de berichten zijn nog
+# voorbeelden. In de repo en het CMS blijft alles gewoon werken en
+# gecontroleerd; alleen dist/ laat het weg (zie zonder_blijf_op_koers). Op True
+# zetten om het weer te publiceren.
+BLIJF_OP_KOERS = False
+
 
 # in een bouwomgeving (Cloudflare, GitHub Actions) mogen we zelf installeren
 IN_BUILD = bool(os.environ.get("WORKERS_CI") or os.environ.get("CI"))
@@ -129,6 +135,50 @@ def csp_hashes() -> None:
     print(f"Content-Security-Policy: {len(hashes)} scripts, {len(regel)} tekens")
 
 
+def zonder_blijf_op_koers() -> None:
+    """Haalt Blijf op koers uit dist/: de pagina's, hun deelafbeeldingen, de
+    links in menu, voet en 404, en de adressen in de sitemap. Oude links
+    (/nieuws van de Craft-site) gaan tijdelijk (302) naar de homepage, zodat
+    Google ze niet als definitief verhuisd onthoudt."""
+    (UIT / "blijf-op-koers.html").unlink()
+    shutil.rmtree(UIT / "blijf-op-koers")
+    shutil.rmtree(UIT / "assets" / "og")
+
+    link = r'href="(?:/|\.\./)?blijf-op-koers\.html"'
+    patronen = [
+        rf'\n[ \t]*<li><a {link}>[^<]*</a></li>',            # voet
+        rf'\n[ \t]*<a {link} class="overlay__link"[^>]*>[\s\S]*?</a>',  # menu
+        rf'\n[ \t]*<a class="more-link" {link}>[\s\S]*?</a>',  # 404
+    ]
+    for pagina in UIT.glob("*.html"):
+        tekst = pagina.read_text(encoding="utf-8")
+        for p in patronen:
+            tekst = re.sub(p, "", tekst)
+        if "blijf-op-koers" in tekst:
+            print(f"FOUT: {pagina.name} verwijst nog naar Blijf op koers", file=sys.stderr)
+            raise SystemExit(1)
+        pagina.write_text(tekst, encoding="utf-8")
+
+    sitemap = UIT / "sitemap.xml"
+    tekst = re.sub(r"\n[ \t]*<url>\s*<loc>[^<]*/blijf-op-koers[^<]*</loc>[\s\S]*?</url>", "",
+                   sitemap.read_text(encoding="utf-8"))
+    if "blijf-op-koers" in tekst:
+        print("FOUT: sitemap.xml bevat nog Blijf op koers", file=sys.stderr)
+        raise SystemExit(1)
+    sitemap.write_text(tekst, encoding="utf-8")
+
+    regels = []
+    for regel in (UIT / "_redirects").read_text(encoding="utf-8").splitlines():
+        if "/blijf-op-koers.html" in regel and not regel.startswith("#"):
+            regel = regel.split()[0].ljust(41) + "/".ljust(41) + "302"
+        regels.append(regel)
+    regels += ["", "# Blijf op koers staat voorlopig niet online (BLIJF_OP_KOERS in tools/bouw-site.py)",
+               "/blijf-op-koers.html".ljust(41) + "/".ljust(41) + "302",
+               "/blijf-op-koers/*".ljust(41) + "/".ljust(41) + "302"]
+    (UIT / "_redirects").write_text("\n".join(regels) + "\n", encoding="utf-8")
+    print("Blijf op koers: niet gepubliceerd")
+
+
 def main() -> int:
     genereer()
     print("── dist/", flush=True)
@@ -146,6 +196,8 @@ def main() -> int:
     for naam in MAPPEN:
         shutil.copytree(ROOT / naam, UIT / naam, ignore=shutil.ignore_patterns(".*"))
 
+    if not BLIJF_OP_KOERS:
+        zonder_blijf_op_koers()
     csp_hashes()
 
     aantal = sum(1 for p in UIT.rglob("*") if p.is_file())
