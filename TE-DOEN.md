@@ -7,7 +7,7 @@ wat hier staat is besproken en beslist, of wacht op één duidelijk antwoord.
 
 ## Analytics en vindbaarheid
 
-**Wacht op:** de site draait op Cloudflare onder `polares.be` of `new.polares.be`.
+**Kan nu:** de site draait sinds 9 oktober op `polares.be`.
 
 **Waarom niet eerder.** Search Console verifieert een *domein*; vanaf een lokale
 server kan dat niet. Het meetscript moet op de echte URL getest worden. En het
@@ -79,23 +79,22 @@ privacyverklaring nakijkt.
 
 ## De domeinnaam polares.be
 
-De site draait op Cloudflare, voorlopig op `polares.meyten.com`. Om ze op
-`polares.be` te zetten:
+Live sinds 9 oktober 2026. De registratie staat bij INWX, de nameservers bij
+Cloudflare, en `polares.be`, `www.polares.be` en `polares.meyten.com` hangen
+als custom domain aan de Worker (`routes` in `wrangler.jsonc`). www gaat met de
+Redirect Rule "Redirect from WWW to root" naar polares.be; Always Use HTTPS
+staat aan. De mailrecords zijn ongewijzigd overgenomen.
 
-1. **De registratie van polares.be naar het eigen Combell-account.** Ze staat
-   nu in het pakket van de vroegere websitebouwer; stopt dat pakket, dan kan de
-   domeinnaam verlopen, en dan vallen site én mail weg. Dringend, los van de rest.
-2. **De nameservers naar Cloudflare**: `dolly.ns.cloudflare.com` en
-   `micah.ns.cloudflare.com`, in de plaats van de drie `european-server`. De
-   zone staat in Cloudflare klaar, met alle records identiek en grijs (DNS
-   only); nagekeken tegen de bestaande DNS, 27 van 28 gelijk (alleen de AAAA van
-   `staging` ontbreekt, en die gaat weg).
-3. **De lancering**, zodra de zone actief is: de A- en AAAA-records van `@` en
-   `www` verwijderen, `polares.be` en `www.polares.be` als custom domain aan
-   het project koppelen, de Redirect Rule "WWW to root" aanzetten en Always Use
-   HTTPS. MX, TXT en de Microsoft-records blijven zoals ze zijn.
-4. Nadien: `polares.meyten.com` loskoppelen, en na een week de oude hosting
-   opzeggen.
+Nog te doen:
+
+1. Rond 16 oktober de oude hosting opzeggen (`5.134.4.194`). Eerst nagaan dat
+   `ftp`, `ssh` en `staging` er niet meer nodig zijn; hun records wijzen er nog
+   naartoe en mogen dan weg.
+2. De SPF-record noemt nog de IP-adressen van de oude hosting
+   (`ip4:78.23.80.15 ip4:188.93.84.76/32 ip4:188.93.85.86/32`) en `a`. Na het
+   opzeggen inkorten tot `v=spf1 include:spf.protection.outlook.com -all`.
+3. `polares.meyten.com` loskoppelen zodra het niet meer nodig is als testadres:
+   uit `routes` in `wrangler.jsonc` halen en pushen.
 
 ## Voor de site live gaat
 
