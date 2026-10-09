@@ -30,7 +30,7 @@ Domeineigendom `polares.be`, voorlopig op het persoonlijke Google-account van
 Thomas, geverifieerd met een TXT-record op `polares.be`
 (`google-site-verification=9PjMSliecoXDik5nTFg8mBVdrYEFPwiXDCgLr60ENI8`).
 `https://polares.be/sitemap.xml` is ingediend en gelezen (7 pagina's); de oude
-sitemap van 2015 is verwijderd.
+sitemap van 2015 is verwijderd. Er zijn geen andere eigenaars meer.
 
 Nog te doen:
 
@@ -41,9 +41,7 @@ Nog te doen:
    Instellingen → Gebruikers en rechten, het persoonlijke account weghalen,
    en daarna het TXT-record hierboven uit Cloudflare verwijderen. Eerst
    nagaan dat het nieuwe account een eigen verificatie heeft.
-2. In Gebruikers en rechten nakijken of er nog eigenaars van de oude site
-   staan (de sitemap van 2015 wijst erop) en die weghalen.
-3. Bing Webmaster Tools: "Import from GSC" neemt de verificatie en de sitemap
+2. Bing Webmaster Tools: "Import from GSC" neemt de verificatie en de sitemap
    over. Telt mee voor de antwoorden van Copilot.
 
 ### Cookiebanner
