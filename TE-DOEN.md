@@ -132,9 +132,6 @@ Nog te doen:
   gebeurt (na 15 oktober: "Aanmelden afgesloten" bij de rondetafel) nagaan
   dat Cloudflare daarna ook echt opnieuw gebouwd heeft. Werkt dat niet, dan
   een deploy hook van Cloudflare aanroepen vanuit de workflow.
-- **Vercel loskoppelen.** Elke push gaat daar nog naartoe en publiceert de hele
-  repo (ook `tools/`, `data/`, `TE-DOEN.md`) op een `vercel.app`-adres. Daarna
-  `vercel.json` weghalen.
 
 ---
 
