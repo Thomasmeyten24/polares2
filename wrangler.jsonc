@@ -25,8 +25,7 @@
   // voeg ze dus hier toe en niet in het dashboard.
   "routes": [
     { "pattern": "polares.be", "custom_domain": true },
-    { "pattern": "www.polares.be", "custom_domain": true },
-    { "pattern": "polares.meyten.com", "custom_domain": true }
+    { "pattern": "www.polares.be", "custom_domain": true }
   ],
   // Het formulier verstuurt via Resend. AFZENDER moet op een domein staan dat
   // bij Resend geverifieerd is (polares.be, sinds 9 oktober 2026). Het adres

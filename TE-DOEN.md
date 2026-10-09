@@ -10,10 +10,10 @@ wat hier staat is besproken en beslist, of wacht op één duidelijk antwoord.
 **Kan nu:** de site draait sinds 9 oktober op `polares.be`.
 
 **Waarom niet eerder.** Search Console verifieert een *domein*; vanaf een lokale
-server kan dat niet. Het meetscript moet op de echte URL getest worden. En het
-testadres mag niet meetellen in de cijfers: `_headers` zet daar al
-`X-Robots-Tag: noindex` op (alles behalve `polares.be`), het meetscript moet
-dezelfde uitzondering krijgen.
+server kan dat niet. Het meetscript moet op de echte URL getest worden. En
+`workers.dev` en de voorvertoningen mogen niet meetellen in de cijfers:
+`_headers` zet daar al `X-Robots-Tag: noindex` op (alles behalve
+`polares.be`), het meetscript moet dezelfde uitzondering krijgen.
 
 ### Eerst beslissen (Polares)
 
@@ -73,17 +73,18 @@ privacyverklaring nakijkt.
 
 - Zijn alle pagina's geïndexeerd, de berichtpagina's inbegrepen?
 - Meldt Search Console fouten in de structured data van de evenementen?
-- Sluit de teller het testadres uit?
+- Sluit de teller `workers.dev` en de voorvertoningen uit?
 
 ---
 
 ## De domeinnaam polares.be
 
 Live sinds 9 oktober 2026. De registratie staat bij INWX, de nameservers bij
-Cloudflare, en `polares.be`, `www.polares.be` en `polares.meyten.com` hangen
-als custom domain aan de Worker (`routes` in `wrangler.jsonc`). www gaat met de
+Cloudflare, en `polares.be` en `www.polares.be` hangen als custom domain
+aan de Worker (`routes` in `wrangler.jsonc`). www gaat met de
 Redirect Rule "Redirect from WWW to root" naar polares.be; Always Use HTTPS
-staat aan. De mailrecords zijn ongewijzigd overgenomen.
+staat aan. De mailrecords zijn ongewijzigd overgenomen. Het testadres
+`polares.meyten.com` is sinds 9 oktober losgekoppeld.
 
 De oude hosting (`linweb424.webhosting.be`) zegt de vorige beheerder op. De
 records die er nog naartoe wezen (`ftp`, `staging`, `ssh`) zijn op 9 oktober
@@ -96,8 +97,6 @@ Nog te doen:
    vermoedelijk het kantoor. Nagaan bij Polares of iets daar rechtstreeks
    mail als @polares.be verstuurt (NAS, scanner, boekhoudpakket). Zo niet, dan
    de SPF terugbrengen tot `v=spf1 include:spf.protection.outlook.com -all`.
-2. `polares.meyten.com` loskoppelen zodra het niet meer nodig is als testadres:
-   uit `routes` in `wrangler.jsonc` halen en pushen.
 
 ## Voor de site live gaat
 
@@ -121,10 +120,6 @@ Nog te doen:
   een regel over het gebruik van de gegevens: neem die mee. In de voet staat
   "KBO BE 1032.172.446": laat de jurist ook de wettelijke vermeldingen
   (ondernemingsnummer, RPR en rechtbank) nakijken.
-- **Always Use HTTPS voor het testadres.** `polares.meyten.com` antwoordt nog
-  over gewone HTTP. In Cloudflare, zone meyten.com: SSL/TLS → Edge
-  Certificates → Always Use HTTPS. De site stuurt zelf al HSTS mee (`_headers`),
-  maar die werkt pas na een eerste bezoek over HTTPS.
 - **De nachtelijke update van Blijf op koers nakijken.** `.github/workflows/dagelijks.yml`
   commit de pagina's als er een evenement voorbij is. Na de eerste keer dat dat
   gebeurt (na 15 oktober: "Aanmelden afgesloten" bij de rondetafel) nagaan

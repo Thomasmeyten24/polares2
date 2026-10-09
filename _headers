@@ -9,8 +9,8 @@
 # doen. Eén regel voor alle paden: twee CSP-regels op één pad worden twee
 # policies die allebei moeten kloppen.
 #
-# Alles behalve polares.be blijft uit de zoekresultaten: het testadres, het
-# adres op workers.dev en elke voorvertoning. Standaard noindex, en op het
+# Alles behalve polares.be blijft uit de zoekresultaten: het adres op
+# workers.dev en elke voorvertoning. Standaard noindex, en op het
 # echte domein haalt de tweede regel die weer weg.
 /*
   X-Robots-Tag: noindex, nofollow
