@@ -24,15 +24,26 @@ versturen van het formulier meten. Wil Polares dat later, dan een Europese
 teller met doelen (Plausible of Pirsch, rond de tien euro per maand), via de
 eigen Worker zodat het script van polares.be zelf komt.
 
-### Nog te doen: Search Console en Bing
+### Search Console (sinds 9 oktober)
 
-1. **Welk Google-account?** Liefst een kantooraccount, geen persoonlijk: het
-   moet een collega kunnen overnemen. De accounts maakt Polares zelf aan.
-2. Search Console: een domeineigendom `polares.be`, verificatie via een DNS
-   TXT-record (Google biedt aan dat automatisch in Cloudflare te zetten). Dat
-   blijft geldig los van wat er op de site verandert.
-3. `https://polares.be/sitemap.xml` indienen.
-4. Bing Webmaster Tools: "Import from GSC" neemt de verificatie en de sitemap
+Domeineigendom `polares.be`, voorlopig op het persoonlijke Google-account van
+Thomas, geverifieerd met een TXT-record op `polares.be`
+(`google-site-verification=9PjMSliecoXDik5nTFg8mBVdrYEFPwiXDCgLr60ENI8`).
+`https://polares.be/sitemap.xml` is ingediend en gelezen (7 pagina's); de oude
+sitemap van 2015 is verwijderd.
+
+Nog te doen:
+
+1. **Overzetten naar `it@polares.be`** zodra Com-One die gedeelde mailbox heeft
+   aangemaakt (zie de mail van 9 oktober: ook de SPF-vraag en een eigen
+   beheerdersaccount voor Polares). Een Google-account maken op dat adres
+   ("mijn huidige e-mailadres gebruiken"), dat als Eigenaar toevoegen in
+   Instellingen → Gebruikers en rechten, het persoonlijke account weghalen,
+   en daarna het TXT-record hierboven uit Cloudflare verwijderen. Eerst
+   nagaan dat het nieuwe account een eigen verificatie heeft.
+2. In Gebruikers en rechten nakijken of er nog eigenaars van de oude site
+   staan (de sitemap van 2015 wijst erop) en die weghalen.
+3. Bing Webmaster Tools: "Import from GSC" neemt de verificatie en de sitemap
    over. Telt mee voor de antwoorden van Copilot.
 
 ### Cookiebanner
