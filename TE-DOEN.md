@@ -105,16 +105,11 @@ Nog te doen:
   tijdelijk (302) naar de homepage. In de repo en het CMS blijft alles werken.
   Weer online: echte berichten in het CMS, dan de schakelaar op `True`.
 - **Het formulier verstuurt via Resend** (`worker/index.js`, op
-  `/api/contact`, gratis plan: 3.000 mails per maand, 100 per dag). Tijdens het
-  testen van `polares@meyten.com` naar `thomas@meyten.com`. Voor de lancering:
-  1. Bij Resend `polares.be` toevoegen als domein, regio Ireland. De records
-     komen op `send.polares.be` en `resend._domainkey.polares.be`; de MX en
-     SPF van Microsoft blijven ongemoeid.
-  2. In `wrangler.jsonc` `AFZENDER` op polares.be zetten (bijvoorbeeld
-     `website@polares.be`) en `ONTVANGER` op `info@polares.be`.
-  3. Een nieuwe API-sleutel, alleen verzendrechten en alleen voor polares.be,
-     als geheim `RESEND_API_KEY` in Cloudflare. De oude sleutel intrekken.
-  Het adres van de bezoeker staat in `Reply-To`, nooit in `From`.
+  `/api/contact`, gratis plan: 3.000 mails per maand, 100 per dag), van
+  `website@polares.be` naar `info@polares.be`. polares.be is sinds 9 oktober
+  geverifieerd bij Resend (regio Ireland, records op `send`, `rsend` en
+  `resend._domainkey`). Het adres van de bezoeker staat in `Reply-To`, nooit
+  in `From`.
 - **Privacyverklaring en algemene voorwaarden** laten nakijken door een jurist.
   De privacyverklaring vermeldt sinds 24 september het contactformulier,
   Cloudflare, Resend en Microsoft als verwerkers, en het vlaggetje in de

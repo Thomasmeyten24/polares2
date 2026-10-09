@@ -18,10 +18,6 @@
     // uit dist/ en kost dus ook geen aanroep van de Worker.
     "run_worker_first": ["/api/*"]
   },
-  // Het formulier verstuurt via Resend. AFZENDER moet op een domein staan dat
-  // bij Resend geverifieerd is. Voorlopig tijdens het testen; later
-  // info@polares.be en een afzender op polares.be.
-  // De sleutel staat niet hier maar als geheim in Cloudflare: RESEND_API_KEY.
   // De adressen van de site. Cloudflare koppelt ze bij elke deploy en maakt
   // zelf het certificaat; er mag voor die namen geen A-, AAAA- of CNAME-record
   // in de DNS staan. www gaat met de Redirect Rule "WWW to root" naar
@@ -32,9 +28,13 @@
     { "pattern": "www.polares.be", "custom_domain": true },
     { "pattern": "polares.meyten.com", "custom_domain": true }
   ],
+  // Het formulier verstuurt via Resend. AFZENDER moet op een domein staan dat
+  // bij Resend geverifieerd is (polares.be, sinds 9 oktober 2026). Het adres
+  // hoeft geen mailbox te zijn: antwoorden gaan naar de bezoeker (Reply-To).
+  // De sleutel staat niet hier maar als geheim in Cloudflare: RESEND_API_KEY.
   "vars": {
-    "AFZENDER": "polares@meyten.com",
-    "ONTVANGER": "thomas@meyten.com"
+    "AFZENDER": "website@polares.be",
+    "ONTVANGER": "info@polares.be"
   },
   "observability": { "enabled": true }
 }
