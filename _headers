@@ -8,6 +8,9 @@
 # pagina's in dist/: wie een script in een pagina wijzigt, hoeft hier niets te
 # doen. Eén regel voor alle paden: twee CSP-regels op één pad worden twee
 # policies die allebei moeten kloppen.
+# Eén uitzondering op "alleen van de site zelf": Cloudflare Web Analytics
+# (zie tools/bouw-site.py). Het script komt van static.cloudflareinsights.com
+# en meldt zijn metingen aan cloudflareinsights.com.
 #
 # Alles behalve polares.be blijft uit de zoekresultaten: het adres op
 # workers.dev en elke voorvertoning. Standaard noindex, en op het
@@ -20,7 +23,7 @@
   Strict-Transport-Security: max-age=31536000
   Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
   Cross-Origin-Opener-Policy: same-origin
-  Content-Security-Policy: default-src 'self'; script-src 'self' __SCRIPT_HASHES__; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'; manifest-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
+  Content-Security-Policy: default-src 'self'; script-src 'self' https://static.cloudflareinsights.com __SCRIPT_HASHES__; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://cloudflareinsights.com; manifest-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
 
 https://polares.be/*
   ! X-Robots-Tag

@@ -57,6 +57,15 @@ MAPPEN = ["assets", "blijf-op-koers"]
 # zetten om het weer te publiceren.
 BLIJF_OP_KOERS = False
 
+# Cloudflare Web Analytics: bezoekers, pagina's, verwijzers, land en toestel,
+# zonder cookies. Het script komt bij het bouwen in elke pagina van dist/, dus
+# ook in de gegenereerde; in de bronbestanden staat het niet, zodat lokaal
+# testen niet meetelt. Cloudflare aanvaardt alleen metingen van de hostnaam
+# polares.be: workers.dev en voorvertoningen tellen niet mee. Het token is
+# niet geheim, het staat in elke pagina. Leeg = geen meting.
+# De Content-Security-Policy in _headers laat het script en zijn meldingen toe.
+WEB_ANALYTICS_TOKEN = "6f85633ba7fa40ae80b24616d1b41b3d"
+
 
 # in een bouwomgeving (Cloudflare, GitHub Actions) mogen we zelf installeren
 IN_BUILD = bool(os.environ.get("WORKERS_CI") or os.environ.get("CI"))
@@ -179,6 +188,28 @@ def zonder_blijf_op_koers() -> None:
     print("Blijf op koers: niet gepubliceerd")
 
 
+def meetscript() -> None:
+    """Zet het script van Cloudflare Web Analytics vlak voor </body> in elke
+    pagina van dist/."""
+    if not WEB_ANALYTICS_TOKEN:
+        print("Web Analytics: geen token, geen meting")
+        return
+    if not re.fullmatch(r"[0-9a-f]{32}", WEB_ANALYTICS_TOKEN):
+        print("FOUT: WEB_ANALYTICS_TOKEN is geen token van 32 tekens (0-9, a-f)", file=sys.stderr)
+        raise SystemExit(1)
+    # zoals Cloudflare het fragment geeft; type="module" laadt het uitgesteld
+    script = ("<script type=\"module\" src=\"https://static.cloudflareinsights.com/beacon.min.js\" "
+              f"data-cf-beacon='{{\"token\": \"{WEB_ANALYTICS_TOKEN}\"}}'></script>\n")
+    paginas = sorted(UIT.rglob("*.html"))
+    for pagina in paginas:
+        tekst = pagina.read_text(encoding="utf-8")
+        if tekst.count("</body>") != 1:
+            print(f"FOUT: {pagina.relative_to(UIT)} heeft niet precies één </body>", file=sys.stderr)
+            raise SystemExit(1)
+        pagina.write_text(tekst.replace("</body>", script + "</body>"), encoding="utf-8")
+    print(f"Web Analytics: {len(paginas)} pagina's")
+
+
 def main() -> int:
     genereer()
     print("── dist/", flush=True)
@@ -198,6 +229,7 @@ def main() -> int:
 
     if not BLIJF_OP_KOERS:
         zonder_blijf_op_koers()
+    meetscript()
     csp_hashes()
 
     aantal = sum(1 for p in UIT.rglob("*") if p.is_file())

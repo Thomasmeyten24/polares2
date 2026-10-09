@@ -7,53 +7,37 @@ wat hier staat is besproken en beslist, of wacht op één duidelijk antwoord.
 
 ## Analytics en vindbaarheid
 
-**Kan nu:** de site draait sinds 9 oktober op `polares.be`.
+### Bezoekersmeting: Cloudflare Web Analytics (sinds 9 oktober)
 
-**Waarom niet eerder.** Search Console verifieert een *domein*; vanaf een lokale
-server kan dat niet. Het meetscript moet op de echte URL getest worden. En
-`workers.dev` en de voorvertoningen mogen niet meetellen in de cijfers:
-`_headers` zet daar al `X-Robots-Tag: noindex` op (alles behalve
-`polares.be`), het meetscript moet dezelfde uitzondering krijgen.
+Gratis, zonder cookies. Geeft bezoekers, pagina's, verwijzers, land en toestel,
+zes maanden terug. In het Cloudflare-dashboard onder Web Analytics, site
+polares.be, op "Enable with JS Snippet installation". Het script komt bij het
+bouwen in elke pagina (`WEB_ANALYTICS_TOKEN` in `tools/bouw-site.py`), de
+Content-Security-Policy in `_headers` laat het toe, en de privacyverklaring
+vermeldt het (punt 3, 4 en 6).
 
-### Eerst beslissen (Polares)
+Het tabblad Analytics → Visitors bij de zone polares.be is iets anders: dat
+telt elke opgevraagde pagina, ook door bots en crawlers.
 
-1. **Welke teller?**
-   - *Gratis:* Cloudflare Web Analytics. Cookieloos, onbeperkt, één scriptregel.
-     Geeft bezoekers, pagina's, verwijzers, land en toestel. Amerikaans bedrijf.
-     Meet geen klikken op e-mail of telefoon.
-   - *Ongeveer tien euro per maand:* een Europese teller (Plausible, Simple
-     Analytics). Gegevens in de EU, en wél meetbaar of iemand op `info@polares.be`
-     klikt of het formulier verstuurt. Prijzen wijzigen; check ze op dat moment.
-2. **Welk Google-account** voor Search Console? Liefst een kantooraccount, geen
-   persoonlijk: het moet een collega kunnen overnemen.
-3. De DNS van polares.be staat bij Cloudflare. Verificatie via een DNS-record
-   verdient de voorkeur boven een bestand of meta-tag: die blijft geldig los van
-   wat er op de site verandert. Cloudflare Web Analytics staat dan ook in
-   hetzelfde account.
+Wat het niet kan: klikken op `info@polares.be`, op het telefoonnummer of het
+versturen van het formulier meten. Wil Polares dat later, dan een Europese
+teller met doelen (Plausible of Pirsch, rond de tien euro per maand), via de
+eigen Worker zodat het script van polares.be zelf komt.
 
-De accounts maakt Polares zelf aan.
+### Nog te doen: Search Console en Bing
 
-### Stappen
-
-1. Search Console: domeinverificatie via een DNS TXT-record.
-2. Bing Webmaster Tools: kan de verificatie van Google overnemen. Telt mee voor
-   de antwoorden van Copilot.
-3. `sitemap.xml` indienen in beide.
-4. Meetscript toevoegen aan alle pagina's **en aan `tools/sjabloon-bericht.html`**,
-   anders missen de berichtpagina's het bij de volgende keer dat het script draait.
-5. Het meetscript uitschakelen op een niet-productieadres, zodat testverkeer niet
-   meetelt.
-6. `privacyverklaring.html` bijwerken. Daar staat nu letterlijk "geen tracking-
-   of analysetools"; dat klopt dan niet meer. Neem meteen het vlaggetje mee dat
-   hieronder bij de kleine punten staat.
-7. Bij een betalende teller: doelen instellen voor klikken op `info@polares.be`,
-   op het telefoonnummer en op het versturen van het formulier.
-8. Een controle toevoegen aan `tools/check-consistentie.py` die nagaat dat elke
-   pagina het meetscript draagt.
+1. **Welk Google-account?** Liefst een kantooraccount, geen persoonlijk: het
+   moet een collega kunnen overnemen. De accounts maakt Polares zelf aan.
+2. Search Console: een domeineigendom `polares.be`, verificatie via een DNS
+   TXT-record (Google biedt aan dat automatisch in Cloudflare te zetten). Dat
+   blijft geldig los van wat er op de site verandert.
+3. `https://polares.be/sitemap.xml` indienen.
+4. Bing Webmaster Tools: "Import from GSC" neemt de verificatie en de sitemap
+   over. Telt mee voor de antwoorden van Copilot.
 
 ### Cookiebanner
 
-**Niet nodig** met deze opzet, zolang de teller cookieloos is: er wordt niets op
+**Niet nodig** met de huidige opzet, zolang de teller cookieloos is: er wordt niets op
 het toestel van de bezoeker gezet of gelezen, en dát is waar de toestemmingsregel
 over gaat. Search Console staat er helemaal buiten, want dat zet geen script op
 de site.
@@ -63,8 +47,8 @@ als niets zeggen.
 
 **Wél een banner nodig zodra** er Google Analytics bij komt, of een ingesloten
 YouTube-video, een Google Maps-kaartje, een LinkedIn-widget, of lettertypen van
-Google's servers in plaats van de eigen. Nu komt er geen enkel extern verzoek van
-de site; dat is de moeite waard om te bewaken.
+Google's servers in plaats van de eigen. Het enige externe verzoek van de site
+is het meetscript van Cloudflare; dat is de moeite waard om te bewaken.
 
 Dit is geen juridisch advies. Laat het meenemen wanneer een jurist de
 privacyverklaring nakijkt.
@@ -73,7 +57,6 @@ privacyverklaring nakijkt.
 
 - Zijn alle pagina's geïndexeerd, de berichtpagina's inbegrepen?
 - Meldt Search Console fouten in de structured data van de evenementen?
-- Sluit de teller `workers.dev` en de voorvertoningen uit?
 
 ---
 
